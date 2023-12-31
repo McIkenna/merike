@@ -1,0 +1,60 @@
+[
+    {
+        "name": "Organifi Immunity - Organic Superfood Immunity Support - 14 Single Serve Packets",
+        "price": 70.09,
+        "description": "Supercharge Your Immunity, Naturally! Organifi is committed to helping you create a holistic lifestyle that is easy, fun and delicious. We're here to guide you through optimal nutrition, habit/mindset coaching, and the right superfood system that makes staying on the healthy path easier than ever. Organifi Immunity Organifi Immunity is an immune-supporting superfoods drink mix in easy-to-use packets. Keep them in your office desk drawer or in your purse for easy access to immunity support. This modern supplement company has revolutionized on-the-go nutrition with no need to change your lifestyle. Nature’s Strongest Immune Health Supporting Compounds! Powerful Immune Support... In A Packet Try Organifi Immunity to support your body’s natural defenses, aid in recovery, and level up your day with this delicious orange drink. Organifi Immunity helps to strengthen your cells so you can feel your best, every day. Just mix with water, enjoy, and rest assured that you’re supporting your immune health in the way your body deserves. Immune System Support In A Glass Made without gluten, soy, or GMO ingredients, Immunity is also vegan. That means that everyone can enjoy the immune-supporting superfoods, extracts, and other natural ingredients found in every glass. Just mix and sip your way to a better you! High Quality Ingredients, Better Results Made with gently-dried organic superfoods, each packet has locked in the best attributes of these high-quality ingredients. It contains powerful extracts straight from nature, such as mushroom beta-glucans and acerola cherry.",
+        "ratings": 4.5,
+        "images": [{
+            "public_id": "organifi-1",
+            "url" :"https://i5.walmartimages.com/seo/Organifi-Immunity-Organic-Superfood-Support-14-Single-Serve-Packets-Powder-T-Cell-Production-Upper-Respiratory-Health-Mushroom-Beta-Glucans-Vitamin-C_4ee481c6-841f-4918-a020-f2219356f773.99b63cac7c4f0d5e1825045d8ac66a6c.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF"
+                    },
+                {
+                    "public_id": "organifi-2",
+                    "url": "https://i5.walmartimages.com/asr/4afa1821-74eb-45ab-94c5-102d7bc277b0.13db3f65fb92eee7b527579d49a62cad.jpeg?odnHeight=117&odnWidth=117&odnBg=FFFFFF"
+                }],
+        "category": "Medicine & Supplements",
+        "seller": "Merike",
+        "stock": 50,
+        "numOfReviews": 32,
+        "reviews":[]
+    },
+    {
+        "name": "Nike MC Trainer 2 Men's Training Shoes - Blue Size 10.5",
+        "price": 90.09,
+        "description": "The Nike MC Trainer 2 allows you to seamlessly transition from circuit training in the weight room to turf, facilitating quick and efficient toning exercises. This all-encompassing shoe offers a blend of versatility, stability, and longevity, ensuring your strength is sustained throughout your training sessions. Whether you're engaging in back squats or sprint reps, this shoe eliminates the need to interrupt your workout to fetch additional equipment.Stable Foundation",
+        "ratings": 4,
+        "images": [{
+            "public_id": "nikeMc-1",
+            "url" :"https://i5.walmartimages.com/asr/ea724ada-5e72-4ada-bff6-8cd9d689c7fc.f768297048ae9f309db0a2e80e5b5909.jpeg"
+                    },
+                {
+                    "public_id": "nikeMc-2",
+                    "url": "https://i5.walmartimages.com/asr/f3140716-7c55-4003-b038-fe7f2a61d836.d0041c9b745d489471b35e7d99198fe1.jpeg"
+                }],
+        "category": "Footwear",
+        "seller": "Merike",
+        "stock": 20,
+        "numOfReviews": 20,
+        "reviews":[]
+    },
+    {
+        "name": "CoComelon Official Deluxe Interactive JJ Doll with Sounds",
+        "price": 34.5,
+        "description": "Bring your favorite character to life with CoComelon's Deluxe Interactive JJ Doll! The included accessories are great for your child to play dress up and have feeding time with JJ",
+        "ratings": 4,
+        "images": [{
+            "public_id": "coco-1",
+            "url" :"https://i5.walmartimages.com/seo/CoComelon-Official-Deluxe-Interactive-JJ-Doll-with-Sounds_50651b0f-6a8b-487f-b193-37c8204553d4.0b275ca06b9fc0a0af681afc65aa982c.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF"
+                    },
+                {
+                    "public_id": "coco-2",
+                    "url": "https://i5.walmartimages.com/asr/3d82cb75-e3d0-4b38-8093-ade7519f2b0d.62938f13855b301e83398c4972613960.jpeg?odnHeight=117&odnWidth=117&odnBg=FFFFFF"
+                }],
+        "category": "Toys",
+        "seller": "Merike",
+        "stock": 20,
+        "numOfReviews": 20,
+        "reviews":[]
+    }
+
+]
