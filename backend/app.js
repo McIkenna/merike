@@ -8,9 +8,11 @@ app.use(bodyParser.json());
 
 const products = require('./routes/product');
 const categories = require('./routes/category');
+const auth = require('./routes/auth');
 
 app.use('/api/v1', products);
 app.use('/api/v1', categories);
+app.use('/api/v1', auth);
 
 app.use(errorMiddleware);
 
