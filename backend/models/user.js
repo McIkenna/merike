@@ -64,7 +64,6 @@ userSchema.methods.getJwtToken = function (){
         expiresIn: process.env.JWT_EXPIRATION_TIME
     })
 }
-
 //Generate password reset token
 userSchema.methods.getResetPasswordToken = function(){
     //Generate the token
