@@ -53,13 +53,18 @@ const productSchema = new mongoose.Schema({
     },
     reviews: [
         {
+            user:{
+                type: mongoose.Schema.ObjectId,
+                ref: 'User',
+                required: true
+            },
             name: {
                 type: String,
                 required: true,
                 maxLength: [100, 'review name cannot be more than 100 characters'],
             },
             rating: {
-                type: String,
+                type: Number,
                 required: true,
             },
             comment: {
