@@ -2,15 +2,24 @@ import './App.css';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import Home from './components/layout/Home';
+import { Container } from '@mui/material';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 
 function App() {
   return (
-    <div>
+    <Router>
+  <div>
       <Header/>
-      <p>This is the Merike Store</p>
-      <Home />
+      <Container sx={{ paddingTop: '100px'}}>
+      <Routes>
+      <Route path='/' Component={Home} exact/>      
+      </Routes>
+      </Container>
       <Footer/>
+  
     </div>
+    </Router>
+  
   );
 }
 

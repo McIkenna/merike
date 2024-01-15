@@ -1,22 +1,28 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import BoxCard from '../../utils/BoxCard'
 import {Grid, Box} from '@mui/material';
+import MetaData from '../../utils/MetaData';
+import { useGetAllProductQuery } from '../../api/services/productApi';
+import { useDispatch } from 'react-redux';
 export default function Home() {
+    
+    useDispatch()
+    const { data: products, error: prodError, isLoading: prodIsLoading, isSuccess:prodIsSuccess } = useGetAllProductQuery();
+   
+    console.log('products-->', products)
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
+        <MetaData title={'Buy Best Products Online'}/>
       <Grid container spacing={2}>
-        <Grid item xs={4}>
-            <BoxCard/>
-        </Grid>
-        <Grid item xs={4}>
-        <BoxCard/>
-        </Grid>
-        <Grid item xs={4}>
-        <BoxCard/>
-        </Grid>
-        <Grid item xs={4}>
-        <BoxCard/>
-        </Grid>
+        {
+            products?.products?.map(product =>
+                <Grid item xs={4}>
+                    <BoxCard
+                    product={product} 
+                    />
+                </Grid>
+            )
+        }
       </Grid>
     </Box>
   )

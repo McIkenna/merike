@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem} from '@mui/material';
 // import {MenuIcon} from '@mui/icons-material'
-import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
@@ -10,6 +9,10 @@ import ShoppingCart from '../../utils/ShoppingCart';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from '../../utils/Themes';
 import merikeLogo from '../../static/images/Merike logo only color.png'
+import DropDownSelect from '../../utils/DropDownSelect';
+import { useGetAllCategoryQuery } from '../../api/services/categoryApi';
+import { useDispatch } from 'react-redux';
+
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -52,11 +55,20 @@ const Search = styled('div')(({ theme }) => ({
   }));
 
 export default function Header() {
-    const pages = ['Products', 'Pricing', 'Blog'];
+    const pages = ['Products', 'Pricing', 'Blog', 'Category'];
    const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
    const [anchorElNav, setAnchorElNav] = useState(null);
    const [anchorElUser, setAnchorElUser] = useState(null);
- 
+   const [category, setCategory] = useState(null);
+   useDispatch()
+   const { data: categories, error, isLoading, isSuccess} = useGetAllCategoryQuery();
+
+   useEffect(() =>{
+    if(categories !== undefined){
+        setCategory(categories)
+    }
+   }, [categories])
+
   const handleOpenNavMenu = (event) => {
     console.log('event', event)
     setAnchorElNav(event.currentTarget);
@@ -103,7 +115,7 @@ export default function Header() {
           >
             Merike
           </Typography>
-
+          
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -115,6 +127,7 @@ export default function Header() {
             >
               <MenuIcon />
             </IconButton>
+           
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -134,10 +147,13 @@ export default function Header() {
               }}
             >
               {pages.map((page) => (
+                page === 'Category' ? <DropDownSelect categories={category}/> :
                 <MenuItem key={page} onClick={() => {handleCloseNavMenu()}}>
                   <Typography variant="display3" textAlign="center">{page}</Typography>
                 </MenuItem>
-              ))}
+              )
+              )}
+             
             </Menu>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, paddingRight: "10px"}}>
@@ -164,6 +180,7 @@ export default function Header() {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
+                page === 'Category'? <DropDownSelect categories={category}/>:
               <Button
                 key={page}
                 onClick={() => {handleCloseNavMenu()}}
