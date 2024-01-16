@@ -5,6 +5,7 @@ import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { styled } from '@mui/material/styles';
 import ReviewRating from './ReviewRating';
+import { Link } from 'react-router-dom';
 import {
     grey,
     lightGreen,
@@ -35,6 +36,7 @@ export default function BoxCard(props) {
       }));
 console.log('props', props)
 const {
+    _id,
     category,
     name,
     description,
@@ -48,16 +50,20 @@ const {
     <Box
     >
       <Item elevation={0}>
+      <Link to={`product/${_id}`} style={{ textDecoration: 'none'}}>
               <CardMedia
                 component="img"
                 image={images[0].url}
               />
+                  </Link>
               <CardContent sx={{ p: 3, mb: 0 }}>
                 <Box sx={{ mb: 4 }}>
-                  <Typography variant="h6" sx={{ mb: 1, fontWeight: "bold" }}>
+                    <Link to={`product/${_id}`} style={{ textDecoration: 'none'}}>
+                    <Typography variant="h6" sx={{ mb: 1, fontWeight: "bolder", color: blueGrey[700] }}>
                    {name}
                   </Typography>
-                  <Typography variant="h6" sx={{fontWeight: "bold" }}>
+                    </Link>
+                  <Typography variant="h6" sx={{fontWeight: "bold", color: green[800]}}>
                      $ {price}
                   </Typography>
                 </Box>
@@ -71,7 +77,7 @@ const {
                 >
                   <Box
                     sx={{
-                      display: "inline-flex",
+                      display: "flex",
                       pt: 1,
                       pb: 1,
                       pr: 3,
@@ -87,6 +93,9 @@ const {
                       1
                     </Typography>
                   </Box>
+                  <Button variant="contained" color="primary">
+                    Add to Cart
+                </Button>
                   <Box>
                     <IconButton variant="body1" size='large'>
                       <AddOutlinedIcon size={2} />
@@ -96,9 +105,7 @@ const {
                     </IconButton>
                   </Box>
                 </Box>
-                <Button>
-                    Add to Cart
-                </Button>
+                
                 <ReviewRating value={ratings}/>
               </CardContent>
       </Item>

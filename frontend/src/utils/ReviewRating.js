@@ -3,9 +3,7 @@ import {Box, Rating, Typography} from '@mui/material';
 
 const ReviewRating = (props) =>{
   const {value} = props
-  console.log('value', value)
   const rating = value === null ? 0 : value
-  console.log('rating', typeof rating)
   // const { val, setVal} = useState(rating)
   return (
     <Box

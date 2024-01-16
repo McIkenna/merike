@@ -14,9 +14,19 @@ export const productApi = createApi({
                 method: 'GET'
             }),
             providesTags: ['product']
+        }),
+        getSingleProduct: build.query({
+            query: (params) => (
+                console.log('inside query', params)
+                ,{
+                // headers: 'headers',
+                url: `/api/v1/product/${params}`,
+                method: 'GET'
+            }),
+            providesTags: ['product']
         })
     })
 
 })
 
-export const {useGetAllProductQuery} = productApi;
+export const {useGetAllProductQuery, useGetSingleProductQuery} = productApi;
