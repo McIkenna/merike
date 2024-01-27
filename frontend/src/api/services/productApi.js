@@ -8,17 +8,19 @@ export const productApi = createApi({
     tagTypes: ["product"],
     endpoints: (build) => ({
         getAllProduct: build.query({
-            query: () => ({
+            query: (params) => (
+                console.log('params', params),
+            {
                 // headers: 'headers',
-                url: '/api/v1/products',
+                url: `/api/v1/products?page=${params}`,
                 method: 'GET'
-            }),
+            }
+            ),
             providesTags: ['product']
         }),
         getSingleProduct: build.query({
             query: (params) => (
-                console.log('inside query', params)
-                ,{
+                {
                 // headers: 'headers',
                 url: `/api/v1/product/${params}`,
                 method: 'GET'

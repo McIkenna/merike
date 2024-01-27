@@ -34,7 +34,7 @@ export default function BoxCard(props) {
         textAlign: 'center',
         color: theme.palette.text.secondary,
       }));
-console.log('props', props)
+// console.log('props', props)
 const {
     _id,
     category,

@@ -12,7 +12,7 @@ import merikeLogo from '../../static/images/Merike logo only color.png'
 import DropDownSelect from '../../utils/DropDownSelect';
 import { useGetAllCategoryQuery } from '../../api/services/categoryApi';
 import { useDispatch } from 'react-redux';
-
+import { Link } from 'react-router-dom';
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -96,6 +96,7 @@ export default function Header() {
             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px"}}>
             <img src={merikeLogo} style={{ width: '100px'}}/>
             </Box>
+
             
           <Typography
             variant="h6"
@@ -113,7 +114,9 @@ export default function Header() {
             }}
             
           >
+            <Link to="/">
             Merike
+            </Link>
           </Typography>
           
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
