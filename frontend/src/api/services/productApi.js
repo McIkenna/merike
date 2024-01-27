@@ -8,14 +8,15 @@ export const productApi = createApi({
     tagTypes: ["product"],
     endpoints: (build) => ({
         getAllProduct: build.query({
-            query: (params) => (
-                console.log('params', params),
-            {
+            query: ({ currentPage, keyword='' }) => {
+                // const { currentPage, keyword } = reqParams
+                console.log('currentPage', currentPage)
+            return {
                 // headers: 'headers',
-                url: `/api/v1/products?page=${params}`,
+                url: `/api/v1/products?keyword=${keyword}&page=${currentPage}`,
                 method: 'GET'
             }
-            ),
+        },
             providesTags: ['product']
         }),
         getSingleProduct: build.query({

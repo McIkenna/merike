@@ -5,13 +5,20 @@ import MetaData from '../../utils/MetaData';
 import { useGetAllProductQuery } from '../../api/services/productApi';
 import { useDispatch } from 'react-redux';
 import Loader from '../../utils/Loader';
+import { useParams } from 'react-router-dom';
 
 export default function Home() {
     
     useDispatch()
     const [currentPage, setCurrentPage] = useState(1);
-    const { data, error: prodError, isLoading: prodIsLoading, isSuccess:prodIsSuccess, ...props} = useGetAllProductQuery(currentPage);
-   
+    const params = useParams();
+    const keyword = params.keyword;
+
+    const reqParams = {
+      keyword: keyword,
+      currentPage: currentPage
+    }
+    const { data, error: prodError, isLoading: prodIsLoading, isSuccess:prodIsSuccess, ...props} = useGetAllProductQuery(reqParams);
     // console.log('data -->', data)
     const products = data?.products
     const productCount = data?.productCount

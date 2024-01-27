@@ -2,9 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem} from '@mui/material';
 // import {MenuIcon} from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
 import ShoppingCart from '../../utils/ShoppingCart';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from '../../utils/Themes';
@@ -13,46 +11,10 @@ import DropDownSelect from '../../utils/DropDownSelect';
 import { useGetAllCategoryQuery } from '../../api/services/categoryApi';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.background.default, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.background.default, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  }));
+import Search from '../../utils/Search';
+
   
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.background.default
-  }));
-  
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
-      },
-    },
-  }));
+
 
 export default function Header() {
     const pages = ['Products', 'Pricing', 'Blog', 'Category'];
@@ -194,15 +156,7 @@ export default function Header() {
             ))}
           </Box>
 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+          <Search />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
           <ShoppingCart
           cartstyle={{ size: 2, color: "#000", circleBg: "#EBEBE8" }}

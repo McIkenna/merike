@@ -13,6 +13,7 @@ function App() {
       <Container sx={{ paddingTop: '100px'}}>
       <Routes>
       <Route path='/' Component={Home} exact/>
+      <Route path='/search/:keyword' Component={Home}/>
       <Route path='/product/:id' Component={ProductDetail} exact/>       
       </Routes>
       </Container>
