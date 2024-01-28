@@ -12,7 +12,7 @@ import { useGetAllCategoryQuery } from '../../api/services/categoryApi';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Search from '../../utils/Search';
-
+import {grey, green, red, blue} from "@mui/material/colors";
   
 
 
@@ -56,10 +56,12 @@ export default function Header() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px"}}>
+            <Link to="/">
             <img src={merikeLogo} style={{ width: '100px'}}/>
+            </Link>
             </Box>
 
-            
+            <Link to="/" style={{ textDecoration: 'none'}}>
           <Typography
             variant="h6"
             noWrap
@@ -71,15 +73,13 @@ export default function Header() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: blue[800],
               textDecoration: 'none',
             }}
-            
           >
-            <Link to="/">
             Merike
-            </Link>
           </Typography>
+          </Link>
           
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
