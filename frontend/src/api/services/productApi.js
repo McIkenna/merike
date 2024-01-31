@@ -8,11 +8,11 @@ export const productApi = createApi({
     tagTypes: ["product"],
     endpoints: (build) => ({
         getAllProduct: build.query({
-            query: ({ currentPage, keyword='', price, category }) => {
+            query: ({ currentPage, keyword='', price, category, rating=0}) => {
                 // const { currentPage, keyword } = reqParams
-                let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}`
+                let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&ratings[gte]=${rating}`
                 if(category){
-                    link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&category=${category}`
+                    link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&category=${category}&ratings[gte]=${rating}`
                 }
             return {
                 // headers: 'headers',
