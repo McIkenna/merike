@@ -18,7 +18,7 @@ import {grey, green, red, blue} from "@mui/material/colors";
 
 export default function Header() {
     const pages = ['Products', 'Pricing', 'Blog', 'Category'];
-   const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+   const settings = ['Profile', 'Account', 'Dashboard', 'Login', 'Logout'];
    const [anchorElNav, setAnchorElNav] = useState(null);
    const [anchorElUser, setAnchorElUser] = useState(null);
    const [category, setCategory] = useState(null);
@@ -189,7 +189,9 @@ export default function Header() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={() => {handleCloseUserMenu()}}>
+                  <Link to={`/${setting.toLowerCase()}`}>
                   <Typography textAlign="center">{setting}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
