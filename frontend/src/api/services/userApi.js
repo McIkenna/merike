@@ -20,11 +20,13 @@ export const userApi = createApi({
         }),
         loginUser: build.mutation({
             query: (reqBody) => {
+                console.log(reqBody)
                 // const { currentPage, keyword } = reqParams
             return {
                 // headers: 'headers',
-                url: '/login',
-                method: 'POST'
+                url: 'api/v1/login',
+                method: 'POST',
+                body: reqBody
             }
         },
             providesTags: ['product']

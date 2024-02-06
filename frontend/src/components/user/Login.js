@@ -1,14 +1,10 @@
-import React from 'react'
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-
+import React, {useState, useEffect} from 'react'
+import {Button, TextField, Link, Grid, Typography} from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { useMediaQuery } from "@mui/material";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { useLoginUserMutation } from '../../api/services/userApi';
+import { useNavigate } from "react-router";
 // const TextField = withStyles({
 //   root: {
 //     "& label.Mui-focused": {
@@ -31,9 +27,50 @@ import { useMediaQuery } from "@mui/material";
 
 export default function Login() {
   const mediaLessthanmd = useMediaQuery("min-width : 900px");
+  const emptyState = {
+    email: "",
+    password: "",
+  }
+  const [state, setState] = useState(emptyState);
+  // const alert = useAlert()
+  const [error, setError] = useState('');
+  useDispatch()
+  const [loginUser, {isLoading, isError, isSuccess, ...props}] = useLoginUserMutation()
+  const navigate = useNavigate()
+  // const { isAuthenticated, error, loading} = useSelector(state => state.auth)
+  console.log('props -->', props)
+
+  useEffect(() => {
+    if(isSuccess){
+      navigate('/')
+    }
+    if(isError){
+      setError('')
+    }
+  })
+
+  const handleStateChange = (e) => {
+    const {name, value} = e.target;
+    setError('')
+    setState({
+      ...state,
+      [name]: value
+    })
+
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const reqBody = state
+    loginUser(reqBody).unwrap().then((response) => {
+      console.log('response ->', response);
+    }).catch((error) => {
+      const {data} = error;
+      setError(data?.message)
+      // console.log('error', error)
+    });
+    
+   
   };
 
   return (
@@ -70,11 +107,13 @@ export default function Login() {
             >
               <Grid item md={12} xs={8}>
                 <TextField
+                  name="email"
                   label="Email"
                   variant="outlined"
                   fullWidth
                   required
                   autoFocus
+                  onChange={handleStateChange}
                   InputLabelProps={{
                     style: {
                       color: "black"
@@ -91,11 +130,13 @@ export default function Login() {
 
               <Grid item md={12} xs={8}>
                 <TextField
+                  name="password"
                   label="Password"
                   variant="outlined"
                   fullWidth
                   required
                   autoFocus
+                  onChange={handleStateChange}
                   InputLabelProps={{
                     style: {
                       color: "black"
@@ -109,6 +150,7 @@ export default function Login() {
                   type="password"
                 />
               </Grid>
+              <span style={{ color: 'red'}}>{error ? error : ''}</span>
               <Button
                 type="submit"
                 fullWidth
