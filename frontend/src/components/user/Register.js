@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 import { withStyles } from "@mui/styles";
 import { useNavigate } from "react-router";
 import { useRef } from "react";
+import { useCreateUserMutation } from "../../api/services/userApi";
 
 const theme = createTheme();
 
@@ -39,11 +40,13 @@ const theme = createTheme();
 
 export default function Register() {
   const mediaLessthanmd = useMediaQuery(theme.breakpoints.down("md"));
-  const userName = useRef();
+  const firstName = useRef();
+  const lastName = useRef();
   const email = useRef();
   const password = useRef();
   const confirmPassword = useRef();
   const navigate = useNavigate();
+  const [createUser, {isLoading, isError, isSuccess, ...props}] = useCreateUserMutation()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,17 +56,17 @@ export default function Register() {
         "password is not matching... Please write carefully"
       );
     } else {
-      const user = {
-        username: userName.current.value,
+      const reqBody = {
+        firstName: firstName.current.value,
+        lastName: lastName.current.value,
         email: email.current.value,
         password: password.current.value
       };
-    //   try {
-    //     await axios.post("/auth/register", user);
-    //     navigate("/login");
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
+        createUser(reqBody).unwrap().then(() =>{
+          navigate("/login")
+        }).catch ((err) =>{
+        console.log(err);
+      })
     }
   };
   return (
@@ -102,7 +105,8 @@ export default function Register() {
                 >
                   <Grid item md={12} xs={8}>
                     <TextField
-                      label="Username"
+                      name='firstName'
+                      label="FirstName"
                       variant="outlined"
                       fullWidth
                       required
@@ -120,9 +124,31 @@ export default function Register() {
                       type="text"
                     />
                   </Grid>
-
                   <Grid item md={12} xs={8}>
                     <TextField
+                      name='lastName'
+                      label="LastName"
+                      variant="outlined"
+                      fullWidth
+                      required
+                      autoFocus
+                      InputLabelProps={{
+                        style: {
+                          color: "black"
+                        }
+                      }}
+                      InputProps={{
+                        style: {
+                          color: "black"
+                        }
+                      }}
+                      type="text"
+                    />
+                  </Grid>
+                  
+                  <Grid item md={12} xs={8}>
+                    <TextField
+                      name="email"
                       label="Email"
                       variant="outlined"
                       fullWidth
@@ -144,6 +170,7 @@ export default function Register() {
 
                   <Grid item md={12} xs={8}>
                     <TextField
+                      name="password"
                       label="Password"
                       variant="outlined"
                       fullWidth
@@ -180,14 +207,6 @@ export default function Register() {
                         }
                       }}
                       type="password"
-                    />
-                  </Grid>
-                  <Grid item md={12} xs={8}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox value="allowExtraEmails" color="primary" />
-                      }
-                      label="I want to receive inspiration, marketing promotions and updates via email."
                     />
                   </Grid>
 
