@@ -13,6 +13,8 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Search from '../../utils/Search';
 import { grey, green, red, blue } from "@mui/material/colors";
+import { useLogoutUserQuery } from '../../api/services/userApi';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -22,9 +24,10 @@ export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [category, setCategory] = useState(null);
+  const navigate = useNavigate()
   useDispatch()
   const { data: categories, error, isLoading, isSuccess } = useGetAllCategoryQuery();
-
+  // const {logoutUser, isError, isSuccess: logoutSuccess}= useLogoutUserQuery()
   useEffect(() => {
     if (categories !== undefined) {
       setCategory(categories)
@@ -49,6 +52,10 @@ export default function Header() {
     setAnchorElUser(null);
   };
 
+  const logOut = () => {
+    
+    navigate('/')
+  }
   return (
     <>
       <ThemeProvider theme={lightTheme}>
@@ -167,6 +174,11 @@ export default function Header() {
                 <Link to={`/login`}style={{ textDecoration: 'none', color: grey[800]}}>
                   <Typography textAlign="center">Login</Typography>
                 </Link>
+              </Box>
+              <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}
+              onClick={useLogoutUserQuery()}
+            >
+                  <Typography textAlign="center">Logout</Typography>
               </Box>
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">

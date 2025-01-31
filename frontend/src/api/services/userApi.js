@@ -12,8 +12,9 @@ export const userApi = createApi({
                 // const { currentPage, keyword } = reqParams
             return {
                 // headers: 'headers',
-                url: '/register',
-                method: 'POST'
+                url: '/api/v1/register',
+                method: 'POST',
+                body: reqBody
             }
         },
             providesTags: ['product']
@@ -24,12 +25,21 @@ export const userApi = createApi({
                 // const { currentPage, keyword } = reqParams
             return {
                 // headers: 'headers',
-                url: 'api/v1/login',
+                url: '/api/v1/login',
                 method: 'POST',
                 body: reqBody
             }
         },
-            providesTags: ['product']
+            providesTags: ['login']
+        }),
+        logoutUser: build.query({
+            query: () =>(
+                {
+                url: `/api/v1/logout`,
+                method: 'GET'
+            }),
+            providesTags: ['logOut']
+     
         }),
         getUser: build.query({
             query: (params) => (
@@ -44,4 +54,4 @@ export const userApi = createApi({
 
 })
 
-export const {useCreateUserMutation, useLoginUserMutation ,useGetUserQuery} = userApi;
+export const {useCreateUserMutation, useLoginUserMutation ,useGetUserQuery, useLogoutUserQuery} = userApi;
