@@ -1,24 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import BoxCard from '../../utils/BoxCard'
 import { Grid, Box, Container, Pagination, Slider, Paper, Typography } from '@mui/material';
 import MetaData from '../../utils/MetaData';
-import { useGetAllProductQuery } from '../../api/services/productApi';
-import { useDispatch } from 'react-redux';
+import { useGetAllProductsQuery } from '../../api/services/productApi';
+import { useDispatch, useSelector} from 'react-redux';
 import Loader from '../../utils/Loader';
 import { useParams } from 'react-router-dom';
-import { useGetAllCategoryQuery } from '../../api/services/categoryApi';
 import { grey, green, red, blue } from "@mui/material/colors";
 import ReviewRating from '../../utils/ReviewRating';
+import { setProducts, filterProductByCategory } from '../../api/actions';
+import { Products } from '../product/Products';
+import { Category } from '../category/Category';
 export default function Home() {
 
-  useDispatch()
+  const dispatch = useDispatch()
   const [currentPage, setCurrentPage] = useState(1);
   const params = useParams();
   const keyword = params.keyword;
-  const [price, setPrice] = useState([1, 1000])
-  const [category, setCategory] = useState('')
+  const [price, setPrice] = useState([1, 150])
+  const [selectedCategory, setSelectedCategory] = useState('')
   const [rating, setRating] = useState(0)
-  const { data: categories, error: catError, isLoading: catIsLoading, isSuccess } = useGetAllCategoryQuery();
+  const {stateStore} = useSelector((state) => state)
+ 
+  const {categories, products} = stateStore
   const handlePriceChange = (event, newValue) => {
     setPrice(newValue);
   };
@@ -38,29 +42,51 @@ export default function Home() {
     },
   ];
 
-  const reqParams = {
-    keyword: keyword,
-    currentPage: currentPage,
-    price: price,
-    category: category,
-    rating: rating
-  }
-  const { data, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, ...props } = useGetAllProductQuery(reqParams);
-
-  const products = data?.products
-  const filteredProductCount = data?.filteredProductCount
-  const productCount = data?.productCount
-  const resPerPage = data?.resPerPage
-  let count = productCount;
-  if (keyword) {
-    count = filteredProductCount
-  }
-  const itemPerPage = Math.ceil(count / resPerPage)
+  
+ 
+  // const filteredProductCount = data?.filteredProductCount
+  // const productCount = data?.productCount
+  // const resPerPage = data?.resPerPage
+  // let count = productCount;
+  // if (keyword) {
+  //   count = filteredProductCount
+  // }
+  // const itemPerPage = Math.ceil(count / resPerPage)
   const handleChange = (event, value) => {
     setCurrentPage(value);
   };
+  const filteredProduct = useMemo(() => {
+    let filteredProducts = [];
+    if(!products || !products?.length){
+      return []
+    }
+    else{
+      filteredProducts = [...products]   
+      if (keyword) {
+        filteredProducts = filteredProducts.filter(product =>
+          product.name.toLowerCase().includes(keyword.toLowerCase())
+        );
+      }
+      if (selectedCategory) {
+        filteredProducts = filteredProducts.filter(product =>
+          product.category === selectedCategory
+        );
+      }
+      if (price[0] < price[1]) {
+        filteredProducts = filteredProducts.filter(product =>
+          product.price >= price[0] && product.price <= price[1]
+        );
+      }
+    }
+   
+    return filteredProducts;
 
-  // console.log('products-->', products)
+  }, [products, selectedCategory, keyword, price])
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category)
+    // dispatch(filterProductByCategory(category))
+  }
   return (
     <Box>
 
@@ -74,12 +100,12 @@ export default function Home() {
             <Box>
               <Slider
                 aria-label="Always visible"
-                defaultValue={[1, 1000]}
+                defaultValue={[1, 150]}
                 getAriaValueText={valueText}
                 step={1}
                 marks={marks}
                 min={1}
-                max={1000}
+                max={150}
                 value={price}
                 onChange={handlePriceChange}
                 valueLabelDisplay="auto"
@@ -105,44 +131,20 @@ export default function Home() {
             </Box>
           </Grid>
           <Grid item>
-            <Box>
-              <Typography variant='h6'>Categories</Typography>
-              <Box>
-                {
-                  catIsLoading ? <Loader /> :
-                    categories && categories?.categories?.map((category, index) =>
-                      <Paper elevation={0}
-                        sx={{ cursor: 'pointer', listStyleType: 'none', margin: '10px', padding: '10px', backgroundColor: grey[100] }} key={index}
-                        onClick={() => setCategory(category?.categoryName)}>
-                        {category?.categoryName}
-                      </Paper>
-                    )
-                }
-              </Box>
-            </Box>
-
+            
+                <Category categories={categories} handleCategoryChange={handleCategoryChange}/>
           </Grid>
         </Grid>
 
         <Grid item direction="row" md={9} sm={12} xs={12} spacing={2}>
-          <Grid item container>
-            {
-              prodIsLoading ? <Loader /> :
-                products && products?.map(product =>
-                  <Grid item md={3} sm={3} xs={6}>
-                    <BoxCard
-                      product={product}
-                    />
-                  </Grid>
-                )
-            }
-          </Grid>
-          <Box>
+          <Products products={filteredProduct} />
+         
+          {/* <Box>
             {resPerPage <= productCount && <Pagination
               count={itemPerPage}
               page={currentPage}
               onChange={handleChange} />}
-          </Box>
+          </Box> */}
         </Grid>
       </Grid>
 

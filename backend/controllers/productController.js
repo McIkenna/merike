@@ -44,6 +44,26 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
     
 })
 
+exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
+    try {
+        // Fetch all products from the database
+        const products = await Product.find();
+
+        // Count the total number of products
+        const productCount = products.length;
+
+        // Send the response with all products and the total count
+        res.status(200).json({
+            success: true,
+            productCount, // Total number of products
+            products, // All products in the database
+        });
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return next(new ErrorHandler(err.message, 400));
+    }
+});
+
 exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
     try{
         const product = await Product.findById(req.params.id);

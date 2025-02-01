@@ -7,19 +7,26 @@ export const productApi = createApi({
     reducerPath: "product",
     tagTypes: ["product"],
     endpoints: (build) => ({
-        getAllProduct: build.query({
-            query: ({ currentPage, keyword='', price, category, rating=0}) => {
-                // const { currentPage, keyword } = reqParams
-                let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&ratings[gte]=${rating}`
-                if(category){
-                    link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&category=${category}&ratings[gte]=${rating}`
-                }
-            return {
-                // headers: 'headers',
-                url: link,
+        // getAllProduct: build.query({
+        //     query: ({ currentPage, keyword='', price, rating=0}) => {
+        //         // const { currentPage, keyword } = reqParams
+        //         let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&ratings[gte]=${rating}`
+        //         // if(selectedCategory){
+        //         //     link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&category=${selectedCategory}&ratings[gte]=${rating}`
+        //         // }
+        //     return {
+        //         // headers: 'headers',
+        //         url: link,
+        //         method: 'GET'
+        //     }
+        // },
+        //     providesTags: ['product']
+        // }),
+        getAllProducts: build.query({
+            query: () => ({
+                url: '/api/v1/allProducts',
                 method: 'GET'
-            }
-        },
+            }),
             providesTags: ['product']
         }),
         getSingleProduct: build.query({
@@ -35,4 +42,4 @@ export const productApi = createApi({
 
 })
 
-export const {useGetAllProductQuery, useGetSingleProductQuery} = productApi;
+export const {useGetAllProductsQuery, useGetSingleProductQuery} = productApi;

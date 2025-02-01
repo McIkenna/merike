@@ -9,31 +9,42 @@ import { lightTheme, darkTheme } from '../../utils/Themes';
 import merikeLogo from '../../static/images/Merike logo only color.png'
 import DropDownSelect from '../../utils/DropDownSelect';
 import { useGetAllCategoryQuery } from '../../api/services/categoryApi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { Link } from 'react-router-dom';
 import Search from '../../utils/Search';
 import { grey, green, red, blue } from "@mui/material/colors";
 import { useLogoutUserQuery } from '../../api/services/userApi';
 import { useNavigate } from 'react-router-dom';
-
+import { setCategories, setProducts } from '../../api/actions';
+import { useGetAllProductsQuery } from '../../api/services/productApi';
 
 
 export default function Header() {
-  const pages = ['Products', 'Pricing', 'Blog', 'Category'];
+  const pages = ['Products', 'Pricing', 'Blog'];
   const settings = ['Profile', 'Account', 'Dashboard'];
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [category, setCategory] = useState(null);
+  // const [category, setCategory] = useState(null);
   const navigate = useNavigate()
-  useDispatch()
-  const { data: categories, error, isLoading, isSuccess } = useGetAllCategoryQuery();
+  const dispatch = useDispatch()
+  const { data, error, isLoading, isSuccess } = useGetAllCategoryQuery();
+  const { data: prodData, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, ...props } = useGetAllProductsQuery();
   // const {logoutUser, isError, isSuccess: logoutSuccess}= useLogoutUserQuery()
-  useEffect(() => {
-    if (categories !== undefined) {
-      setCategory(categories)
+    useEffect(() => {
+    if (data !== undefined) {
+      dispatch(setCategories(data))
     }
-  }, [categories])
+  }, [data])
 
+  useEffect(() => {
+    if (prodData !== undefined) {
+      dispatch(setProducts(prodData?.products))
+    }
+  }, [prodData])
+
+  console.log('prodData', prodData)
+  const {stateStore} = useSelector(state => state)
+  const {categories, products} = stateStore
   const handleOpenNavMenu = (event) => {
     console.log('event', event)
     setAnchorElNav(event.currentTarget);
@@ -100,7 +111,7 @@ export default function Header() {
                   <MenuIcon />
                 </IconButton>
 
-                <Menu
+                {/* <Menu
                   id="menu-appbar"
                   anchorEl={anchorElNav}
                   anchorOrigin={{
@@ -119,14 +130,14 @@ export default function Header() {
                   }}
                 >
                   {pages.map((page) => (
-                    page === 'Category' ? <DropDownSelect categories={category} /> :
+                    page === 'Category' ? <DropDownSelect categories={categories} /> :
                       <MenuItem key={page} onClick={() => { handleCloseNavMenu() }}>
                         <Typography variant="display3" textAlign="center">{page}</Typography>
                       </MenuItem>
                   )
                   )}
 
-                </Menu>
+                </Menu> */}
               </Box>
               <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, paddingRight: "10px" }}>
                 <img src={merikeLogo} style={{ width: '100px' }} />
@@ -152,7 +163,6 @@ export default function Header() {
 
               <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                 {pages.map((page) => (
-                  page === 'Category' ? <DropDownSelect categories={category} /> :
                     <Button
                       key={page}
                       onClick={() => { handleCloseNavMenu() }}
