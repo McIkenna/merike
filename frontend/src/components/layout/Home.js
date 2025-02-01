@@ -129,7 +129,7 @@ export default function Home() {
             {
               prodIsLoading ? <Loader /> :
                 products && products?.map(product =>
-                  <Grid item md={4} sm={6} xs={12}>
+                  <Grid item md={3} sm={3} xs={6}>
                     <BoxCard
                       product={product}
                     />

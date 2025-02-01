@@ -12,7 +12,7 @@ function App() {
     <Router>
   <div>
       <Header/>
-      <Box sx={{ padding: '10%', }}>
+      <Box sx={{ padding: '2%', }}>
       <Routes>
       <Route path='/' Component={Home} exact/>
       <Route path='/login' Component={Login} exact/>
