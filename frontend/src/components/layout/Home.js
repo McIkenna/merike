@@ -5,23 +5,26 @@ import MetaData from '../../utils/MetaData';
 import { useGetAllProductsQuery } from '../../api/services/productApi';
 import { useDispatch, useSelector} from 'react-redux';
 import Loader from '../../utils/Loader';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, useNavigate} from 'react-router-dom';
 import { grey, green, red, blue } from "@mui/material/colors";
 import ReviewRating from '../../utils/ReviewRating';
-import { setProducts, filterProductByCategory } from '../../api/actions';
+import { setKeyword } from '../../api/actions';
 import { Products } from '../product/Products';
 import { Category } from '../category/Category';
+
 export default function Home() {
 
   const dispatch = useDispatch()
+  const location = useLocation()
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1);
-  const params = useParams();
-  const keyword = params.keyword;
+  const [keyword, setKeyword] = useState('')
+  const keyparam = new URLSearchParams(location.search)
   const [price, setPrice] = useState([1, 150])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [rating, setRating] = useState(0)
   const {stateStore} = useSelector((state) => state)
- 
+
   const {categories, products} = stateStore
   const handlePriceChange = (event, newValue) => {
     setPrice(newValue);
@@ -42,6 +45,9 @@ export default function Home() {
     },
   ];
 
+  useEffect(() =>{
+    setKeyword(keyparam.get('search'));
+  }, [keyparam])
   
  
   // const filteredProductCount = data?.filteredProductCount
@@ -61,18 +67,21 @@ export default function Home() {
       return []
     }
     else{
-      filteredProducts = [...products]   
+      filteredProducts = [...products] 
       if (keyword) {
         filteredProducts = filteredProducts.filter(product =>
-          product.name.toLowerCase().includes(keyword.toLowerCase())
+          product.name.toLowerCase().includes(keyword.toLowerCase()) ||
+          product.category.toLowerCase().includes(keyword.toLowerCase()) ||
+          product.description.toLowerCase().includes(keyword.toLowerCase())
+
         );
       }
-      if (selectedCategory) {
+      else if (selectedCategory) {
         filteredProducts = filteredProducts.filter(product =>
           product.category === selectedCategory
         );
       }
-      if (price[0] < price[1]) {
+      else if (price[0] < price[1]) {
         filteredProducts = filteredProducts.filter(product =>
           product.price >= price[0] && product.price <= price[1]
         );
@@ -85,6 +94,9 @@ export default function Home() {
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category)
+    keyparam.delete('search');
+    navigate('');
+    
     // dispatch(filterProductByCategory(category))
   }
   return (
@@ -113,7 +125,7 @@ export default function Home() {
               />
             </Box>
             </Box>
-            <Box>
+            {/* <Box>
               <Typography variant='h6'>Ratings</Typography>
               <Box>
                 {
@@ -128,7 +140,7 @@ export default function Home() {
                     )
                 }
               </Box>
-            </Box>
+            </Box> */}
           </Grid>
           <Grid item>
             

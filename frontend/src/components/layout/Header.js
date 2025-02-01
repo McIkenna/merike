@@ -64,7 +64,6 @@ export default function Header() {
   };
 
   const logOut = () => {
-    
     navigate('/')
   }
   return (

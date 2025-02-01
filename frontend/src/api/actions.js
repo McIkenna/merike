@@ -1,4 +1,4 @@
 import reducers from './reducers'
 
-export const { setCategories, setProducts } = reducers.actions
+export const { setCategories, setProducts, setKeyword } = reducers.actions
 

@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     products: {},
     categories: {},
+    keyword: ''
 }
 
 const reducers = createSlice({
@@ -19,6 +20,12 @@ const reducers = createSlice({
             return {
                ...state,
                 categories: action.payload,
+            }
+        },
+        setKeyword: (state, action) => {
+            return {
+               ...state,
+                keyword: action.payload,
             }
         }
     },

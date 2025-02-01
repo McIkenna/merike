@@ -2,47 +2,26 @@ import React, {useState, useEffect, useRef} from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled, alpha } from '@mui/material/styles';
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useLocation} from 'react-router-dom'
 import {Button, Box} from '@mui/material';
 import {grey, green, red} from "@mui/material/colors";
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import { useDispatch, useSelector} from'react-redux';
+import { setKeyword } from '../api/actions';
 
-const SearchDiv = styled('div')(({ theme }) => ({
-    // position: 'relative',
-    // borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.background.default, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.background.default, 0.25),
-    },
-    // marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  }));
+
   
-  const SearchIconWrapper = styled(SearchIcon)(({ theme }) => ({
-    color: theme.palette.background.paper,
-  }));
 
-  const SearchButton = styled(Button)(({ theme }) => ({
-    // height: '100%',
-    // position: 'absolute',
-    borderRadius: 0,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: theme.palette.background.default,
-    backgroundColor: green[600],
+  const SearchButton = styled(IconButton)(({ theme }) => ({
     '&:hover': {
-        backgroundColor: alpha(green[600], 0.85),
+        color: grey[500]
       },
   }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
+    
     '& .MuiInputBase-input': {
       padding: theme.spacing(1, 1, 1, 0),
       // vertical padding + font size from searchIcon
@@ -57,23 +36,29 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 const Search = () => {
-    const [keyword, setKeyword] = useState('');
+  const dispatch = useDispatch();
+  const {stateStore} = useSelector(state => state)
+  const {keyword} = stateStore
     const [searchTimeout, setSearchTimeout] = useState(null);
     const searchInputRef = useRef(null);
     const navigate = useNavigate()
+    const location = useLocation()
 
     const handleSearchSubmit = () => {
+      const keyparam = new URLSearchParams(location.search)
         if(keyword.trim()){
-            navigate(`/search/${keyword}`);
+            keyparam.set('search', keyword)
+            navigate(`?search=${keyword}`);
         }else{
-            navigate(`/`);
+          keyparam.delete('search');
         }
+       
 
     }
     const handleKeywordChange = (e) => {
         e.preventDefault();
         
-        setKeyword(e.target.value)
+        dispatch(setKeyword(e.target.value))
 
         // if (searchTimeout) {
         //     clearTimeout(searchTimeout);
@@ -91,31 +76,21 @@ const Search = () => {
     }
     
   return (
-    <form onSubmit={handleSearchSubmit}>
-        <Box sx={{ display: 'flex'}}>
+        <Box sx={{ display: 'flex', backgroundColor: grey[200], borderRadius: '20px'}}>
 
-        <SearchDiv>
-            {/* <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper> */}
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-              value={keyword}
-              onChange={handleKeywordChange}
-              inputRef={searchInputRef}
-            //   onFocus={}
-            //   onKeyDown={searchHandler}
-            />
-         
-          </SearchDiv>
-          <SearchButton
-          onClick={handleSearchSubmit}
-            >
-               <SearchIconWrapper/>
-            </SearchButton>
+<StyledInputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Search Google Maps"
+        inputProps={{ 'aria-label': 'search google maps' }}
+        onChange={handleKeywordChange}
+        value={keyword}
+        
+      />
+      <SearchButton type="button" sx={{ p: '10px' }} aria-label="search"
+      onClick={handleSearchSubmit}>
+        <SearchIcon />
+      </SearchButton>
             </Box>
-        </form>
   )
 }
 
