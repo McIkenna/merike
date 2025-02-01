@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 const initialState = {
     products: {},
     categories: {},
-    keyword: ''
+    selectedCategory: '',
+    priceFilter: [0, 500],
 }
 
 const reducers = createSlice({
@@ -22,10 +22,16 @@ const reducers = createSlice({
                 categories: action.payload,
             }
         },
-        setKeyword: (state, action) => {
+        setSelectedCategory: (state, action) => {
             return {
                ...state,
-                keyword: action.payload,
+                selectedCategory: action.payload,
+            }
+        },
+        setPriceFilter: (state, action) => {
+            return {
+               ...state,
+                priceFilter: action.payload,
             }
         }
     },

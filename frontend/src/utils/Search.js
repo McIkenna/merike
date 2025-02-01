@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { useDispatch, useSelector} from'react-redux';
 import { setKeyword } from '../api/actions';
+import { set } from 'mongoose';
 
 
   
@@ -35,44 +36,33 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }));
 
 
-const Search = () => {
-  const dispatch = useDispatch();
-  const {stateStore} = useSelector(state => state)
-  const {keyword} = stateStore
-    const [searchTimeout, setSearchTimeout] = useState(null);
-    const searchInputRef = useRef(null);
+const Search = ({pageReloaded}) => {
+  // const dispatch = useDispatch();
+  // const {stateStore} = useSelector(state => state)
+  // const {keyword} = stateStore
+  const [search, setSearch] = useState('')
+    // const [searchTimeout, setSearchTimeout] = useState(null);
+    // const searchInputRef = useRef(null);
     const navigate = useNavigate()
     const location = useLocation()
 
+    useEffect(() => {
+      setSearch('')
+    }, [pageReloaded])
+
     const handleSearchSubmit = () => {
       const keyparam = new URLSearchParams(location.search)
-        if(keyword.trim()){
-            keyparam.set('search', keyword)
-            navigate(`?search=${keyword}`);
+        if(search.trim()){
+            keyparam.set('search', search)
+            navigate(`?search=${search}`);
         }else{
           keyparam.delete('search');
         }
-       
+        // dispatch(setKeyword(search))
 
     }
     const handleKeywordChange = (e) => {
-        e.preventDefault();
-        
-        dispatch(setKeyword(e.target.value))
-
-        // if (searchTimeout) {
-        //     clearTimeout(searchTimeout);
-        //   }
-      
-        //   // Set a new timeout for 4 seconds after the user stops typing
-        //   setSearchTimeout(
-        //     setTimeout(() => {
-        //         handleSearchSubmit(keyword)
-        //       // Your search logic here
-        //       console.log('Search triggered:', );
-        //     }, 4000)
-        //   );
-
+        setSearch(e.target.value)
     }
     
   return (
@@ -83,11 +73,11 @@ const Search = () => {
         placeholder="Search Google Maps"
         inputProps={{ 'aria-label': 'search google maps' }}
         onChange={handleKeywordChange}
-        value={keyword}
+        value={search}
         
       />
       <SearchButton type="button" sx={{ p: '10px' }} aria-label="search"
-      onClick={handleSearchSubmit}>
+      onClick={()=>handleSearchSubmit()}>
         <SearchIcon />
       </SearchButton>
             </Box>

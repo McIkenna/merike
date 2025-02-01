@@ -15,7 +15,7 @@ import Search from '../../utils/Search';
 import { grey, green, red, blue } from "@mui/material/colors";
 import { useLogoutUserQuery } from '../../api/services/userApi';
 import { useNavigate } from 'react-router-dom';
-import { setCategories, setProducts } from '../../api/actions';
+import { setCategories, setProducts, setSelectedCategory, setPriceFilter } from '../../api/actions';
 import { useGetAllProductsQuery } from '../../api/services/productApi';
 
 
@@ -27,8 +27,9 @@ export default function Header() {
   // const [category, setCategory] = useState(null);
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { data, error, isLoading, isSuccess } = useGetAllCategoryQuery();
-  const { data: prodData, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, ...props } = useGetAllProductsQuery();
+  const { data, error, isLoading, isSuccess, refetch: categoryRefetch } = useGetAllCategoryQuery();
+  const { data: prodData, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, refetch: productRefetch } = useGetAllProductsQuery();
+  const [ pageReloaded, setPageReloaded] = useState(false)
   // const {logoutUser, isError, isSuccess: logoutSuccess}= useLogoutUserQuery()
     useEffect(() => {
     if (data !== undefined) {
@@ -43,8 +44,6 @@ export default function Header() {
   }, [prodData])
 
   console.log('prodData', prodData)
-  const {stateStore} = useSelector(state => state)
-  const {categories, products} = stateStore
   const handleOpenNavMenu = (event) => {
     console.log('event', event)
     setAnchorElNav(event.currentTarget);
@@ -66,6 +65,15 @@ export default function Header() {
   const logOut = () => {
     navigate('/')
   }
+
+  const reloadPage = () => {
+    categoryRefetch()
+    productRefetch()
+    dispatch(setSelectedCategory(''))
+    dispatch(setPriceFilter([1, 150]))
+    setPageReloaded(true)
+    navigate('/')
+  }
   return (
     <>
       <ThemeProvider theme={lightTheme}>
@@ -73,12 +81,12 @@ export default function Header() {
           <Container maxWidth="xl">
             <Toolbar disableGutters>
               <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px" }}>
-                <Link to="/">
+                <Link onClick={() => {reloadPage()}}>
                   <img src={merikeLogo} style={{ width: '100px' }} />
                 </Link>
               </Box>
 
-              <Link to="/" style={{ textDecoration: 'none' }}>
+              <Link onClick={() => {reloadPage()}} style={{ textDecoration: 'none' }}>
                 <Typography
                   variant="h6"
                   noWrap
@@ -172,7 +180,7 @@ export default function Header() {
                 ))}
               </Box>
 
-              <Search />
+              <Search pageReloaded={pageReloaded}/>
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                 <ShoppingCart
                   cartstyle={{ size: 2, color: "#000", circleBg: "#EBEBE8" }}

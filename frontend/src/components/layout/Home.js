@@ -8,7 +8,7 @@ import Loader from '../../utils/Loader';
 import { useParams, useLocation, useNavigate} from 'react-router-dom';
 import { grey, green, red, blue } from "@mui/material/colors";
 import ReviewRating from '../../utils/ReviewRating';
-import { setKeyword } from '../../api/actions';
+import { setSelectedCategory, setPriceFilter } from '../../api/actions';
 import { Products } from '../product/Products';
 import { Category } from '../category/Category';
 
@@ -20,30 +20,38 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [keyword, setKeyword] = useState('')
   const keyparam = new URLSearchParams(location.search)
-  const [price, setPrice] = useState([1, 150])
-  const [selectedCategory, setSelectedCategory] = useState('')
+  // const [price, setPrice] = useState([1, 150])
+  // const [selectedCategory, setSelectedCategory] = useState('')
   const [rating, setRating] = useState(0)
   const {stateStore} = useSelector((state) => state)
+  const [localproducts, setLocalProducts] = useState(null)
 
-  const {categories, products} = stateStore
+  const {categories, products, selectedCategory, priceFilter} = stateStore
   const handlePriceChange = (event, newValue) => {
-    setPrice(newValue);
+    dispatch(setPriceFilter(newValue));
   };
 
   const valueText = (value) => {
     return `$${value}`;
   }
 
-  const marks = [
-    {
-      value: 1,
-      label: '$1',
-    },
-    {
-      value: 1000,
-      label: '$1000',
-    },
-  ];
+  const generateMarks = (min, max, step) => {
+    const marks = [];
+    for (let value = min; value <= max; value += step) {
+      marks.push({
+        value: value,
+        label: `$${value}`,
+      });
+    }
+    return marks;
+  };
+  
+  // Example usage
+  const min = 0;
+  const max = 500;
+  const step = 50;
+  
+  const marks = generateMarks(min, max, step);
 
   useEffect(() =>{
     setKeyword(keyparam.get('search'));
@@ -58,44 +66,54 @@ export default function Home() {
   //   count = filteredProductCount
   // }
   // const itemPerPage = Math.ceil(count / resPerPage)
+
+  console.log('selectedCategory -->', selectedCategory)
+  useEffect(() =>{
+    // setLocalProducts(products)
+    filteredProduct()
+  }, [products, selectedCategory, keyword, priceFilter])
+
+  console.log('localProd -->, ', localproducts)
+  console.log('selectedCategory -->', selectedCategory)
+  console.log('keyword -->', keyword)
+
   const handleChange = (event, value) => {
     setCurrentPage(value);
   };
-  const filteredProduct = useMemo(() => {
-    let filteredProducts = [];
-    if(!products || !products?.length){
-      return []
+  const filteredProduct = () => {
+    if (!products || !products.length) {
+      setLocalProducts(null);
+      return;
     }
-    else{
-      filteredProducts = [...products] 
-      if (keyword) {
-        filteredProducts = filteredProducts.filter(product =>
-          product.name.toLowerCase().includes(keyword.toLowerCase()) ||
-          product.category.toLowerCase().includes(keyword.toLowerCase()) ||
-          product.description.toLowerCase().includes(keyword.toLowerCase())
-
-        );
-      }
-      else if (selectedCategory) {
-        filteredProducts = filteredProducts.filter(product =>
-          product.category === selectedCategory
-        );
-      }
-      else if (price[0] < price[1]) {
-        filteredProducts = filteredProducts.filter(product =>
-          product.price >= price[0] && product.price <= price[1]
-        );
-      }
+  
+    let filteredProducts = [...products];
+  
+    if (keyword) {
+      filteredProducts = filteredProducts.filter(product =>
+        product.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        product.category.toLowerCase().includes(keyword.toLowerCase()) ||
+        product.description.toLowerCase().includes(keyword.toLowerCase())
+      );
     }
-   
-    return filteredProducts;
-
-  }, [products, selectedCategory, keyword, price])
+  
+    if (selectedCategory) {
+      filteredProducts = filteredProducts.filter(product =>
+        product.category === selectedCategory
+      );
+    }
+  
+    if (priceFilter[0] < priceFilter[1]) {
+      filteredProducts = filteredProducts.filter(product =>
+        product.price >= priceFilter[0] && product.price <= priceFilter[1]
+      );
+    }
+  
+    setLocalProducts(filteredProducts);
+  };
 
   const handleCategoryChange = (category) => {
-    setSelectedCategory(category)
-    keyparam.delete('search');
-    navigate('');
+    dispatch(setSelectedCategory(category))
+    // keyparam.delete('search');
     
     // dispatch(filterProductByCategory(category))
   }
@@ -116,9 +134,9 @@ export default function Home() {
                 getAriaValueText={valueText}
                 step={1}
                 marks={marks}
-                min={1}
+                min={0}
                 max={150}
-                value={price}
+                value={priceFilter}
                 onChange={handlePriceChange}
                 valueLabelDisplay="auto"
                 valueLabelFormat={value => `$${value}`}
@@ -144,12 +162,12 @@ export default function Home() {
           </Grid>
           <Grid item>
             
-                <Category categories={categories} handleCategoryChange={handleCategoryChange}/>
+                <Category categories={categories} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory}/>
           </Grid>
         </Grid>
 
         <Grid item direction="row" md={9} sm={12} xs={12} spacing={2}>
-          <Products products={filteredProduct} />
+          <Products products={localproducts} />
          
           {/* <Box>
             {resPerPage <= productCount && <Pagination

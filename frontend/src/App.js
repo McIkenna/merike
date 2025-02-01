@@ -17,7 +17,6 @@ function App() {
       <Route path='/' Component={Home} exact/>
       <Route path='/login' Component={Login} exact/>
       <Route path='/register' Component={Register} exact/>
-      <Route path='/search/:keyword' Component={Home}/>
       <Route path='/product/:id' Component={ProductDetail} exact/>       
       </Routes>
       </Box>

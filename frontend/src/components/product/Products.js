@@ -1,8 +1,12 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Box, Grid} from '@mui/material'
 import Loader from '../../utils/Loader'
 import BoxCard from '../../utils/BoxCard'
 export const Products = ({products}) => {
+    console.log('product in products component -->', products)
+    useEffect(() =>{
+
+    }, [products])
     // console.log(Object.value(products))
   return (
     <Box>
