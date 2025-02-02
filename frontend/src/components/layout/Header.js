@@ -17,6 +17,7 @@ import { useLogoutUserQuery } from '../../api/services/userApi';
 import { useNavigate } from 'react-router-dom';
 import { setCategories, setProducts, setSelectedCategory, setPriceFilter } from '../../api/actions';
 import { useGetAllProductsQuery } from '../../api/services/productApi';
+import Banner from './Banner';
 
 
 export default function Header() {
@@ -233,6 +234,7 @@ export default function Header() {
             </Toolbar>
           </Container>
         </AppBar>
+        <Banner />
       </ThemeProvider>
     </>
   )

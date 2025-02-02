@@ -11,6 +11,7 @@ import ReviewRating from '../../utils/ReviewRating';
 import { setSelectedCategory, setPriceFilter } from '../../api/actions';
 import { Products } from '../product/Products';
 import { Category } from '../category/Category';
+import CarouselBanner from '../../utils/CarouselBanner';
 
 export default function Home() {
 
@@ -121,7 +122,7 @@ export default function Home() {
     <Box>
 
       <MetaData title={'Buy Best Products Online'} />
-
+      <CarouselBanner />
       <Grid container spacing={2} justify="center">
         <Grid item container direction="column" md={3} sm={12} xs={12} spacing={2}>
           <Grid item>
