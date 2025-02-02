@@ -68,8 +68,8 @@ export default function Header() {
   }
 
   const reloadPage = () => {
-    categoryRefetch()
-    productRefetch()
+    // categoryRefetch()
+    // productRefetch()
     dispatch(setSelectedCategory(''))
     dispatch(setPriceFilter([1, 150]))
     setPageReloaded(true)
@@ -81,18 +81,19 @@ export default function Header() {
         <AppBar position="static">
           <Container maxWidth="xl">
             <Toolbar disableGutters>
-              <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px" }}>
-                <Link onClick={() => {reloadPage()}}>
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px",  }}
+              onClick={() => {reloadPage()}}>
+              
                   <img src={merikeLogo} style={{ width: '100px' }} />
-                </Link>
+                
               </Box>
 
-              <Link onClick={() => {reloadPage()}} style={{ textDecoration: 'none' }}>
+              <Box style={{ textDecoration: 'none' }}>
                 <Typography
                   variant="h6"
                   noWrap
                   component="a"
-                  href="#app-bar-with-responsive-menu"
+                  href="/"
                   sx={{
                     mr: 2,
                     display: { xs: 'none', md: 'flex' },
@@ -102,10 +103,11 @@ export default function Header() {
                     color: blue[800],
                     textDecoration: 'none',
                   }}
+                  onClick={() => {reloadPage()}} 
                 >
                   Merike
                 </Typography>
-              </Link>
+              </Box>
 
               <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                 <IconButton
@@ -154,7 +156,7 @@ export default function Header() {
                 variant="h5"
                 noWrap
                 component="a"
-                href="#app-bar-with-responsive-menu"
+                href="/"
                 sx={{
                   mr: 2,
                   display: { xs: 'flex', md: 'none' },
