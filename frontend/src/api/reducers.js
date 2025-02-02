@@ -4,6 +4,11 @@ const initialState = {
     categories: {},
     selectedCategory: '',
     priceFilter: [0, 500],
+    pricePerItem: 0,
+    qtyPerItem: 0,
+    totalPrice: 0,
+    totalQuantity: 0,
+    cartItems: [],
 }
 
 const reducers = createSlice({
@@ -33,8 +38,38 @@ const reducers = createSlice({
                ...state,
                 priceFilter: action.payload,
             }
+        },
+        setPricePerItem: (state, action) => {
+            return {
+               ...state,
+                pricePerItem: action.payload,
+            }
+        },
+        setQtyPerItem: (state, action) => {
+            return {
+               ...state,
+                qtyPerItem: action.payload,
+            }
+        },
+        setTotalPrice: (state, action) => {
+            return {
+               ...state,
+                totalPrice: action.payload,
+            }
+        },
+        setTotalQuantity: (state, action) => {
+            return {
+               ...state,
+                totalQuantity: action.payload,
+            }
+        },
+        setCartItems: (state, action) => {
+            return {
+               ...state,
+                cartItems: action.payload,
+            }
         }
-    },
+    }
 })
 
 export default reducers

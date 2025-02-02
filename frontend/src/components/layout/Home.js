@@ -74,9 +74,9 @@ export default function Home() {
     filteredProduct()
   }, [products, selectedCategory, keyword, priceFilter])
 
-  console.log('localProd -->, ', localproducts)
-  console.log('selectedCategory -->', selectedCategory)
-  console.log('keyword -->', keyword)
+  // console.log('localProd -->, ', localproducts)
+  // console.log('selectedCategory -->', selectedCategory)
+  // console.log('keyword -->', keyword)
 
   const handleChange = (event, value) => {
     setCurrentPage(value);

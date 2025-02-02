@@ -4,7 +4,7 @@ import Footer from './components/layout/Footer';
 import Home from './components/layout/Home';
 import { Container, Box } from '@mui/material';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
-import ProductDetail from './components/layout/ProductDetail';
+import ProductDetail from './components/product/ProductDetail';
 import Login from './components/user/Login';
 import Register from './components/user/Register';
 function App() {

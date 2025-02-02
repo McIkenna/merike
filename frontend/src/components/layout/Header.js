@@ -32,6 +32,8 @@ export default function Header() {
   const { data: prodData, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, refetch: productRefetch } = useGetAllProductsQuery();
   const [ pageReloaded, setPageReloaded] = useState(false)
   // const {logoutUser, isError, isSuccess: logoutSuccess}= useLogoutUserQuery()
+  const {stateStore} = useSelector((state) => state)
+  const {totalQuantity} = stateStore
     useEffect(() => {
     if (data !== undefined) {
       dispatch(setCategories(data))
@@ -81,7 +83,7 @@ export default function Header() {
         <AppBar position="static">
           <Container maxWidth="xl">
             <Toolbar disableGutters>
-              <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px",  }}
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px", cursor: 'pointer' }}
               onClick={() => {reloadPage()}}>
               
                   <img src={merikeLogo} style={{ width: '100px' }} />
@@ -93,7 +95,6 @@ export default function Header() {
                   variant="h6"
                   noWrap
                   component="a"
-                  href="/"
                   sx={{
                     mr: 2,
                     display: { xs: 'none', md: 'flex' },
@@ -102,6 +103,7 @@ export default function Header() {
                     letterSpacing: '.3rem',
                     color: blue[800],
                     textDecoration: 'none',
+                    cursor: 'pointer'
                   }}
                   onClick={() => {reloadPage()}} 
                 >
@@ -187,6 +189,7 @@ export default function Header() {
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                 <ShoppingCart
                   cartstyle={{ size: 2, color: "#000", circleBg: "#EBEBE8" }}
+                  totalQuantity={totalQuantity}
                 //style={{}} prop can be added
                 />
               </Box>

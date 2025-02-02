@@ -4,7 +4,7 @@ import Loader from '../../utils/Loader'
 import BoxCard from '../../utils/BoxCard'
 import ProdGrid from './ProdGrid'
 export const Products = ({ products }) => {
-  console.log('product in products component -->', products)
+  // console.log('product in products component -->', products)
   useEffect(() => {
 
   }, [products])
