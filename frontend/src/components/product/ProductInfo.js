@@ -24,6 +24,7 @@ export const ProductInfo = ({product, setOpenSnackbar, setSnackbarMessage}) => {
         const newItem = {
             name: product.name,
             productId: product._id,
+            image: product.images[0].url,
             price: product.price,
             quantity: qtyPerItem,
             total: product.price * qtyPerItem
