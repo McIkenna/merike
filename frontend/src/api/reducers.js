@@ -6,9 +6,9 @@ const initialState = {
     priceFilter: [0, 500],
     pricePerItem: 0,
     qtyPerItem: 0,
-    totalPrice: 0,
-    totalQuantity: 0,
-    cartItems: [],
+    totalPrice: localStorage.getItem('totalPrice') ? JSON.parse(localStorage.getItem('totalPrice')) : 0,
+    totalQuantity: localStorage.getItem('totalQuantity') ? JSON.parse(localStorage.getItem('totalQuantity')) : 0,
+    cartItems: localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [],
 }
 
 const reducers = createSlice({
@@ -68,8 +68,12 @@ const reducers = createSlice({
                ...state,
                 cartItems: action.payload,
             }
+            
         }
+
+        
     }
+    
 })
 
 export default reducers

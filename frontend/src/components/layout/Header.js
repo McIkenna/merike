@@ -186,7 +186,8 @@ export default function Header() {
               </Box>
 
               <Search pageReloaded={pageReloaded}/>
-              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
+              onClick={() => navigate('/cart')}>
                 <ShoppingCart
                   cartstyle={{ size: 2, color: "#000", circleBg: "#EBEBE8" }}
                   totalQuantity={totalQuantity}

@@ -68,7 +68,7 @@ export default function Home() {
   // }
   // const itemPerPage = Math.ceil(count / resPerPage)
 
-  console.log('selectedCategory -->', selectedCategory)
+  // console.log('selectedCategory -->', selectedCategory)
   useEffect(() =>{
     // setLocalProducts(products)
     filteredProduct()

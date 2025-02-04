@@ -7,16 +7,18 @@ import { AddOutlined, RemoveOutlined } from '@mui/icons-material'
 import { setQtyPerItem, setTotalPrice, setPricePerItem, setTotalQuantity, setCartItems } from '../../api/actions';
 import { useDispatch, useSelector } from 'react-redux';
 
-export const ProductInfo = ({product}) => {
+
+export const ProductInfo = ({product, setOpenSnackbar, setSnackbarMessage}) => {
     const dispatch = useDispatch();
     const { stateStore } = useSelector(state => state);
     const { qtyPerItem, totalPrice, pricePerItem, totalQuantity,  cartItems } = stateStore;
-    console.log('qtyPerItem', qtyPerItem)
     const addItem = () => {
         dispatch(setQtyPerItem(qtyPerItem + 1));
     };
     const removeItem = () => {
-        dispatch(setQtyPerItem(qtyPerItem - 1));
+        if (qtyPerItem > 0){
+            dispatch(setQtyPerItem(qtyPerItem - 1));
+        }
     }
     const addItemToCart = () => {
         const newItem = {
@@ -28,22 +30,37 @@ export const ProductInfo = ({product}) => {
         };
 
         const existingItem = cartItems.find(item => item.productId === newItem.productId);
-
+        let updatedCartItems;
+        let updatedCartPrice;
+        let updatedCartQuantity;
         if (existingItem) {
-            const updatedCartItems = cartItems.map(item =>
+             updatedCartItems = cartItems.map(item =>
                 item.productId === newItem.productId
                     ? { ...item, quantity: item.quantity + newItem.quantity, total: item.total + newItem.total }
                     : item
             );
+            updatedCartPrice = updatedCartItems.reduce((acc, item) => acc + item.total, 0)
+            updatedCartQuantity = updatedCartItems.reduce((acc, item) => acc + item.quantity, 0)
             dispatch(setCartItems(updatedCartItems));
-            dispatch(setTotalPrice(updatedCartItems.reduce((acc, item) => acc + item.total, 0)));
-            dispatch(setTotalQuantity(updatedCartItems.reduce((acc, item) => acc + item.quantity, 0)));
+            dispatch(setTotalPrice(updatedCartPrice));
+            dispatch(setTotalQuantity(updatedCartQuantity));
+            setOpenSnackbar(true);
+            setSnackbarMessage(`increased ${newItem.name} quantity`);
         } else {
-            dispatch(setCartItems([...cartItems, newItem]));
-            dispatch(setTotalPrice(totalPrice + newItem.total));
-            dispatch(setTotalQuantity(totalQuantity + qtyPerItem));
+            updatedCartItems = [...cartItems, newItem];
+            updatedCartPrice = totalPrice + newItem.total;
+            updatedCartQuantity = totalQuantity + qtyPerItem;
+            dispatch(setCartItems(updatedCartItems));
+            dispatch(setTotalPrice(updatedCartPrice));
+            dispatch(setTotalQuantity(updatedCartQuantity));
+            setOpenSnackbar(true);
+            setSnackbarMessage(`${newItem.name} added to cart`);
+           
         }
 
+        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+        localStorage.setItem('totalPrice', JSON.stringify(updatedCartPrice));
+        localStorage.setItem('totalQuantity', JSON.stringify(updatedCartQuantity));
         dispatch(setPricePerItem(0));
         dispatch(setQtyPerItem(0));
     };
@@ -106,7 +123,7 @@ export const ProductInfo = ({product}) => {
 
                     </Box>
                     <Button variant="contained" color="primary"
-                      onClick={() => addItemToCart()}>
+                      onClick={() =>addItemToCart()}>
                       Add to Cart
                     </Button>
                   </Box>
@@ -119,7 +136,7 @@ export const ProductInfo = ({product}) => {
                   <Typography variant="body1" paragraph paddingTop={'20px'}>
                     {product.description}
                   </Typography>
-                </Box>
+              </Box>
 
   )
 }
