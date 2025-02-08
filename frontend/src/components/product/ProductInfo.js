@@ -25,9 +25,9 @@ export const ProductInfo = ({product, setOpenSnackbar, setSnackbarMessage}) => {
             name: product.name,
             productId: product._id,
             image: product.images[0].url,
-            price: product.price,
+            price: product.price?.toFixed(2),
             quantity: qtyPerItem,
-            total: product.price * qtyPerItem
+            total: product.price?.toFixed(2) * qtyPerItem
         };
 
         const existingItem = cartItems.find(item => item.productId === newItem.productId);
@@ -82,7 +82,7 @@ export const ProductInfo = ({product, setOpenSnackbar, setSnackbarMessage}) => {
                   <hr />
 
                   <Typography variant="h6" gutterBottom color={green[800]} paddingTop='20px'>
-                    Price: ${product.price}
+                    Price: ${product.price?.toFixed(2)}
                   </Typography>
                   <Box
                     sx={{
