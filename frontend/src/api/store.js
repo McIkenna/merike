@@ -4,6 +4,7 @@ import { productApi } from './services/productApi'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { userApi } from './services/userApi'
 import reducers from './reducers'
+import authReducer from './authReducer'
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     [productApi.reducerPath] : productApi.reducer,
     [userApi.reducerPath] : userApi.reducer,
     stateStore: reducers.reducer,
+    auth: authReducer.reducer
   },
   middleware: (getDefaultMiddleware) =>
   getDefaultMiddleware().concat(categoryApi.middleware, productApi.middleware, userApi.middleware),

@@ -8,6 +8,12 @@ const crypto = require('crypto');
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     try{
         const { firstName, lastName, email, password } = req.body;
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            return next(new ErrorHandler('User already exists with the same email', 400));
+        }
+
         const user = await User.create({
             firstName,
             lastName,
@@ -148,7 +154,7 @@ exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
     })
 })
 //Logout User
-module.exports.logout = catchAsyncErrors(async(req, res, next) => {
+exports.logout = catchAsyncErrors(async(req, res, next) => {
     res.cookie('token', null, {
         expires: new Date(Date.now()),
         httpOnly: true

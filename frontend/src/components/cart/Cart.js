@@ -248,7 +248,7 @@ export const Cart = () => {
 
                             </Paper>
                             <Box sx={{ color: blue['500'], display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '20px' }}>
-                                <ArrowBack />
+                                <ArrowBack sx={{ paddingRight: '10px'}}/>
                                 <Typography variant="h6" sx={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => navigate('/')}>
                                     Continue Shopping
                                 </Typography>
@@ -271,7 +271,7 @@ export const Cart = () => {
                             Your cart is empty, add product to cart
                         </Typography>
                         <Box sx={{ color: blue['500'], display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '20px' }}>
-                            <ArrowBack />
+                            <ArrowBack sx={{ paddingRight: '10px'}}/>
                             <Typography variant="h6" sx={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => navigate('/')}>
                                 Start Shopping
                             </Typography>

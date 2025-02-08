@@ -1,4 +1,5 @@
 import reducers from './reducers'
+import authReducer from './authReducer'
 
 export const { 
     setCategories, 
@@ -11,4 +12,5 @@ export const {
     setCartItems,
     
 setPriceFilter } = reducers.actions
+export const { setUser, setToken, logout } = authReducer.actions
 

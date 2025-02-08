@@ -13,11 +13,12 @@ import { useDispatch, useSelector} from 'react-redux';
 import { Link } from 'react-router-dom';
 import Search from '../../utils/Search';
 import { grey, green, red, blue } from "@mui/material/colors";
-import { useLogoutUserQuery } from '../../api/services/userApi';
+import { useLogoutUserMutation } from '../../api/services/userApi';
 import { useNavigate } from 'react-router-dom';
 import { setCategories, setProducts, setSelectedCategory, setPriceFilter } from '../../api/actions';
 import { useGetAllProductsQuery } from '../../api/services/productApi';
 import Banner from './Banner';
+import { setUser, setToken } from '../../api/actions';
 
 
 export default function Header() {
@@ -31,8 +32,10 @@ export default function Header() {
   const { data, error, isLoading, isSuccess, refetch: categoryRefetch } = useGetAllCategoryQuery();
   const { data: prodData, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, refetch: productRefetch } = useGetAllProductsQuery();
   const [ pageReloaded, setPageReloaded] = useState(false)
-  // const {logoutUser, isError, isSuccess: logoutSuccess}= useLogoutUserQuery()
-  const {stateStore} = useSelector((state) => state)
+  const [logoutUser, {isError, isSuccess: logoutSuccess, ...props}]= useLogoutUserMutation()
+  const {stateStore, auth} = useSelector((state) => state)
+  const {user} = auth
+  console.log('auth', auth)
   const {totalQuantity} = stateStore
     useEffect(() => {
     if (data !== undefined) {
@@ -46,7 +49,9 @@ export default function Header() {
     }
   }, [prodData])
 
-  console.log('prodData', prodData)
+  console.log('logoutSuccess', logoutSuccess)
+  console.log('isError', isError)
+  console.log('props', props)
   const handleOpenNavMenu = (event) => {
     console.log('event', event)
     setAnchorElNav(event.currentTarget);
@@ -66,6 +71,12 @@ export default function Header() {
   };
 
   const logOut = () => {
+    // useLogoutUserQuery()
+    logoutUser()
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    dispatch(setUser(null))
+    dispatch(setToken(null))
     navigate('/')
   }
 
@@ -194,16 +205,31 @@ export default function Header() {
                 //style={{}} prop can be added
                 />
               </Box>
-              <Box style={{ textDecoration: 'none', paddingRight: '20px'}}>
-                <Link to={`/login`}style={{ textDecoration: 'none', color: grey[800]}}>
-                  <Typography textAlign="center">Login</Typography>
-                </Link>
-              </Box>
-              <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}
-              onClick={useLogoutUserQuery()}
-            >
-                  <Typography textAlign="center">Logout</Typography>
-              </Box>
+              {
+                user?._id ? (
+                  <Box style={{ paddingRight: '20px', textDecoration: 'none', color: grey[800], cursor: 'pointer' }}
+                  onClick={() => logOut()}>
+                    <Typography textAlign="center">Logout</Typography>
+                </Box>
+                 ) : (
+                  <Box style={{ display: 'flex' }}>
+                  <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}>
+                  <Link to={`/login`}style={{ textDecoration: 'none', color: grey[800]}}>
+                    <Typography textAlign="center">Login</Typography>
+                  </Link>
+                </Box>
+                <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}
+                onClick={() => navigate('/register')}
+              >
+                    <Typography textAlign="center">Register</Typography>
+                </Box>
+                </Box>
+                )
+              }
+              
+              
+             
+              
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={(e) => { handleOpenUserMenu(e) }} sx={{ p: 0 }}>

@@ -32,14 +32,12 @@ export const userApi = createApi({
         },
             providesTags: ['login']
         }),
-        logoutUser: build.query({
-            query: () =>(
-                {
+        logoutUser: build.mutation({
+            query: () => ({
                 url: `/api/v1/logout`,
-                method: 'GET'
+                method: 'POST'
             }),
-            providesTags: ['logOut']
-     
+            invalidatesTags: ['logOut']
         }),
         getUser: build.query({
             query: (params) => (
@@ -54,4 +52,4 @@ export const userApi = createApi({
 
 })
 
-export const {useCreateUserMutation, useLoginUserMutation ,useGetUserQuery, useLogoutUserQuery} = userApi;
+export const {useCreateUserMutation, useLoginUserMutation ,useGetUserQuery, useLogoutUserMutation} = userApi;
