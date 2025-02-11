@@ -9,8 +9,9 @@ import { useNavigate } from 'react-router-dom';
 export const Cart = () => {
 
     const navigate = useNavigate();
-    const { stateStore } = useSelector(state => state);
+    const { stateStore, auth } = useSelector(state => state);
     const { cartItems, totalQuantity, totalPrice } = stateStore;
+    const {user} = auth
     const dispatch = useDispatch();
 
     const decreaseQuantity = (item) => {
@@ -215,7 +216,7 @@ export const Cart = () => {
                                                     padding: '20px'
                                                 }}>
                                                 <Typography variant='h6' sx={{ fontWeight: 'bold' }}>Shipping</Typography>
-                                                <Typography sx={{ fontSize: '1.2em' }}>Free</Typography>
+                                                <Typography sx={{ fontSize: '1.2em' }}>Calculated during checkout</Typography>
                                             </ListItem>
                                             <ListItem
                                                 sx={{
@@ -241,8 +242,9 @@ export const Cart = () => {
 
                                 </Box>
                                 <Box sx={{ padding: '20px' }}>
-                                    <Button variant="contained" color="primary" fullWidth sx={{ padding: '20px', borderRadius: '40px' }}>
-                                        Proceed to Checkout
+                                    <Button variant="contained" color="primary" fullWidth sx={{ padding: '20px', borderRadius: '40px' }} disabled={!user?._id}
+                                    onClick={() => navigate('/checkout')}>
+                                        {!user?._id ? 'Login to Checkout' : 'Proceed to Checkout'}
                                     </Button>
                                 </Box>
 
