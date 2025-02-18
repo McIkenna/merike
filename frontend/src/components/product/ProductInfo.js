@@ -25,9 +25,9 @@ export const ProductInfo = ({product, setOpenSnackbar, setSnackbarMessage}) => {
             name: product.name,
             productId: product._id,
             image: product.images[0].url,
-            price: product.price?.toFixed(2),
-            quantity: qtyPerItem,
-            total: product.price?.toFixed(2) * qtyPerItem
+            price: Number(product.price?.toFixed(2)),
+            quantity: Number(qtyPerItem),
+            total: Number(product.price?.toFixed(2) * qtyPerItem)
         };
 
         const existingItem = cartItems.find(item => item.productId === newItem.productId);

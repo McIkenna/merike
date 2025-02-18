@@ -13,11 +13,13 @@ const products = require('./routes/product');
 const categories = require('./routes/category');
 const auth = require('./routes/auth');
 const order = require('./routes/order');
+const stripe = require('./routes/stripe')
 
 app.use('/api/v1', products);
 app.use('/api/v1', categories);
 app.use('/api/v1', auth);
 app.use('/api/v1', order);
+app.use('/api/v1', stripe)
 
 app.use(errorMiddleware);
 

@@ -21,7 +21,7 @@ export const userApi = createApi({
         }),
         loginUser: build.mutation({
             query: (reqBody) => {
-                console.log(reqBody)
+                // console.log(reqBody)
                 // const { currentPage, keyword } = reqParams
             return {
                 // headers: 'headers',

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Box, Container, List, ListItem, ListItemText, Divider, Typography, Paper, Grid, IconButton, Button } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTotalPrice, setTotalQuantity, setCartItems } from '../../api/actions';
@@ -6,13 +6,58 @@ import { AddOutlined, RemoveOutlined, Favorite, ArrowBack } from '@mui/icons-mat
 import { grey, green, blue } from '@mui/material/colors';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 import { useNavigate } from 'react-router-dom';
+import { useCheckoutOrderMutation } from '../../api/services/checkoutApi';
+import Checkout from '../checkout/Checkout';
 export const Cart = () => {
-
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { stateStore, auth } = useSelector(state => state);
     const { cartItems, totalQuantity, totalPrice } = stateStore;
+
+    const [checkoutUrl, setCheckoutUrl] = useState(null);
+    const [checkoutOrder, {data, error, isError, isLoading, isSuccess}] = useCheckoutOrderMutation()
+    
+      // Initialize the Shopify client
+
+      const [loading, setLoading] = useState(false);
+
+
+
+    //   const [cartInput, setCartInput] = useState({
+    //     lines: [
+    //       {
+    //         quantity: 1,
+    //         merchandiseId: 'gid://shopify/ProductVariant/1',
+    //       },
+    //     ],
+    //   });
+    
+    //   const handleCheckout = async () => {
+    //     try {
+    //         const response = await checkoutOrder(cartInput).unwrap();
+    //         console.log('Cart created:', response.cartCreate.cart);
+          
+    //     } catch (err) {
+    //       console.error('Failed to create checkout:', err);
+    //     }
+    //   };
+
+
+
+const goToShopify = () => {
+    console.log('Go to Shopify called')
+    if (data?.webUrl) {
+      window.open(data?.webUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  useEffect(()=>{
+    goToShopify()
+  }, [data])
+
+
     const {user} = auth
-    const dispatch = useDispatch();
+    
 
     const decreaseQuantity = (item) => {
         const newCartItems = cartItems.reduce((acc, cartItem) => {
@@ -242,10 +287,13 @@ export const Cart = () => {
 
                                 </Box>
                                 <Box sx={{ padding: '20px' }}>
-                                    <Button variant="contained" color="primary" fullWidth sx={{ padding: '20px', borderRadius: '40px' }} disabled={!user?._id}
-                                    onClick={() => navigate('/checkout')}>
-                                        {!user?._id ? 'Login to Checkout' : 'Proceed to Checkout'}
-                                    </Button>
+                                {!user?._id ?  <Button variant="contained" color="primary" fullWidth sx={{ padding: '20px', borderRadius: '40px' }} disabled={!user?._id}
+                                    // onClick={() => navigate('/checkout')}
+                                    >
+                                       Login to Checkout
+                                    </Button> :
+                                    <Checkout cartItems={cartItems}/>
+                                            }
                                 </Box>
 
                             </Paper>
