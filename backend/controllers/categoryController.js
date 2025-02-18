@@ -16,12 +16,15 @@ exports.newCategory = catchAsyncErrors(async (req, res, next) => {
 });
 exports.getCategories = async (req, res, next) => {
     const categories = await Category.find();
-    res.status(200).json({
+    if (categories) { res.status(200).json({
         success: true,
         count: categories.length,
         categories
 
     })
+}else {
+        return next(new ErrorHandler('Category not found', 404))
+    }
 }
 exports.getSingleCategory = async (req, res, next) => {
     const category = await Category.findById(req.params.id);
