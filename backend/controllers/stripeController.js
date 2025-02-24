@@ -5,11 +5,26 @@ const dotenv = require('dotenv');
 dotenv.config({ path: 'backend/config/config.env' });
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_KEY)
+const { newOrder } = require('./orderController');
 
 
 
 exports.stripeCheckout = catchAsyncErrors(async (req, res, next) => {
     try {
+        // console.log('req.body.userId', req.body)
+        const customer = await stripe.customers.create({
+            metadata: {
+                userId: req.body.userId._id,
+                cartItems: JSON.stringify(req.body.cartItems.map(item => ({
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price,
+                    total: item.total,
+                    product: item.productId
+                })))
+            }
+
+        })
         const line_items = req.body.cartItems.map((item) => {
             return {
                 price_data: {
@@ -54,7 +69,7 @@ exports.stripeCheckout = catchAsyncErrors(async (req, res, next) => {
                 shipping_rate_data: {
                     type: 'fixed_amount',
                     fixed_amount: {
-                        amount: 20,
+                        amount: 9.5*100,
                         currency: 'usd',
                     },
                     display_name: 'Standard shipping',
@@ -95,13 +110,18 @@ exports.stripeCheckout = catchAsyncErrors(async (req, res, next) => {
                 enabled: true
             },
             line_items,
+            customer: customer.id,
             mode: 'payment',
             success_url: `${process.env.CLIENT_URL}/checkout-success`,
             cancel_url: `${process.env.CLIENT_URL}/cart`,
             tax_id_collection: {
                 enabled: true,
             },
-            // tax_rates: [taxRates.id],
+            customer_update: {
+                shipping: 'auto',
+                name: 'auto'
+            }
+
         });
         // res.status(201).json({ 
         //     success: true, 
@@ -115,3 +135,52 @@ exports.stripeCheckout = catchAsyncErrors(async (req, res, next) => {
     }
 
 });
+
+exports.stripeWebhook = catchAsyncErrors(async (request, response) => {
+    let event;
+    const endpointSecret = 'whsec_eee877ca51b26a330c9c64ec77805a2c16da11e2fef236a92ea1463e99848da1';
+  
+    if (endpointSecret) {
+      const signature = request.headers['stripe-signature'];
+      try {
+        event = stripe.webhooks.constructEvent(
+          request.rawBody,
+          signature,
+          endpointSecret
+        );
+      } catch (err) {
+        console.log(`⚠️  Webhook signature verification failed.`, err.message);
+        return response.sendStatus(400);
+      }
+    } else {
+      event = request.body;
+    }
+  
+    const data = event.data.object;
+    const eventType = event.type;
+  
+    switch (eventType) {
+      case 'checkout.session.completed':
+        stripe.customers.retrieve(data.customer).then(customer => {
+            // console.log('customer -->', customer)
+            const reqParam = {customer, data}
+            newOrder(reqParam).then(res=>{
+                console.log('order saved successfully ')
+            })
+        }).catch(err => {
+            console.log('error', err.message)
+        })
+        break;
+    //   case 'payment_intent.succeeded':
+    //     const paymentIntent = data;
+    //     console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
+    //     break;
+    //   case 'payment_method.attached':
+    //     const paymentMethod = data;
+    //     break;
+      default:
+        console.log(`Unhandled event type ${eventType}.`);
+    }
+  
+    response.send().end();
+  });
