@@ -1,17 +1,23 @@
 const mongoose = require('mongoose');
 const orderSchema = mongoose.Schema({
     shippingInfo:{
-        address: {
+        address1: {
             type: String,
             required: true
+        },
+        address2: {
+            type: String
         },
         city: {
             type: String,
             required: true
         },
-        phoneNo: {
+        state: {
             type: String,
             required: true
+        },
+        phoneNo: {
+            type: String
         },
         postalCode: {
             type: String,
@@ -27,6 +33,9 @@ const orderSchema = mongoose.Schema({
         required: true,
         ref: 'User'
     },
+    customerId:{
+        type: String
+    },
     orderItem: [
         {
             name: {
@@ -37,10 +46,10 @@ const orderSchema = mongoose.Schema({
                 type: Number,
                 required: true
             },
-            image: {
-                type: String,
-                required: true
-            },
+            // image: {
+            //     type: String,
+            //     required: true
+            // },
             price: {
                 type: Number,
                 required: true
