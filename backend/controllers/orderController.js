@@ -41,7 +41,6 @@ exports.newOrder = catchAsyncErrors(async (req) => {
             customerId,
             user: customerInfo.metadata.userId
         };
-
         const order = await Order.create(paymentDetails)
         return order
         

@@ -149,7 +149,7 @@ exports.stripeWebhook = catchAsyncErrors(async (request, response) => {
           endpointSecret
         );
       } catch (err) {
-        console.log(`⚠️  Webhook signature verification failed.`, err.message);
+        // console.log(`⚠️  Webhook signature verification failed.`, err.message);
         return response.sendStatus(400);
       }
     } else {
@@ -164,9 +164,7 @@ exports.stripeWebhook = catchAsyncErrors(async (request, response) => {
         stripe.customers.retrieve(data.customer).then(customer => {
             // console.log('customer -->', customer)
             const reqParam = {customer, data}
-            newOrder(reqParam).then(res=>{
-                console.log('order saved successfully ')
-            })
+            newOrder(reqParam)
         }).catch(err => {
             console.log('error', err.message)
         })
