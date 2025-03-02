@@ -11,6 +11,7 @@ import { Cart } from './components/cart/Cart';
 import UserProfilePage from './components/user/UserProfilePage';
 import Checkout from './components/checkout/Checkout';
 import CheckoutSuccess from './components/checkout/CheckoutSuccess';
+import { AdminDashboard } from './components/product/productAdmin/AdminDashboard';
 function App() {
   return (
     <Router>
@@ -26,6 +27,7 @@ function App() {
       <Route path='/profile' Component={UserProfilePage} exact/>
       <Route path='/checkout' Component={Checkout} exact/>
       <Route path='/checkout-success' Component={CheckoutSuccess} exact/>
+      <Route path='/dashboard' Component={AdminDashboard} exact />
       </Routes>
       </Box>
       <Footer/>

@@ -35,7 +35,7 @@ export default function Header() {
   const [logoutUser, {isError, isSuccess: logoutSuccess, ...props}]= useLogoutUserMutation()
   const {stateStore, auth} = useSelector((state) => state)
   const {user} = auth
-  console.log('auth', auth)
+  // console.log('auth', auth)
   const {totalQuantity} = stateStore
     useEffect(() => {
     if (data !== undefined) {
@@ -49,9 +49,9 @@ export default function Header() {
     }
   }, [prodData])
 
-  console.log('logoutSuccess', logoutSuccess)
-  console.log('isError', isError)
-  console.log('props', props)
+  // console.log('logoutSuccess', logoutSuccess)
+  // console.log('isError', isError)
+  // console.log('props', props)
   const handleOpenNavMenu = (event) => {
     console.log('event', event)
     setAnchorElNav(event.currentTarget);

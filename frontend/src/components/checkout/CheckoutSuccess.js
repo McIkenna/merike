@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
+import { setCartItems, setTotalPrice, setTotalQuantity } from '../../api/actions';
+import { useDispatch } from 'react-redux';
 const CheckoutSuccess = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
+    dispatch(setCartItems([]))
+    dispatch(setTotalPrice(0))
+    dispatch(setTotalQuantity(0))
+    localStorage.removeItem('cartItems');
+    localStorage.removeItem('totalPrice');
+    localStorage.removeItem('totalQuantity')
     const timer = setInterval(() => {
       setCountdown((prevCountdown) => prevCountdown - 1);
     }, 1000);

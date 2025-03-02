@@ -66,9 +66,9 @@ export const ProductInfo = ({product, setOpenSnackbar, setSnackbarMessage}) => {
         dispatch(setQtyPerItem(0));
     };
 
-    console.log('totalPrice', totalPrice)
-    console.log('totalQuantity', totalQuantity)
-    console.log('cartItems', cartItems)
+    // console.log('totalPrice', totalPrice)
+    // console.log('totalQuantity', totalQuantity)
+    // console.log('cartItems', cartItems)
   return (
     <Box padding={'20px 10px 20px 10px'}>
                   <Typography variant="h4" gutterBottom>
