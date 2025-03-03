@@ -69,7 +69,17 @@ export const productApi = createApi(
                         body: body
                     }
                 )
+            }),
+            updateProduct: build.mutation({
+                query: (body) => (
+                    {
+                        url: `/api/v1/admin/product/${body?._id}`,
+                        method: 'PUT',
+                        body: body
+                    }
+                )
             })
+
         })
 
     })
@@ -78,5 +88,6 @@ export const {
     useGetAllProductsQuery, 
     useGetSingleProductQuery, 
     useCreateProductMutation,
-    useGetProductBySellerQuery
+    useGetProductBySellerQuery,
+    useUpdateProductMutation
  } = productApi;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
     TextField, Button, Grid, Typography, Container, MenuItem, Select, InputLabel, FormControl, Box,
     IconButton
@@ -7,9 +7,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { grey } from '@mui/material/colors';
 import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material'
-import { useCreateProductMutation } from '../../../api/services/productApi';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import { useCreateProductMutation, useUpdateProductMutation } from '../../../api/services/productApi';
+
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -31,40 +30,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ProductForm = (props) => {
-    const { categories, user } = props;
+    const { categories, user, activePage, setActivePage, selectedRow, emptyState, refetch, setToastState } = props;
     // console.log('categories -->', categories)
     const [createProduct, { isLoading, isError, isSuccess }] = useCreateProductMutation()
-    const [toastState, setToastState] = useState({
-        open: false,
-        message: '',
-        severity: ''
-      });
-    const classes = useStyles();
-    const defaultState = {
-        name: '',
-        price: 0.0,
-        description: '',
-        ratings: 5.0,
-        images: [{ public_id: '', url: '' }],
-        category: '',
-        seller: user?._id,
-        stock: 0
-    }
+    const [updateProduct, { isError: isErrorUpdate, isSucess: isSuccessProduct }] = useUpdateProductMutation()
 
-    const [formData, setFormData] = useState(defaultState);
-    // const [formSubmitted, setFormSubmitted] = useState(false)
+    const classes = useStyles();
+    const [formData, setFormData] = useState({});
 
     useEffect(() => {
-            const removeAlert = () => {
-                setToastState({
-                    open: false,
-                    message: '',
-                    severity: ''
-                })
-            }
-            const timer = setTimeout(removeAlert, 3000);
-            return () => clearTimeout(timer)
-    }, [toastState])
+        if (activePage === 'UpdateProductForm' && selectedRow) {
+            setFormData(selectedRow)
+        } else {
+            setFormData(emptyState)
+        }
+    }, [activePage])
+
+    // console.log(' activePage -->', activePage)
+    // console.log(' selectedRow -->', selectedRow)
+    // console.log(' defaultState -->', defaultState)
+    // const [formSubmitted, setFormSubmitted] = useState(false)
+
+    // console.log('formData --->', formData)
 
 
     const handleChange = (e) => {
@@ -77,7 +64,7 @@ const ProductForm = (props) => {
 
     const handleImageChange = (index, e) => {
         const { value } = e.target;
-        const updatedImages = formData.images.map((image, i) =>
+        const updatedImages = formData?.images?.map((image, i) =>
             i === index ? {
                 ...image,
                 public_id: value?.split("/").pop(),
@@ -98,7 +85,7 @@ const ProductForm = (props) => {
     };
 
     const removeImageField = (index) => {
-        const updatedImages = formData.images.filter((_, i) => i !== index);
+        const updatedImages = formData?.images?.filter((_, i) => i !== index);
         setFormData((prevData) => ({
             ...prevData,
             images: updatedImages,
@@ -107,56 +94,84 @@ const ProductForm = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const convertedFormData = {
-            ...formData,
-            price: parseFloat(formData.price),
-            ratings: parseFloat(formData.ratings),
-            stock: parseInt(formData.stock, 10),
-            numOfReviews: parseInt(formData.numOfReviews, 10),
-            createdAt: new Date(formData.createdAt),
-        };
-        // Add your form submission logic here
-        // console.log(convertedFormData);
-        createProduct(convertedFormData).then(res => {
-            if(res.data.success && res.data.statusCode === 201){
+        if (activePage === 'UpdateProductForm') {
+            const updatedFormData = {
+                ...formData,
+                price: parseFloat(formData?.price),
+                ratings: parseFloat(formData?.ratings),
+                stock: parseInt(formData?.stock, 10),
+                updatedAt: Date.now()
+            };
+            updateProduct(updatedFormData).then(res => {
+                if (res.data.success && res.data.statusCode === 200) {
+                    setToastState({
+                        open: true,
+                        message: "Product Updated successfully",
+                        severity: "success"
+                    })
+                    refetch()
+                    setActivePage('Listing')
+                    setFormData(emptyState)
+                } else {
+                    setToastState({
+                        open: true,
+                        message: "Product Update failed",
+                        severity: "error"
+                    })
+                }
+            }).catch(err => {
                 setToastState({
                     open: true,
-                    message: "Product created successfully",
-                    severity: "success"
+                    message: "Product Update failed",
+                    severity: "error"
                 })
-                setFormData(defaultState)
-            }else{
+            })
+
+        } else {
+            const convertedFormData = {
+                ...formData,
+                price: parseFloat(formData?.price),
+                ratings: parseFloat(formData?.ratings),
+                stock: parseInt(formData?.stock, 10)
+            };
+            createProduct(convertedFormData).then(res => {
+                if (res.data.success && res.data.statusCode === 201) {
+                    setToastState({
+                        open: true,
+                        message: "Product created successfully",
+                        severity: "success"
+                    })
+                    refetch()
+                    setActivePage('Listing')
+                    setFormData(emptyState)
+                } else {
+                    setToastState({
+                        open: true,
+                        message: "Product creation failed",
+                        severity: "error"
+                    })
+                }
+            }).catch(err => {
                 setToastState({
                     open: true,
                     message: "Product creation failed",
                     severity: "error"
                 })
-            }
-        }).catch(err => {
-            setToastState({
-                open: true,
-                message: "Product creation failed",
-                severity: "error"
             })
-        })
+
+        }
+
+        // Add your form submission logic here
+        // console.log(convertedFormData);
+
     };
 
     return (
         <Container component="main" maxWidth="md">
-            <Box>
-                <Snackbar open={toastState.open} autoHideDuration={1200} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                    <Alert
-                        severity={toastState.severity}
-                        variant="filled"
-                        sx={{ width: '100%' }}
-                    >
-                        {toastState.message}
-                    </Alert>
-                </Snackbar>
-            </Box>
+
             <div className={classes.form}>
                 <Box sx={{ padding: '20px' }}><Typography component="h1" variant="h4">
-                    Product Form
+                    {(activePage === 'UpdateProductForm' && selectedRow) ? 'Update Product Form' : 'Product Form'}
                 </Typography>
                 </Box>
 
@@ -169,7 +184,7 @@ const ProductForm = (props) => {
                                 required
                                 fullWidth
                                 label="Product Name"
-                                value={formData.name}
+                                value={formData?.name}
                                 onChange={handleChange}
                                 inputProps={{ maxLength: 100 }}
                             />
@@ -182,7 +197,7 @@ const ProductForm = (props) => {
                                 fullWidth
                                 label="Product Price"
                                 type="number"
-                                value={formData.price}
+                                value={formData?.price}
                                 onChange={handleChange}
                                 inputProps={{ maxLength: 100 }}
                             />
@@ -194,7 +209,7 @@ const ProductForm = (props) => {
                                 required
                                 fullWidth
                                 label="Product Description"
-                                value={formData.description}
+                                value={formData?.description}
                                 onChange={handleChange}
                                 inputProps={{ maxLength: 500 }}
                             />
@@ -206,25 +221,27 @@ const ProductForm = (props) => {
                                 fullWidth
                                 label="Ratings"
                                 type="number"
-                                value={formData.ratings}
+                                value={formData?.ratings}
                                 aria-readonly
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControl variant="outlined" fullWidth className={classes.formControl} required>
-                                <InputLabel>Category</InputLabel>
+                            <FormControl variant="outlined" fullWidth required>
+                                <InputLabel id="category-label">Category</InputLabel>
                                 <Select
+                                    labelId="category-label"
+                                    id="category"
                                     name="category"
-                                    value={formData.category}
+                                    value={formData?.category || ""} // Ensure it's not undefined
                                     onChange={handleChange}
                                     label="Category"
                                 >
                                     <MenuItem value=""><em>None</em></MenuItem>
-                                    {
-                                        categories?.categories?.map((cat) => (
-                                            <MenuItem value={cat?.categoryName}>{cat?.categoryName}</MenuItem>
-                                        ))
-                                    }
+                                    {categories?.categories?.map((cat) => (
+                                        <MenuItem key={cat?._id} value={cat?.categoryName}>
+                                            {cat?.categoryName}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -247,7 +264,7 @@ const ProductForm = (props) => {
                                 fullWidth
                                 label="Stock"
                                 type="number"
-                                value={formData.stock}
+                                value={formData?.stock}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -285,7 +302,7 @@ const ProductForm = (props) => {
                 aria-readonly
               />
             </Grid> */}
-                        {formData.images.map((image, index) => (
+                        {formData?.images?.map((image, index) => (
                             <React.Fragment key={index}>
                                 {/* <Grid item xs={5}>
                   <TextField

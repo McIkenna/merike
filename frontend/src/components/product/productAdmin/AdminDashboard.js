@@ -4,17 +4,18 @@ import { green, red, grey } from '@mui/material/colors'
 import ProductForm from './ProductForm'
 import { useSelector } from 'react-redux'
 import { UserInventory } from './UserInventory'
+import { useGetProductBySellerQuery } from '../../../api/services/productApi'
 
 export const AdminDashboard = () => {
     const { stateStore, auth } = useSelector(state => state);
     const { user } = auth
     const { categories } = stateStore
-    const userPage = {
-        ProductForm: 'Create New Product',
-        UserInventory: 'My Inventory'
-    }
-    const [activePage, setActivePage] = useState('ProductForm')
-    const changePage = (e) => {
+    const { data, isError, isSuccess, isFetching, isLoading, refetch } = useGetProductBySellerQuery(user?._id)
+   const userPage = {
+    UserInventory: 'Inventory'
+   }
+    const [activePage, setActivePage] = useState('UserInventory')
+      const changePage = (e) => {
         const { name } = e.target
         // console.log('e -->', e.target)
         setActivePage(name)
@@ -56,13 +57,9 @@ export const AdminDashboard = () => {
 
                 </Grid>
                 <Grid item sm={10} md={10} xl={10}>
-                    {activePage === 'ProductForm' && <Box>
-                        <ProductForm categories={categories} user={user} />
+                   { activePage === 'UserInventory' && <Box>
+                        <UserInventory categories={categories} user={user} data={data} isFetching={isFetching} refetch={refetch}/>
                     </Box>}
-                    {activePage === 'UserInventory' && <Box>
-                        <UserInventory categories={categories} user={user} />
-                    </Box>}
-
                 </Grid>
 
             </Grid>
