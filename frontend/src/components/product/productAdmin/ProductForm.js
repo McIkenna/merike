@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ProductForm = (props) => {
-    const { categories, user, activePage, setActivePage, selectedRow, emptyState, refetch, setToastState } = props;
+    const { categories, user, activePage, setActivePage, selectedRow, emptyState, refetch, setToastState, setSelectedRow, gridRef } = props;
     // console.log('categories -->', categories)
     const [createProduct, { isLoading, isError, isSuccess }] = useCreateProductMutation()
     const [updateProduct, { isError: isErrorUpdate, isSucess: isSuccessProduct }] = useUpdateProductMutation()
@@ -160,7 +160,10 @@ const ProductForm = (props) => {
             })
 
         }
-
+        if (gridRef.current && gridRef.current.api) {
+            gridRef.current.api.deselectAll(); // Corrected to deselectAll
+        }
+        setSelectedRow(null)
         // Add your form submission logic here
         // console.log(convertedFormData);
 

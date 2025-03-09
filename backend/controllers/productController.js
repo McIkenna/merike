@@ -161,17 +161,18 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
     }
 })
 
-exports.deleteProduct = async(req, res) => {
+exports.deleteProduct = catchAsyncErrors(async(req, res, next) => {
     try{
         const product = await Product.findByIdAndDelete(req.params.id);
         res.status(200).json({
+            statusCode: 200,
             success: true,
             message: `${product.name} deleted successfully`
         })
     }catch(err){
         return next(new ErrorHandler('Product does not exist', 404))
     }
-}
+})
 
 //New review
 exports.createProductReview = catchAsyncErrors(async(req, res, next) => {
