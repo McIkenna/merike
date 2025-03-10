@@ -124,7 +124,8 @@ export const ProductInfo = ({product, setOpenSnackbar, setSnackbarMessage}) => {
 
                     </Box>
                     <Button variant="contained" color="primary"
-                      onClick={() =>addItemToCart()}>
+                      onClick={() =>addItemToCart()}
+                      disabled={product.stock === 0 || qtyPerItem === 0}>
                       Add to Cart
                     </Button>
                   </Box>

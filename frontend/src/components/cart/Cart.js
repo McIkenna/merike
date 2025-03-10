@@ -45,7 +45,6 @@ export const Cart = () => {
 
 
 const goToShopify = () => {
-    console.log('Go to Shopify called')
     if (data?.webUrl) {
       window.open(data?.webUrl, '_blank', 'noopener,noreferrer');
     }

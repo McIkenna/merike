@@ -97,8 +97,8 @@ const ProductForm = (props) => {
         if (activePage === 'UpdateProductForm') {
             const updatedFormData = {
                 ...formData,
-                price: parseFloat(formData?.price),
-                ratings: parseFloat(formData?.ratings),
+                price: parseFloat(formData?.price).toFixed(2),
+                ratings: parseFloat(formData?.ratings).toFixed(2),
                 stock: parseInt(formData?.stock, 10),
                 updatedAt: Date.now()
             };
@@ -130,8 +130,8 @@ const ProductForm = (props) => {
         } else {
             const convertedFormData = {
                 ...formData,
-                price: parseFloat(formData?.price),
-                ratings: parseFloat(formData?.ratings),
+                price: parseFloat(formData?.price).toFixed(2),
+                ratings: parseFloat(formData?.ratings).toFixed(2),
                 stock: parseInt(formData?.stock, 10)
             };
             createProduct(convertedFormData).then(res => {

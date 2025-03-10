@@ -17,9 +17,9 @@ exports.stripeCheckout = catchAsyncErrors(async (req, res, next) => {
                 userId: req.body.userId._id,
                 cartItems: JSON.stringify(req.body.cartItems.map(item => ({
                     name: item.name,
-                    quantity: item.quantity,
-                    price: item.price,
-                    total: item.total,
+                    quantity: Number(item.quantity),
+                    price: Number(item.price),
+                    total: Number(item.total), // Ensure total is a number
                     product: item.productId
                 })))
             }
@@ -37,9 +37,9 @@ exports.stripeCheckout = catchAsyncErrors(async (req, res, next) => {
                             id: item.productId,
                         }
                     },
-                    unit_amount: item.price * 100
+                    unit_amount: Number(item.price) * 100
                 },
-                quantity: item.quantity
+                quantity: Number(item.quantity)
             }
 
         })
