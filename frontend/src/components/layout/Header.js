@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, Divider } from '@mui/material';
 // import {MenuIcon} from '@mui/icons-material'
 import MenuIcon from '@mui/icons-material/Menu';
 import { styled, alpha } from '@mui/material/styles';
@@ -15,10 +15,12 @@ import Search from '../../utils/Search';
 import { grey, green, red, blue } from "@mui/material/colors";
 import { useLogoutUserMutation } from '../../api/services/userApi';
 import { useNavigate } from 'react-router-dom';
-import { setCategories, setProducts, setSelectedCategory, setPriceFilter } from '../../api/actions';
+import { setCategories, setProducts, setSelectedCategory, setPriceFilter, setProductRecentlyBought, setAllOrders } from '../../api/actions';
 import { useGetAllProductsQuery } from '../../api/services/productApi';
 import Banner from './Banner';
 import { setUser, setToken } from '../../api/actions';
+import { useMyOrdersQuery } from '../../api/services/orderApi';
+import {Category} from '../category/Category'
 
 
 export default function Header() {
@@ -31,17 +33,22 @@ export default function Header() {
   const dispatch = useDispatch()
   const { data, error, isLoading, isSuccess, refetch: categoryRefetch } = useGetAllCategoryQuery();
   const { data: prodData, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, refetch: productRefetch } = useGetAllProductsQuery();
+  
   const [ pageReloaded, setPageReloaded] = useState(false)
   const [logoutUser, {isError, isSuccess: logoutSuccess, ...props}]= useLogoutUserMutation()
   const {stateStore, auth} = useSelector((state) => state)
   const {user} = auth
   // console.log('auth', auth)
-  const {totalQuantity} = stateStore
-    useEffect(() => {
+  const {data: orderData, isSuccess: orderIsSuccess, isError: orderIsError} = useMyOrdersQuery()
+  const {totalQuantity, selectedCategory, categories} = stateStore
+  useEffect(() => {
     if (data !== undefined) {
       dispatch(setCategories(data))
     }
-  }, [data])
+    if(user?._id && orderIsSuccess) {
+      dispatch(setAllOrders(orderData?.orders))
+    }
+  }, [data, orderData])
 
   useEffect(() => {
     if (prodData !== undefined) {
@@ -88,6 +95,13 @@ export default function Header() {
     setPageReloaded(true)
     navigate('/')
   }
+
+  const handleCategoryChange = (category) => {
+      dispatch(setSelectedCategory(category))
+      // keyparam.delete('search');
+  
+      // dispatch(filterProductByCategory(category))
+    }
   return (
     <>
       <ThemeProvider theme={lightTheme}>
@@ -265,6 +279,8 @@ export default function Header() {
               </Box>
             </Toolbar>
           </Container>
+          <Divider />
+         <Category categories={categories} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory}/>
         </AppBar>
         <Banner />
       </ThemeProvider>

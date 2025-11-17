@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { Box, Grid } from '@mui/material'
 import Loader from '../../utils/Loader'
 import BoxCard from '../../utils/BoxCard'
-import ProdGrid from './ProdGrid'
+// import ProdGrid from './ProdGrid'
+
 export const Products = ({ products }) => {
   // console.log('product in products component -->', products)
   useEffect(() => {
@@ -24,7 +25,7 @@ export const Products = ({ products }) => {
             )
         }
       </Grid>
-      <ProdGrid />
+      {/* <ProdGrid /> */}
     </Box>
   )
 }

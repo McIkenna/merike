@@ -10,7 +10,10 @@ export const {
     setTotalPrice,
     setTotalQuantity,
     setCartItems,
-    
-setPriceFilter } = reducers.actions
+    setPriceFilter,
+    setViewedProducts,
+setCartInspiredProducts,
+setAllOrders,
+setProductRecentlyBought } = reducers.actions
 export const { setUser, setToken, logout } = authReducer.actions
 
