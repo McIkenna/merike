@@ -14,6 +14,7 @@ export const {
     setViewedProducts,
 setCartInspiredProducts,
 setAllOrders,
-setProductRecentlyBought } = reducers.actions
+setProductRecentlyBought,
+setRecommendedProducts } = reducers.actions
 export const { setUser, setToken, logout } = authReducer.actions
 

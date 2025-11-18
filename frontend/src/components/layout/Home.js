@@ -4,7 +4,7 @@ import { Grid, Box, Slider, Typography, Popover, Icon, IconButton } from '@mui/m
 import MetaData from '../../utils/MetaData';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { setSelectedCategory, setPriceFilter } from '../../api/actions';
+import { setSelectedCategory, setPriceFilter, setRecommendedProducts, setProductRecentlyBought } from '../../api/actions';
 import { Products } from '../product/Products';
 import RecommendedProduct from '../product/RecommendedProduct';
 import CartInspired from '../product/CartInspired';
@@ -12,6 +12,7 @@ import RecentBought from '../product/RecentBought';
 import ViewCarousel from '../product/ViewCarousel';
 import { Sort, SwapVert } from '@mui/icons-material';
 import SortProd from '../../utils/SortProd';
+import CarouselBanner from '../../utils/CarouselBanner';
 export default function Home() {
 
   const dispatch = useDispatch()
@@ -23,6 +24,7 @@ export default function Home() {
   const { stateStore } = useSelector((state) => state)
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedSort, setSelectedSort] = useState('Bestselling');
+  const [specialSelect, setSpecialSelect] = useState(null);
   const handlePopover = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -50,22 +52,32 @@ export default function Home() {
     const recent = ordersSorted
       .flatMap(order => order?.orderItem ?? [])
       .map(item => {
-        // resolve product id whether item.product is an id or an object
-        const pid = item?.product
-          ? (typeof item.product === 'object' ? (item.product._id ?? item.product.id) : item.product)
-          : (item?.productId ?? item?._id ?? item?.id);
+      const pid = item?.product
+        ? (typeof item.product === 'object' ? (item.product._id ?? item.product.id) : item.product)
+        : (item?.productId ?? item?._id ?? item?.id);
 
-        const found = products?.find(p => p._id === pid || p.id === pid);
+      const found = products?.find(p => p._id === pid || p.id === pid);
 
-        // prefer product.images[0].url, fallback to other possible shapes
-        const image = found?.images[0]?.url ?? null;
+      const image = found?.images?.[0]?.url ?? null;
+      const orderId = item?._id;
 
-        return { ...item, image };
+      return { ...item, orderId: orderId, image, _id:pid };
       })
-      .slice(0, 4);
+      .reduce((acc, item) => {
+      if (!acc.seen.has(item._id)) {
+        acc.seen.add(item._id);
+        acc.result.push(item);
+      }
+      return acc;
+      }, { seen: new Set(), result: [] })
+      .result;
+
+      dispatch(setProductRecentlyBought(recent));
+      localStorage.setItem('productRecentlyBought', JSON.stringify(recent));
+
     return recent;
 
-  }, [allOrders, products]);
+  }, [allOrders, products, dispatch]);
 
 
   const valueText = (value) => {
@@ -106,11 +118,12 @@ export default function Home() {
     const similarProducts = products?.filter(
       (p) => p?.category === lastViewed?.category && p?._id !== lastViewed?._id
     );
+    dispatch(setRecommendedProducts(similarProducts));
+    localStorage.setItem('recommendedProducts', JSON.stringify(similarProducts));
     const sameCategory = similarProducts?.slice(0, 8);
     return sameCategory;
-    // dispatch(setRecommendedProducts(sameCategory));
-    // localStorage.setItem("recommendedProducts", JSON.stringify(sameCategory));
-  }, [viewedProducts, products]);
+   
+  }, [viewedProducts, products, dispatch]);
 
 
   const filteredProduct = useMemo(() => {
@@ -159,12 +172,27 @@ export default function Home() {
   const id = open ? 'simple-popover' : undefined;
 
 
+  const handleSelect = (selectType) => {
+      switch (selectType) {
+        case 'recommended':
+          navigate('/recommended');
+          break;
+        case 'cart-inspired':
+          navigate('/cart-inspired');
+          break;
+        case 'recently-bought':
+          navigate('/recently-bought');
+          break;
+        default:
+          break;
+      }
+    }
 
 
   return (
     <Box>
-
       <MetaData title={'Buy Best Products Online'} />
+      <CarouselBanner />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
         <Box>
           <IconButton aria-describedby={id} onClick={handlePopover} >
@@ -172,7 +200,6 @@ export default function Home() {
           </IconButton>
           <Typography variant='caption'>Sort Products</Typography>
         </Box>
-
         <Popover
           id={id}
           open={open}
@@ -198,7 +225,7 @@ export default function Home() {
           />
         </Popover>
       </Box>
-      {/* <CarouselBanner /> */}
+      
       <Grid container spacing={2} justify="center">
         <Grid item direction="row" md={12} sm={12} xs={12} spacing={2}>
           <Products products={filteredProduct} />
@@ -206,13 +233,13 @@ export default function Home() {
       </Grid>
       <Grid container spacing={2} justify="center" paddingTop='40px'>
         <Grid item md={4} sm={4} xs={4}>
-          <RecommendedProduct recommendedProducts={recommendations} />
+          <RecommendedProduct recommendedProducts={recommendations} handleSelect={handleSelect}/>
         </Grid>
         <Grid item md={4} sm={4} xs={4}>
-          <CartInspired cartInspiredProducts={cartInspiredProducts} />
+          <CartInspired cartInspiredProducts={cartInspiredProducts.slice(0, 4)} handleSelect={handleSelect} />
         </Grid>
         <Grid item md={4} sm={4} xs={4}>
-          <RecentBought recentBoughtProducts={getRecentlyBoughtProducts} />
+          {getRecentlyBoughtProducts?.length > 0 && <RecentBought recentBoughtProducts={getRecentlyBoughtProducts.slice(0, 4)} handleSelect={handleSelect}/>}
         </Grid>
         {/* <LastViewed allProducts={localproducts} viewedProducts={viewedProducts} /> */}
 

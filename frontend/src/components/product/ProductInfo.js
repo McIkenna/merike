@@ -69,7 +69,6 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
     // Keep unique entries by product id, preserve most-recent-first order
     if (!inspired.some(i => i._id === entry._id)) {
       inspired.unshift(entry);
-      inspired = inspired.slice(0, 4); // keep a reasonable history length
       dispatch(setCartInspiredProducts(inspired));
       localStorage.setItem('cartInspiredProducts', JSON.stringify(inspired));
     }

@@ -11,8 +11,7 @@ import {
     Stack,
     ImageList, ImageListItem, ImageListItemBar, ListSubheader
 } from '@mui/material';
-const CartInspired = ({ cartInspiredProducts }) => {
-    console.log('cartInspiredProducts -->', cartInspiredProducts);
+const CartInspired = ({ cartInspiredProducts, handleSelect }) => {
     return (
         <>
             <Card
@@ -23,7 +22,9 @@ const CartInspired = ({ cartInspiredProducts }) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: 500,
-                }}>
+                    cursor: 'pointer'
+                }}
+                onClick={() => handleSelect('cart-inspired')}>
 
                 <ImageList sx={{ width: '100%', height: 450 }} cols={2}  >
                     <ImageListItem key="Subheader" cols={2}>

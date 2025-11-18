@@ -12,6 +12,7 @@ import UserProfilePage from './components/user/UserProfilePage';
 import Checkout from './components/checkout/Checkout';
 import CheckoutSuccess from './components/checkout/CheckoutSuccess';
 import { AdminDashboard } from './components/product/productAdmin/AdminDashboard';
+import { SelectHome } from './components/layout/SelectHome';
 function App() {
   return (
     <Router>
@@ -20,6 +21,9 @@ function App() {
       <Box sx={{ padding: '2%', }}>
       <Routes>
       <Route path='/' Component={Home} exact/>
+      <Route path='/recommended' Component={SelectHome} exact/>
+      <Route path='/cart-inspired' Component={SelectHome} exact/>
+      <Route path='/recently-bought' Component={SelectHome} exact/>
       <Route path='/login' Component={Login} exact/>
       <Route path='/register' Component={Register} exact/>
       <Route path='/product/:id' Component={ProductDetail} exact/> 

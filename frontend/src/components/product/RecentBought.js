@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
 import {
     Box,
     Typography,
     Card,
-    CardMedia,
-    CardContent,
-    CardActionArea,
-    Chip,
-    IconButton,
-    Stack,
-    ImageList, ImageListItem, ImageListItemBar, ListSubheader
+    ImageList, ImageListItem, ImageListItemBar, ListSubheader,
+    Link
 } from '@mui/material';
-const RecentlyBought = ({ recentBoughtProducts }) => {
+import { blue } from "@mui/material/colors";
+const RecentlyBought = ({ recentBoughtProducts, handleSelect }) => {
     return (
         <>
             <Card
@@ -30,6 +25,7 @@ const RecentlyBought = ({ recentBoughtProducts }) => {
                         <ListSubheader sx={{ background: 'none', fontSize: '1.4em', fontWeight: 'bold' }}>Recently Bought</ListSubheader>
                     </ImageListItem>
                     {recentBoughtProducts?.map((item) => (
+                        <Link href={`/product/${item?._id }`} sx={{ textDecoration: 'none', cursor: 'pointer'}} key={item?.id}>
                         <ImageListItem key={item?.id}
                             sx={{
                                 borderRadius: 2,
@@ -47,8 +43,28 @@ const RecentlyBought = ({ recentBoughtProducts }) => {
                             />
                             <ImageListItemBar title={item?.name} subtitle={<span>price: ${item.price}</span>} />
                         </ImageListItem>
+                        </Link>
                     ))}
                 </ImageList>
+                <Box
+                    onClick={() => handleSelect('recently-bought')}>
+                    <Typography
+                        sx={{
+                            mt: 1,
+                            fontSize: '0.8em',
+                            color: blue[600],
+                            cursor: 'pointer', textAlign: 'center',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            '&:hover': {
+                                transform: 'translateY(-5px)',
+                                textDecoration: 'underline'
+                            }
+                        }}
+                    >
+                        Show More
+                    </Typography>
+                </Box>
+
             </Card>
         </>
     );

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { setProductRecentlyBought } from "./actions";
 const initialState = {
     products: {},
     categories: {},
@@ -11,7 +12,10 @@ const initialState = {
     cartItems: localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [],
     allOrders: [],
     viewedProducts: localStorage.getItem("viewedProducts") ? JSON.parse(localStorage.getItem("viewedProducts")) : [],
-    cartInspiredProducts: localStorage.getItem("cartInspiredProducts") ? JSON.parse(localStorage.getItem("cartInspiredProducts")) : []
+    cartInspiredProducts: localStorage.getItem("cartInspiredProducts") ? JSON.parse(localStorage.getItem("cartInspiredProducts")) : [],
+    recommendedProducts: localStorage.getItem("recommendedProducts") ? JSON.parse(localStorage.getItem("recommendedProducts")) : [],
+    productRecentlyBought: localStorage.getItem("productRecentlyBought") ? JSON.parse(localStorage.getItem("productRecentlyBought")) : [],
+
 }
 
 const reducers = createSlice({
@@ -89,6 +93,18 @@ const reducers = createSlice({
             return {
                ...state,
                 cartInspiredProducts: action.payload,
+            }
+        },
+        setRecommendedProducts: (state, action) => {
+            return {
+               ...state,
+                recommendedProducts: action.payload,
+            }
+        },
+        setProductRecentlyBought: (state, action) => {
+            return {
+               ...state,
+                productRecentlyBought: action.payload,
             }
         }
 
