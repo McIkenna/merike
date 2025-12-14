@@ -9,22 +9,23 @@ import { lightTheme, darkTheme } from '../../utils/Themes';
 import merikeLogo from '../../static/images/Merike logo only color.png'
 import DropDownSelect from '../../utils/DropDownSelect';
 import { useGetAllCategoryQuery } from '../../api/services/categoryApi';
-import { useDispatch, useSelector} from 'react-redux';
+import { useGetAllCarouselQuery } from '../../api/services/carouselApi';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Search from '../../utils/Search';
 import { grey, green, red, blue } from "@mui/material/colors";
 import { useLogoutUserMutation } from '../../api/services/userApi';
 import { useNavigate } from 'react-router-dom';
-import { setCategories, setProducts, setSelectedCategory, setPriceFilter, setProductRecentlyBought, setAllOrders } from '../../api/actions';
+import { setCategories, setProducts, setSelectedCategory, setPriceFilter, setProductRecentlyBought, setAllOrders, setCarouselItems } from '../../api/actions';
 import { useGetAllProductsQuery } from '../../api/services/productApi';
 import Banner from './Banner';
 import { setUser, setToken } from '../../api/actions';
 import { useMyOrdersQuery } from '../../api/services/orderApi';
-import {Category} from '../category/Category'
+import { Category } from '../category/Category'
 
 
 export default function Header() {
-  const pages = ['Products', 'Pricing', 'Blog'];
+  // const pages = ['Products', 'Pricing', 'Blog'];
   const settings = ['Profile', 'Account', 'Dashboard'];
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -32,23 +33,27 @@ export default function Header() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { data, error, isLoading, isSuccess, refetch: categoryRefetch } = useGetAllCategoryQuery();
+  const { data: carouselData, error: carouselError, isLoading: carouselIsLoading, isSuccess: isSuccessCarousel} = useGetAllCarouselQuery();
   const { data: prodData, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, refetch: productRefetch } = useGetAllProductsQuery();
-  
-  const [ pageReloaded, setPageReloaded] = useState(false)
-  const [logoutUser, {isError, isSuccess: logoutSuccess, ...props}]= useLogoutUserMutation()
-  const {stateStore, auth} = useSelector((state) => state)
-  const {user} = auth
+
+  const [pageReloaded, setPageReloaded] = useState(false)
+  const [logoutUser, { isError, isSuccess: logoutSuccess, ...props }] = useLogoutUserMutation()
+  const { stateStore, auth } = useSelector((state) => state)
+  const { user } = auth
   // console.log('auth', auth)
-  const {data: orderData, isSuccess: orderIsSuccess, isError: orderIsError} = useMyOrdersQuery()
-  const {totalQuantity, selectedCategory, categories} = stateStore
+  const { data: orderData, isSuccess: orderIsSuccess, isError: orderIsError } = useMyOrdersQuery()
+  const { totalQuantity, selectedCategory, categories } = stateStore
   useEffect(() => {
     if (data !== undefined) {
       dispatch(setCategories(data))
     }
-    if(user?._id && orderIsSuccess) {
+    if (user?._id && orderIsSuccess) {
       dispatch(setAllOrders(orderData?.orders))
     }
-  }, [data, orderData])
+    if (carouselData !== undefined) {
+      dispatch(setCarouselItems(carouselData?.carousels))
+    }
+  }, [data, orderData, carouselData])
 
   useEffect(() => {
     if (prodData !== undefined) {
@@ -97,22 +102,23 @@ export default function Header() {
   }
 
   const handleCategoryChange = (category) => {
-      dispatch(setSelectedCategory(category))
-      // keyparam.delete('search');
-  
-      // dispatch(filterProductByCategory(category))
-    }
+    dispatch(setSelectedCategory(category))
+    // keyparam.delete('search');
+
+    // dispatch(filterProductByCategory(category))
+  }
   return (
     <>
       <ThemeProvider theme={lightTheme}>
         <AppBar position="static">
           <Container maxWidth="xl">
+
             <Toolbar disableGutters>
               <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px", cursor: 'pointer' }}
-              onClick={() => {reloadPage()}}>
-              
-                  <img src={merikeLogo} style={{ width: '100px' }} />
-                
+                onClick={() => { reloadPage() }}>
+
+                <img src={merikeLogo} style={{ width: '100px' }} />
+
               </Box>
 
               <Box style={{ textDecoration: 'none' }}>
@@ -130,89 +136,28 @@ export default function Header() {
                     textDecoration: 'none',
                     cursor: 'pointer'
                   }}
-                  onClick={() => {reloadPage()}} 
+                  onClick={() => { reloadPage() }}
                 >
-                  Merike
+                  Merikemart
                 </Typography>
               </Box>
 
-              <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              <Box sx={{ display: { xs: 'flex', md: 'none' }, flexGrow: 0 }}>
                 <IconButton
                   size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={(e) => { handleOpenNavMenu(e) }}
+                  aria-label="menu"
+                  onClick={handleOpenNavMenu}
                   color="inherit"
                 >
                   <MenuIcon />
                 </IconButton>
-
-                {/* <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorElNav}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                  }}
-                  open={Boolean(anchorElNav)}
-                  onClose={() => { handleCloseNavMenu() }}
-                  sx={{
-                    display: { xs: 'block', md: 'none' },
-                  }}
-                >
-                  {pages.map((page) => (
-                    page === 'Category' ? <DropDownSelect categories={categories} /> :
-                      <MenuItem key={page} onClick={() => { handleCloseNavMenu() }}>
-                        <Typography variant="display3" textAlign="center">{page}</Typography>
-                      </MenuItem>
-                  )
-                  )}
-
-                </Menu> */}
-              </Box>
-              <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, paddingRight: "10px" }}>
-                <img src={merikeLogo} style={{ width: '100px' }} />
-              </Box>
-              <Typography
-                variant="h5"
-                noWrap
-                component="a"
-                href="/"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'flex', md: 'none' },
-                  flexGrow: 1,
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.3rem',
-                  color: 'inherit',
-                  textDecoration: 'none',
-                }}
-              >
-                Merike
-              </Typography>
-
-              <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                {pages.map((page) => (
-                    <Button
-                      key={page}
-                      onClick={() => { handleCloseNavMenu() }}
-                      sx={{ my: 2, color: '#212121', display: 'block' }}
-                    >
-                      {page}
-                    </Button>
-                ))}
               </Box>
 
-              <Search pageReloaded={pageReloaded}/>
+
+              <Box sx={{ flexGrow: 1 }} />
+              <Search pageReloaded={pageReloaded} />
               <Box sx={{ display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
-              onClick={() => navigate('/cart')}>
+                onClick={() => navigate('/cart')}>
                 <ShoppingCart
                   cartstyle={{ size: 2, color: "#000", circleBg: "#EBEBE8" }}
                   totalQuantity={totalQuantity}
@@ -222,28 +167,28 @@ export default function Header() {
               {
                 user?._id ? (
                   <Box style={{ paddingRight: '20px', textDecoration: 'none', color: grey[800], cursor: 'pointer' }}
-                  onClick={() => logOut()}>
+                    onClick={() => logOut()}>
                     <Typography textAlign="center">Logout</Typography>
-                </Box>
-                 ) : (
+                  </Box>
+                ) : (
                   <Box style={{ display: 'flex' }}>
-                  <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}>
-                  <Link to={`/login`}style={{ textDecoration: 'none', color: grey[800]}}>
-                    <Typography textAlign="center">Login</Typography>
-                  </Link>
-                </Box>
-                <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}
-                onClick={() => navigate('/register')}
-              >
-                    <Typography textAlign="center">Register</Typography>
-                </Box>
-                </Box>
+                    <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}>
+                      <Link to={`/login`} style={{ textDecoration: 'none', color: grey[800] }}>
+                        <Typography textAlign="center">Login</Typography>
+                      </Link>
+                    </Box>
+                    <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}
+                      onClick={() => navigate('/register')}
+                    >
+                      <Typography textAlign="center">Register</Typography>
+                    </Box>
+                  </Box>
                 )
               }
-              
-              
-             
-              
+
+
+
+
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={(e) => { handleOpenUserMenu(e) }} sx={{ p: 0 }}>
@@ -277,10 +222,14 @@ export default function Header() {
                   ))}
                 </Menu>
               </Box>
+
             </Toolbar>
           </Container>
           <Divider />
-         <Category categories={categories} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory}/>
+          <Box sx={{ padding: '5px 0', backgroundColor: grey[100], overflowX: 'auto', width: '100%' }}>
+          <Category categories={categories} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
+          </Box>
+          
         </AppBar>
         <Banner />
       </ThemeProvider>

@@ -33,7 +33,7 @@ export default function Home() {
     setAnchorEl(null);
   };
 
-  const { categories, products, selectedCategory, priceFilter, viewedProducts, cartInspiredProducts, allOrders } = stateStore
+  const { categories, products, selectedCategory, priceFilter, viewedProducts, cartInspiredProducts, allOrders, carouselItems } = stateStore
 
   // console.log('allOrders in home -->', allOrders)
   const handlePriceChange = (event, newValue) => {
@@ -192,7 +192,7 @@ export default function Home() {
   return (
     <Box>
       <MetaData title={'Buy Best Products Online'} />
-      <CarouselBanner />
+      <CarouselBanner carouselItems={carouselItems}/>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
         <Box>
           <IconButton aria-describedby={id} onClick={handlePopover} >
@@ -233,10 +233,10 @@ export default function Home() {
       </Grid>
       <Grid container spacing={2} justify="center" paddingTop='40px'>
         <Grid item md={4} sm={4} xs={4}>
-          <RecommendedProduct recommendedProducts={recommendations} handleSelect={handleSelect}/>
+          {recommendations?.length > 0 && <RecommendedProduct recommendedProducts={recommendations} handleSelect={handleSelect}/>}
         </Grid>
         <Grid item md={4} sm={4} xs={4}>
-          <CartInspired cartInspiredProducts={cartInspiredProducts.slice(0, 4)} handleSelect={handleSelect} />
+          {cartInspiredProducts.length > 0 && <CartInspired cartInspiredProducts={cartInspiredProducts.slice(0, 4)} handleSelect={handleSelect} />}
         </Grid>
         <Grid item md={4} sm={4} xs={4}>
           {getRecentlyBoughtProducts?.length > 0 && <RecentBought recentBoughtProducts={getRecentlyBoughtProducts.slice(0, 4)} handleSelect={handleSelect}/>}
