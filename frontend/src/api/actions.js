@@ -16,6 +16,7 @@ setCartInspiredProducts,
 setAllOrders,
 setProductRecentlyBought,
 setRecommendedProducts,
-setCarouselItems } = reducers.actions
+setCarouselItems, 
+setBannerItems } = reducers.actions
 export const { setUser, setToken, logout } = authReducer.actions
 

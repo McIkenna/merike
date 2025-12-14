@@ -1,21 +1,21 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
-export const carouselApi = createApi({
+export const bannerApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "http://127.0.0.1:4000"
     }),
 
-    reducerPath: "carousel",
-    tagTypes: ["carousel"],
+    reducerPath: "advert",
+    tagTypes: ["advert"],
     endpoints: (build) => ({
-        getAllCarousel: build.query({
+        getAllBanner: build.query({
             query: () => ({
-                url: '/api/v1/carousels',
+                url: '/api/v1/adverts',
                 method: 'GET'
             }),
-            providesTags: ['carousel']
+            providesTags: ['advert']
         })
     })
 
 })
 
-export const {useGetAllCarouselQuery} = carouselApi;
+export const {useGetAllBannerQuery} = bannerApi;
