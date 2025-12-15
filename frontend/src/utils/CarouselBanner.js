@@ -2,33 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, Paper, IconButton } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 import { ArrowBack, ArrowForward, Pause, PlayArrow } from '@mui/icons-material';
-import { green, blue, red } from '@mui/material/colors';
-
-const items = [
-    {
-        image: 'https://images.unsplash.com/photo-1549388604-817d15aa0110',
-        description: 'This is the description for Image 1'
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1523413651479-597eb2da0ad6',
-        description: 'This is the description for Image 2'
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1563298723-dcfebaa392e3',
-        description: 'This is the description for Image 3'
-    },
-    {
-        image: 'https://images.unsplash.com/photo-1574180045827-681f8a1a9622',
-        description: 'This is the description for Image 4'
-    }
-];
 
 const CarouselItem = ({ item }) => (
     <Paper
         sx={{
             position: 'relative',
-            height: '400px',
-            background: `url(${item.image}) no-repeat center center`,
+            height: { xs: '250px', sm: '350px', md: '400px' },
+            background: `url(${item?.image?.url}) no-repeat center center`,
             backgroundSize: 'cover',
             display: 'flex',
             justifyContent: 'center',
@@ -40,21 +20,24 @@ const CarouselItem = ({ item }) => (
         <Box
             sx={{
                 position: 'absolute',
-                bottom: '20px',
+                bottom: { xs: '10px', sm: '15px', md: '20px' },
                 backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                padding: '10px',
-                borderRadius: '4px'
+                padding: { xs: '6px 10px', sm: '8px 12px', md: '10px' },
+                borderRadius: '4px',
+                maxWidth: '90%'
             }}
         >
-            <Typography variant="h6">{item.description}</Typography>
+            <Typography variant="h6" sx={{ fontSize: { xs: '0.9rem', sm: '1.1rem', md: '1.25rem' } }}>
+                {item?.description}
+            </Typography>
         </Box>
     </Paper>
 );
 
-const CarouselBanner = () => {
+const CarouselBanner = ({carouselItems}) => {
     const [activeStep, setActiveStep] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
-    const numItems = items.length;
+    const numItems = carouselItems.length;
     const autoPlayRef = useRef(null);
 
     useEffect(() => {
@@ -81,41 +64,82 @@ const CarouselBanner = () => {
     };
 
     return (
-        <Box >
+        <Box sx={{ position: 'relative', width: '100%' }}>
+            {/* Carousel */}
             <Box sx={{ maxWidth: '100vw', margin: 'auto', marginTop: '0' }}>
                 <Carousel
                     index={activeStep}
                     autoPlay={false}
                     navButtonsAlwaysInvisible
                 >
-                    {items.map((item, index) => (
+                    {carouselItems.map((item, index) => (
                         <CarouselItem key={index} item={item} />
                     ))}
                 </Carousel>
             </Box>
 
+            {/* Control Buttons - Always on top */}
             <Box
                 sx={{
                     position: 'absolute',
                     top: '50%',
-                    right: '40px',
+                    right: { xs: '10px', sm: '20px', md: '40px' },
                     transform: 'translateY(-50%)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '10px',
-                    zIndex: 4,
-                    padding: '20px'
+                    gap: { xs: '8px', sm: '10px' },
+                    zIndex: 1000,
+                    pointerEvents: 'auto'
                 }}
             >
-                <IconButton onClick={handlePrevious} sx={{backgroundColor: blue['A400'], color: 'white'}}>
-                    <ArrowBack />
+                <IconButton 
+                    onClick={handlePrevious} 
+                    sx={{
+                        backgroundColor: 'primary.dark', 
+                        color: 'neutral.white',
+                        width: { xs: '36px', sm: '42px', md: '48px' },
+                        height: { xs: '36px', sm: '42px', md: '48px' },
+                        '&:hover': {
+                            backgroundColor: 'primary.light',
+                            color: 'neutral.gray'
+                        },
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                    }}
+                >
+                    <ArrowBack sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />
                 </IconButton>
-                <IconButton onClick={handlePause} sx={{backgroundColor: green['A400'], color: 'white'}}>
-                    {isPaused ? <PlayArrow /> : <Pause />}
+                <IconButton 
+                    onClick={handlePause} 
+                    sx={{
+                        backgroundColor: 'success.dark', 
+                        color: 'neutral.dark',
+                        width: { xs: '36px', sm: '42px', md: '48px' },
+                        height: { xs: '36px', sm: '42px', md: '48px' },
+                        '&:hover': {
+                            backgroundColor: 'success.light',
+                            color: 'neutral.gray'
+                        },
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                    }}
+                >
+                    {isPaused ? <PlayArrow sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} /> : <Pause sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />}
                 </IconButton>
-                <IconButton onClick={handleNext} sx={{backgroundColor: red['A400'], color: 'white'}}>
-                    <ArrowForward />
+                <IconButton 
+                    onClick={handleNext} 
+                    sx={{
+                        backgroundColor: 'secondary.dark', 
+                        color: 'neutral.white',
+                        width: { xs: '36px', sm: '42px', md: '48px' },
+                        height: { xs: '36px', sm: '42px', md: '48px' },
+                        '&:hover': {
+                            backgroundColor: 'secondary.light',
+                            color: 'neutral.gray'
+                        },
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                    }}
+                >
+                    <ArrowForward sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />
                 </IconButton>
             </Box>
         </Box>

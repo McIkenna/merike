@@ -15,11 +15,11 @@ export const ProductGallery = ({ product }) => {
 
 
     const nextImage = () => {
-        setMainImageIndex((prevIndex) => (prevIndex + 1) % product.images.length);
+        setMainImageIndex((prevIndex) => (prevIndex + 1) % product?.images?.length);
     };
 
     const prevImage = () => {
-        setMainImageIndex((prevIndex) => (prevIndex - 1 + product.images.length) % product.images.length);
+        setMainImageIndex((prevIndex) => (prevIndex - 1 + product?.images?.length) % product?.images?.length);
     };
     const thumbnailSettings = {
         dots: false,

@@ -15,6 +15,7 @@ const Checkout = ({cartItems}) => {
         cartItems: cartItems,
         userId : auth?.user
     }
+    console.log('cartItems -->', cartItems)
     checkoutOrder(reqBody).then((res) => {
         if(res.data.url){
             window.location.href = res.data.url

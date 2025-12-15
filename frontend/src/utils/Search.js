@@ -66,17 +66,18 @@ const Search = ({pageReloaded}) => {
     }
     
   return (
-        <Box sx={{ display: 'flex', backgroundColor: grey[200], borderRadius: '20px'}}>
+        <Box sx={{ display: 'flex', bgcolor: 'background.default', borderRadius: '20px', border: '1px solid', borderColor: 'background.paper'  }}>
 
 <StyledInputBase
-        sx={{ ml: 1, flex: 1 }}
-        placeholder="Search Google Maps"
-        inputProps={{ 'aria-label': 'search google maps' }}
+        sx={{ ml: 1, flex: 1,   color: 'text.primary' }}
+        placeholder="Search For Products…"
+        inputProps={{ 'aria-label': 'search for products' }}
         onChange={handleKeywordChange}
         value={search}
+
         
       />
-      <SearchButton type="button" sx={{ p: '10px' }} aria-label="search"
+      <SearchButton type="button" sx={{ p: '10px'}} aria-label="search"
       onClick={()=>handleSearchSubmit()}>
         <SearchIcon />
       </SearchButton>

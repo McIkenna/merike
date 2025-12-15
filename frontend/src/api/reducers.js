@@ -1,14 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { setProductRecentlyBought } from "./actions";
 const initialState = {
     products: {},
     categories: {},
-    selectedCategory: '',
+    selectedCategory: 'all',
     priceFilter: [0, 500],
     pricePerItem: 0,
     qtyPerItem: 0,
     totalPrice: localStorage.getItem('totalPrice') ? JSON.parse(localStorage.getItem('totalPrice')) : 0,
     totalQuantity: localStorage.getItem('totalQuantity') ? JSON.parse(localStorage.getItem('totalQuantity')) : 0,
     cartItems: localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [],
+    allOrders: [],
+    viewedProducts: localStorage.getItem("viewedProducts") ? JSON.parse(localStorage.getItem("viewedProducts")) : [],
+    cartInspiredProducts: localStorage.getItem("cartInspiredProducts") ? JSON.parse(localStorage.getItem("cartInspiredProducts")) : [],
+    recommendedProducts: localStorage.getItem("recommendedProducts") ? JSON.parse(localStorage.getItem("recommendedProducts")) : [],
+    productRecentlyBought: localStorage.getItem("productRecentlyBought") ? JSON.parse(localStorage.getItem("productRecentlyBought")) : [],
+    carouselItems: [],
+    bannerItems: []
+
 }
 
 const reducers = createSlice({
@@ -69,6 +78,48 @@ const reducers = createSlice({
                 cartItems: action.payload,
             }
             
+        },
+        setAllOrders: (state, action) => {
+            return {
+               ...state,
+                allOrders: action.payload,
+            }
+        },
+        setViewedProducts: (state, action) => {
+            return {
+               ...state,
+                viewedProducts: action.payload,
+            }
+        },
+        setCartInspiredProducts: (state, action) => {
+            return {
+               ...state,
+                cartInspiredProducts: action.payload,
+            }
+        },
+        setRecommendedProducts: (state, action) => {
+            return {
+               ...state,
+                recommendedProducts: action.payload,
+            }
+        },
+        setProductRecentlyBought: (state, action) => {
+            return {
+               ...state,
+                productRecentlyBought: action.payload,
+            }
+        },
+        setCarouselItems: (state, action) => {
+            return {
+               ...state,
+                carouselItems: action.payload
+            }
+        },
+        setBannerItems: (state, action) => {
+            return {
+               ...state,
+                bannerItems: action.payload
+            }
         }
 
         
