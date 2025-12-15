@@ -3,7 +3,6 @@ import { Box, Paper, CardMedia, CardContent, Typography, Button, IconButton } fr
 // import {AddOutlinedIcon, RemoveOutlinedIcon} from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 export default function BoxCard(props) {
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -40,7 +39,9 @@ export default function BoxCard(props) {
             alignItems: "center",
             height: "250px",
             overflow: "hidden",
-            padding: '10px'
+            padding: '10px',
+            borderRadius: '8px',
+            border: '1px solid #e2e2e2ff',
           }}>
           <CardMedia
             component="img"

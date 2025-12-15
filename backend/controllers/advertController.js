@@ -71,15 +71,11 @@ exports.updateAdvert = catchAsyncErrors(async (req, res, next) => {
 // Delete a advert item by ID
 exports.deleteAdvert = catchAsyncErrors(async (req, res, next) => {
     try {
-        const advert = await Advert.findById(req.params.id);
-        if (!advert) {
-            return next(new ErrorHandler('No Advert found with this ID', 404));
-        }
-        await advert.remove();
-        res.status(200).json({
-            success: true,
-            message: 'Advert item deleted successfully'
-        });
+        const advert = await Advert.findByIdAndDelete(req.params.id);
+                res.status(200).json({
+                    success: true,
+                    message: `${advert.name} deleted successfully`
+                });
     } catch (err) {
         return next(new ErrorHandler(err.message, 400));
     }

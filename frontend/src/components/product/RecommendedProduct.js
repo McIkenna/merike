@@ -1,15 +1,6 @@
 import {
-  Box,
-  Typography,
   Card,
-  CardMedia,
-  CardContent,
-  CardActionArea,
-  Chip,
-  IconButton,
-  Stack,
-  Link,
-  ImageList, ImageListItem, ImageListItemBar, ListSubheader
+  ImageList, ImageListItem, ListSubheader
 } from '@mui/material';
 const RecommendedProduct = ({ recommendedProducts, handleSelect }) => {
 

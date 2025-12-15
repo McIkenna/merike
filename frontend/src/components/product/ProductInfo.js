@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) => {
   const dispatch = useDispatch();
   const { stateStore } = useSelector(state => state);
-  const { qtyPerItem, totalPrice, pricePerItem, totalQuantity, cartItems, viewedProducts, products, cartInspiredProducts } = stateStore;
+  const { qtyPerItem, totalPrice, totalQuantity, cartItems, viewedProducts, cartInspiredProducts } = stateStore;
   const addItem = () => {
     dispatch(setQtyPerItem(qtyPerItem + 1));
   };

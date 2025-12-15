@@ -71,15 +71,12 @@ exports.updateCarousel = catchAsyncErrors(async (req, res, next) => {
 // Delete a carousel item by ID
 exports.deleteCarousel = catchAsyncErrors(async (req, res, next) => {
     try {
-        const carousel = await Carousel.findById(req.params.id);
-        if (!carousel) {
-            return next(new ErrorHandler('No Carousel found with this ID', 404));
-        }
-        await carousel.remove();
+        const carousel = await Carousel.findByIdAndDelete(req.params.id);
         res.status(200).json({
             success: true,
-            message: 'Carousel item deleted successfully'
+            message: `${carousel.name} deleted successfully`
         });
+
     } catch (err) {
         return next(new ErrorHandler(err.message, 400));
     }

@@ -1,20 +1,15 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Box, Typography, Button, Stack, TextField, Select, MenuItem, Modal } from '@mui/material'
 import { AgGridReact } from "ag-grid-react";
-// import "ag-grid-community/styles/ag-grid.css"; // Core AG Grid styles
-// import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useGetProductBySellerQuery, useUpdateProductMutation, useDeleteProductMutation } from '../../../api/services/productApi';
-import { blue, grey } from '@mui/material/colors';
 import ProductForm from './ProductForm';
 import Loader from '../../../utils/Loader';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { blueGrey, red, yellow } from '@material-ui/core/colors';
+import { colors } from '../../../utils/Themes';
 
 export const UserInventory = (props) => {
-    const { categories, user, data, isFetching, refetch } = props
+    const { categories, user, data, isFetching, refetch, toastState, setToastState } = props
     const gridRef = useRef(null)
     // Row Data: The data to be displayed.
 
@@ -23,11 +18,7 @@ export const UserInventory = (props) => {
     // const userPage = ['Listing', 'ProductForm', 'UpdateProductForm']
     const [deleteProduct, {isError: deleteIsError, isLoading: deleteIsLoading, isSuccess, deleteIsSuccess}] = useDeleteProductMutation()
     const [activePage, setActivePage] = useState('Listing')
-    const [toastState, setToastState] = useState({
-        open: false,
-        message: '',
-        severity: ''
-    });
+   
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const changePage = (e) => {
         const { name } = e.target
@@ -42,6 +33,7 @@ export const UserInventory = (props) => {
         setSelectedRow(data);
         setShowDeleteModal(true)
     }
+
 
     const handleDelete = () => {
         
@@ -108,9 +100,9 @@ export const UserInventory = (props) => {
                 }}>
                     <EditNoteOutlinedIcon
                         style={{
-                            color: blue['700'],
+                            color: colors.primaryBlue.dark,
                             border: 'none',
-                            backgroundColor: grey['100'],
+                            backgroundColor: colors.neutral.lightGray,
                             cursor: 'pointer',
                             padding: '5px',
                             borderRadius: '20px',
@@ -119,9 +111,9 @@ export const UserInventory = (props) => {
                     />
                     <DeleteOutlineOutlinedIcon
                         style={{
-                            color: red['700'],
+                            color: colors.primaryRed.light,
                             border: 'none',
-                            backgroundColor: grey['100'],
+                            backgroundColor: colors.neutral.lightGray,
                             padding: '5px',
                             borderRadius: '20px',
                             cursor: 'pointer'
@@ -236,7 +228,7 @@ export const UserInventory = (props) => {
         }
         const timer = setTimeout(removeAlert, 3000);
         return () => clearTimeout(timer)
-    }, [toastState])
+    }, [toastState.open])
 
     const emptyState = {
         name: '',
@@ -252,17 +244,7 @@ export const UserInventory = (props) => {
 
     return (
         <Box>
-            <Box>
-                <Snackbar open={toastState.open} autoHideDuration={1200} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-                    <Alert
-                        severity={toastState.severity}
-                        variant="filled"
-                        sx={{ width: '100%' }}
-                    >
-                        {toastState.message}
-                    </Alert>
-                </Snackbar>
-            </Box>
+            
             {(!data?.product || isFetching || deleteIsLoading) ? <Box>
                 <div style={{ height: '80vh' }}>
                     <Loader />
@@ -276,8 +258,26 @@ export const UserInventory = (props) => {
                         justifyContent: 'space-between'
                     }}>
                         <Stack spacing={2} direction="row">
-                            <Button name='ProductForm' disabled={activePage === 'ProductForm'} variant="outlined" onClick={(e) => changePageAndClear(e)}>Add Listing</Button>
-                            <Button name='UpdateProductForm' disabled={!selectedRow || activePage === 'UpdateProductForm'} variant="outlined" onClick={changePage}>Edit Listing</Button>
+                            <Button 
+                            name='ProductForm' 
+                            disabled={activePage === 'ProductForm'} 
+                            variant="outlined" 
+                            onClick={(e) => changePageAndClear(e)}
+                            color='primary'>Add Listing</Button>
+                            <Button 
+                            name='UpdateProductForm'
+                             disabled={!selectedRow || activePage === 'UpdateProductForm'} 
+                             variant="outlined" 
+                             onClick={changePage}
+                             sx={{
+                                borderColor: colors.primaryGreen.dark,
+                                color: colors.primaryGreen.dark,
+                                '&:hover': {
+                                    backgroundColor: colors.primaryGreen.light,
+                                    color: colors.neutral.black
+                                }
+                            }}
+                             >Edit Listing</Button>
                             {/* <Button disabled={!selectedRow} variant="outlined">Update Listing</Button> */}
                             <Button disabled={!selectedRow} variant="outlined" color="error" onClick={() =>setShowDeleteModal(true)}>Delete Listing</Button>
                         </Stack>

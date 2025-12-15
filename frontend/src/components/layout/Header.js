@@ -16,12 +16,13 @@ import Search from '../../utils/Search';
 import { grey, green, red, blue } from "@mui/material/colors";
 import { useLogoutUserMutation } from '../../api/services/userApi';
 import { useNavigate } from 'react-router-dom';
-import { setCategories, setProducts, setSelectedCategory, setPriceFilter, setProductRecentlyBought, setAllOrders, setCarouselItems } from '../../api/actions';
+import { setCategories, setProducts, setSelectedCategory, setPriceFilter, setProductRecentlyBought, setAllOrders, setCarouselItems, setBannerItems } from '../../api/actions';
 import { useGetAllProductsQuery } from '../../api/services/productApi';
 import Banner from './Banner';
 import { setUser, setToken } from '../../api/actions';
 import { useMyOrdersQuery } from '../../api/services/orderApi';
 import { Category } from '../category/Category'
+import { useGetAllBannerQuery } from '../../api/services/bannerApi';
 
 
 export default function Header() {
@@ -35,6 +36,7 @@ export default function Header() {
   const { data, error, isLoading, isSuccess, refetch: categoryRefetch } = useGetAllCategoryQuery();
   const { data: carouselData, error: carouselError, isLoading: carouselIsLoading, isSuccess: isSuccessCarousel} = useGetAllCarouselQuery();
   const { data: prodData, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, refetch: productRefetch } = useGetAllProductsQuery();
+  const { data: bannerData, error: bannerError, isLoading: bannerIsLoading, isSuccess: bannerIsSuccess} = useGetAllBannerQuery();
 
   const [pageReloaded, setPageReloaded] = useState(false)
   const [logoutUser, { isError, isSuccess: logoutSuccess, ...props }] = useLogoutUserMutation()
@@ -53,7 +55,10 @@ export default function Header() {
     if (carouselData !== undefined) {
       dispatch(setCarouselItems(carouselData?.carousels))
     }
-  }, [data, orderData, carouselData])
+    if (bannerData !== undefined) {
+      dispatch(setBannerItems(bannerData?.adverts))
+    }
+  }, [data, orderData, carouselData, bannerData])
 
   useEffect(() => {
     if (prodData !== undefined) {

@@ -1,72 +1,158 @@
 import { createTheme } from '@mui/material/styles';
 
-// Define color shades
-const primaryBlue = {
-  light: '#D4F1F4',
-  main: '#044CAB',
-  dark: '#05445E',
-  contrastText: '#fff',
+// Define color shades as exportable constants
+export const colors = {
+  primaryBlue: {
+    light: '#D4F1F4',
+    main: '#044CAB',
+    dark: '#05445E',
+    contrastText: '#fff',
+  },
+  primaryRed: {
+    light: '#ed7d7bff',
+    main: '#FB3D3D',
+    dark: '#C85250',
+    contrastText: '#f1d1d1ff',
+  },
+  primaryGreen: {
+    light: '#75E6DA',
+    main: '#D1E2C4',
+    dark: '#116530',
+    contrastText: '#fff',
+  },
+  primaryLight: {
+    light: '#B5E5CF',
+    main: '#fff',
+    dark: '#FCB5AC',
+    contrastText: '#212121',
+  },
+  neutral: {
+    black: '#212121',
+    gray: '#757575',
+    white: '#D1E2C4',
+    lightGray: '#EBEBE8',
+  },
+  text: {
+    primary: '#212121',
+    secondary: '#757575',
+    light: '#EBEBE8',
+    white: '#fff',
+  },
 };
 
-const primaryRed = {
-  light: '#E7625F',
-  main: '#FB3D3D',
-  dark: '#C85250',
-  contrastText: '#fff',
-};
-
-const primaryGreen = {
-  light: '#75E6DA',
-  main: '#D1E2C4',
-  dark: '#116530',
-  contrastText: '#fff',
-};
-
-const primaryLight ={
-  light: '#B5E5CF',
-  main: '#fff',
-  dark: '#FCB5AC',
-  contrastText: '#212121',
-}
-
-const neutralBlack = '#212121';
-const neutralGray = '#757575';
-const neutralWhite = '#D1E2C4';
-const lightGray = '#EBEBE8';
-const textcolor = '#EBEBE8';
 // Create dark theme
-const darkTheme = createTheme({
+export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
-    primary: primaryBlue,
-    secondary: primaryRed,
-    success: primaryGreen,
+    primary: {
+      light: colors.primaryBlue.light,
+      main: colors.primaryBlue.main,
+      dark: colors.primaryBlue.dark,
+      contrastText: colors.primaryBlue.contrastText,
+    },
+    secondary: {
+      light: colors.primaryRed.light,
+      main: colors.primaryRed.main,
+      dark: colors.primaryRed.dark,
+      contrastText: colors.primaryRed.contrastText,
+    },
+    success: {
+      light: colors.primaryGreen.light,
+      main: colors.primaryGreen.main,
+      dark: colors.primaryGreen.dark,
+      contrastText: colors.primaryGreen.contrastText,
+    },
     text: {
-      primary: '#fff',
+      primary: colors.text.white,
+      secondary: colors.neutral.lightGray,
     },
     background: {
-      default: neutralGray,
-      paper: neutralBlack,
+      default: colors.neutral.gray,
+      paper: colors.neutral.black,
+    },
+    divider: colors.neutral.gray,
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+        },
+      },
     },
   },
 });
 
 // Create light theme
-const lightTheme = createTheme({
+export const lightTheme = createTheme({
   palette: {
     mode: 'light',
-    primary: primaryLight,
-    secondary: primaryRed,
-    success: primaryGreen,
+    primary: {
+      light: colors.primaryLight.light,
+      main: colors.primaryLight.main,
+      dark: colors.primaryLight.dark,
+      contrastText: colors.primaryLight.contrastText,
+    },
+    secondary: {
+      light: colors.primaryRed.light,
+      main: colors.primaryRed.main,
+      dark: colors.primaryRed.dark,
+      contrastText: colors.primaryRed.contrastText,
+    },
+    success: {
+      light: colors.primaryGreen.light,
+      main: colors.primaryGreen.main,
+      dark: colors.primaryGreen.dark,
+      contrastText: colors.primaryGreen.contrastText,
+    },
+    error: {
+      light: colors.primaryRed.light,
+      main: colors.primaryRed.main,
+      dark: colors.primaryRed.dark,
+      contrastText: colors.primaryRed.contrastText,
+    },
     text: {
-      primary: neutralBlack,
+      primary: colors.text.primary,
+      secondary: colors.neutral.gray,
     },
     background: {
-      default: neutralBlack,
-      paper: lightGray,
+      default: colors.neutral.white,
+      paper: colors.neutral.lightGray,
+    },
+    divider: colors.neutral.lightGray,
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+        },
+      },
     },
   },
-
 });
 
-export { darkTheme, lightTheme };
+// Utility function to get color by path
+export const getColor = (colorPath) => {
+  const paths = colorPath.split('.');
+  let result = colors;
+  
+  for (const path of paths) {
+    result = result[path];
+    if (result === undefined) return null;
+  }
+  
+  return result;
+};
+
+// Export individual color palettes for direct access
+export const { primaryBlue, primaryRed, primaryGreen, primaryLight, neutral, text } = colors;
+
+// Default export
+export default { darkTheme, lightTheme, colors };

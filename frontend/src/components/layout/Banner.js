@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, Collapse, Button, Paper } from '@mui/material';
 import { blueGrey, green } from '@mui/material/colors';
 import { keyframes } from '@emotion/react';
-import { useGetAllBannerQuery } from '../../api/services/bannerApi';
+import { useSelector } from 'react-redux';
 
 // Define the animation keyframes
 const moveLeft = keyframes`
@@ -34,7 +34,9 @@ const fadeOut = keyframes`
 
 const Banner = () => {
   const [open, setOpen] = useState(true);
-  const { data: bannerData, error: bannerError, isLoading: bannerIsLoading, isSuccess: bannerIsSuccess} = useGetAllBannerQuery();
+  const { stateStore, auth } = useSelector((state) => state)
+
+  const { bannerData } = stateStore;
 
   const handleToggle = () => {
     setOpen(!open);
@@ -61,7 +63,7 @@ const Banner = () => {
             marginTop: '0', 
             backgroundColor: green['A200'],
           }}>
-           {bannerData?.adverts?.map((advert, index) => {
+           {bannerData?.map((advert, index) => {
              const fullText = `(${advert?.name}) - ${advert?.description}`;
              const animationDuration = calculateAnimationDuration(fullText);
              

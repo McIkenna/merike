@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, Paper, IconButton } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 import { ArrowBack, ArrowForward, Pause, PlayArrow } from '@mui/icons-material';
-import { green, blue, red } from '@mui/material/colors';
+import { colors } from './Themes';
 
 const CarouselItem = ({ item }) => (
     <Paper
@@ -97,12 +97,13 @@ const CarouselBanner = ({carouselItems}) => {
                 <IconButton 
                     onClick={handlePrevious} 
                     sx={{
-                        backgroundColor: blue['A400'], 
-                        color: 'white',
+                        backgroundColor: colors.primaryBlue.dark, 
+                        color: colors.neutral.white,
                         width: { xs: '36px', sm: '42px', md: '48px' },
                         height: { xs: '36px', sm: '42px', md: '48px' },
                         '&:hover': {
-                            backgroundColor: blue['A700']
+                            backgroundColor: colors.primaryBlue.light,
+                            color: colors.neutral.gray
                         },
                         boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                     }}
@@ -112,14 +113,15 @@ const CarouselBanner = ({carouselItems}) => {
                 <IconButton 
                     onClick={handlePause} 
                     sx={{
-                        backgroundColor: green['A400'], 
-                        color: 'white',
+                        backgroundColor: colors.primaryGreen.dark, 
+                        color: colors.neutral.dark,
                         width: { xs: '36px', sm: '42px', md: '48px' },
                         height: { xs: '36px', sm: '42px', md: '48px' },
                         '&:hover': {
-                            backgroundColor: green['A700']
+                            backgroundColor: colors.primaryGreen.main,
+                            color: colors.neutral.gray
                         },
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
                     }}
                 >
                     {isPaused ? <PlayArrow sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} /> : <Pause sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />}
@@ -127,12 +129,13 @@ const CarouselBanner = ({carouselItems}) => {
                 <IconButton 
                     onClick={handleNext} 
                     sx={{
-                        backgroundColor: red['A400'], 
-                        color: 'white',
+                        backgroundColor: colors.primaryRed.dark, 
+                        color: colors.neutral.white,
                         width: { xs: '36px', sm: '42px', md: '48px' },
                         height: { xs: '36px', sm: '42px', md: '48px' },
                         '&:hover': {
-                            backgroundColor: red['A700']
+                            backgroundColor: colors.primaryRed.contrastText,
+                            color: colors.neutral.gray
                         },
                         boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                     }}
