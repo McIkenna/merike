@@ -3,22 +3,22 @@ import { createTheme } from '@mui/material/styles';
 // Define color shades as exportable constants
 export const colors = {
   primaryBlue: {
-    light: '#D4F1F4',
+    light: '#82a6d5',
     main: '#044CAB',
-    dark: '#05445E',
-    contrastText: '#fff',
+    dark: '#022656',
+    contrastText: '#d3eaf3fe',
   },
   primaryRed: {
-    light: '#ed7d7bff',
+    light: '#fed8d8',
     main: '#FB3D3D',
-    dark: '#C85250',
-    contrastText: '#f1d1d1ff',
+    dark: '#6c1a1a',
+    contrastText: '#ffeeee',
   },
   primaryGreen: {
-    light: '#75E6DA',
-    main: '#D1E2C4',
-    dark: '#116530',
-    contrastText: '#fff',
+    light: '#b8d1c1',
+    main: '#418459',
+    dark: '#0a3d1d',
+    contrastText: '#e7f0ea',
   },
   primaryLight: {
     light: '#B5E5CF',
@@ -28,14 +28,15 @@ export const colors = {
   },
   neutral: {
     black: '#212121',
-    gray: '#757575',
-    white: '#D1E2C4',
-    lightGray: '#EBEBE8',
+    darkGray: '#949494ff',
+    gray: '#bdbdbdff',
+    white: '#ffffffff',
+    lightGray: '#e3e3e3ff',
   },
   text: {
     primary: '#212121',
     secondary: '#757575',
-    light: '#EBEBE8',
+    light: '#03ad77ff',
     white: '#fff',
   },
 };
@@ -64,11 +65,14 @@ export const darkTheme = createTheme({
     },
     text: {
       primary: colors.text.white,
-      secondary: colors.neutral.lightGray,
+      secondary: colors.text.primary,
+      light: colors.text.light,
+
     },
     background: {
       default: colors.neutral.gray,
-      paper: colors.neutral.black,
+      paper: colors.neutral.darkGray,
+      dark: colors.neutral.black,
     },
     divider: colors.neutral.gray,
   },
@@ -91,21 +95,21 @@ export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      light: colors.primaryLight.light,
-      main: colors.primaryLight.main,
-      dark: colors.primaryLight.dark,
+      light: colors.primaryBlue.contrastText,
+      main: colors.primaryBlue.light,
+      dark: colors.primaryBlue.main,
       contrastText: colors.primaryLight.contrastText,
     },
     secondary: {
-      light: colors.primaryRed.light,
-      main: colors.primaryRed.main,
-      dark: colors.primaryRed.dark,
+      light: colors.primaryRed.contrastText,
+      main: colors.primaryRed.light,
+      dark: colors.primaryRed.main,
       contrastText: colors.primaryRed.contrastText,
     },
     success: {
-      light: colors.primaryGreen.light,
-      main: colors.primaryGreen.main,
-      dark: colors.primaryGreen.dark,
+      light: colors.primaryGreen.contrastText,
+      main: colors.primaryGreen.light,
+      dark: colors.primaryGreen.main,
       contrastText: colors.primaryGreen.contrastText,
     },
     error: {
@@ -116,11 +120,13 @@ export const lightTheme = createTheme({
     },
     text: {
       primary: colors.text.primary,
-      secondary: colors.neutral.gray,
+      secondary: colors.text.black,
+      light: colors.text.light,
     },
     background: {
       default: colors.neutral.white,
       paper: colors.neutral.lightGray,
+      dark: colors.neutral.darkGray,
     },
     divider: colors.neutral.lightGray,
   },

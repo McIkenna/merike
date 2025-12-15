@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, Paper, IconButton } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 import { ArrowBack, ArrowForward, Pause, PlayArrow } from '@mui/icons-material';
-import { colors } from './Themes';
 
 const CarouselItem = ({ item }) => (
     <Paper
@@ -97,13 +96,13 @@ const CarouselBanner = ({carouselItems}) => {
                 <IconButton 
                     onClick={handlePrevious} 
                     sx={{
-                        backgroundColor: colors.primaryBlue.dark, 
-                        color: colors.neutral.white,
+                        backgroundColor: 'primary.dark', 
+                        color: 'neutral.white',
                         width: { xs: '36px', sm: '42px', md: '48px' },
                         height: { xs: '36px', sm: '42px', md: '48px' },
                         '&:hover': {
-                            backgroundColor: colors.primaryBlue.light,
-                            color: colors.neutral.gray
+                            backgroundColor: 'primary.light',
+                            color: 'neutral.gray'
                         },
                         boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                     }}
@@ -113,13 +112,13 @@ const CarouselBanner = ({carouselItems}) => {
                 <IconButton 
                     onClick={handlePause} 
                     sx={{
-                        backgroundColor: colors.primaryGreen.dark, 
-                        color: colors.neutral.dark,
+                        backgroundColor: 'success.dark', 
+                        color: 'neutral.dark',
                         width: { xs: '36px', sm: '42px', md: '48px' },
                         height: { xs: '36px', sm: '42px', md: '48px' },
                         '&:hover': {
-                            backgroundColor: colors.primaryGreen.main,
-                            color: colors.neutral.gray
+                            backgroundColor: 'success.light',
+                            color: 'neutral.gray'
                         },
                         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
                     }}
@@ -129,13 +128,13 @@ const CarouselBanner = ({carouselItems}) => {
                 <IconButton 
                     onClick={handleNext} 
                     sx={{
-                        backgroundColor: colors.primaryRed.dark, 
-                        color: colors.neutral.white,
+                        backgroundColor: 'secondary.dark', 
+                        color: 'neutral.white',
                         width: { xs: '36px', sm: '42px', md: '48px' },
                         height: { xs: '36px', sm: '42px', md: '48px' },
                         '&:hover': {
-                            backgroundColor: colors.primaryRed.contrastText,
-                            color: colors.neutral.gray
+                            backgroundColor: 'secondary.light',
+                            color: 'neutral.gray'
                         },
                         boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                     }}

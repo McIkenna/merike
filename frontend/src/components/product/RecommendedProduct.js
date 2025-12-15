@@ -15,13 +15,14 @@ const RecommendedProduct = ({ recommendedProducts, handleSelect }) => {
           justifyContent: 'center',
           alignItems: 'center',
           height: 500,
-         cursor: 'pointer'
+         cursor: 'pointer',
+         backgroundColor: 'background.paper'
         }}
      onClick={() => handleSelect('recommended')}
       >
           <ImageList variant='quilted' sx={{ width: '100%', height: 450 }} cols={2}>
             <ImageListItem key="Subheader" cols={2} >
-              <ListSubheader sx={{ background: 'none', fontSize: '1.4em', fontWeight: 'bold' }} >Recommended for you</ListSubheader>
+              <ListSubheader sx={{ background: 'none', fontSize: '1.4em', fontWeight: 'bold', color: 'text.primary' }} >Recommended for you</ListSubheader>
             </ImageListItem>
             {recommendedProducts?.map((item) => (
               <ImageListItem key={item?.id}

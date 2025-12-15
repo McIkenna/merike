@@ -3,14 +3,15 @@ import { Box, Paper, CardMedia, CardContent, Typography, Button, IconButton } fr
 // import {AddOutlinedIcon, RemoveOutlinedIcon} from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import { colors } from './Themes';
 export default function BoxCard(props) {
 
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : '#fff',
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.secondary
   }));
   // console.log('props', props)
   const {
@@ -41,14 +42,12 @@ export default function BoxCard(props) {
             overflow: "hidden",
             padding: '10px',
             borderRadius: '8px',
-            border: '1px solid #e2e2e2ff',
           }}>
           <CardMedia
             component="img"
             image={images?.[0]?.url ?? image}
             sx={{
-              width: '180px',
-              height: '180px',
+              height: '450px',
               objectFit: 'contain', // Ensures the image covers the area without distortion
               p:2,
               transition: 'transform 0.3s ease-in-out', // Adds a smooth hover effect
@@ -67,7 +66,7 @@ export default function BoxCard(props) {
               variant="body1"
             sx={{
               fontWeight: 600,
-              color: 'primary.main',
+              color: 'text.primary',
               mb: 1,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -77,7 +76,7 @@ export default function BoxCard(props) {
               minHeight: 48,
               lineHeight: 1.5,
               '&:hover': {
-                color: 'text.primary',
+                color: 'text.secondary',
                 textDecoration: 'underline',
               }
             }}>

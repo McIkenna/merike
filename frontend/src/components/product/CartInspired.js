@@ -22,13 +22,14 @@ const CartInspired = ({ cartInspiredProducts, handleSelect }) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: 500,
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    backgroundColor: 'background.paper'
                 }}
                 onClick={() => handleSelect('cart-inspired')}>
 
                 <ImageList sx={{ width: '100%', height: 450 }} cols={2}  >
                     <ImageListItem key="Subheader" cols={2}>
-                        <ListSubheader sx={{ background: 'none', fontSize: '1.4em', fontWeight: 'bold' }}>Cart Inspired Products</ListSubheader>
+                        <ListSubheader sx={{ background: 'none', fontSize: '1.4em', fontWeight: 'bold', color: 'text.primary' }}>Cart Inspired Products</ListSubheader>
                     </ImageListItem>
                     {cartInspiredProducts?.map((item) => (
                         <ImageListItem key={item?.id}

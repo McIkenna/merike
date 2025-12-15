@@ -23,6 +23,7 @@ import { setUser, setToken } from '../../api/actions';
 import { useMyOrdersQuery } from '../../api/services/orderApi';
 import { Category } from '../category/Category'
 import { useGetAllBannerQuery } from '../../api/services/bannerApi';
+import ThemeToggleButton from '../../utils/ThemeToggleButton';
 
 
 export default function Header() {
@@ -34,9 +35,9 @@ export default function Header() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { data, error, isLoading, isSuccess, refetch: categoryRefetch } = useGetAllCategoryQuery();
-  const { data: carouselData, error: carouselError, isLoading: carouselIsLoading, isSuccess: isSuccessCarousel} = useGetAllCarouselQuery();
+  const { data: carouselData, error: carouselError, isLoading: carouselIsLoading, isSuccess: isSuccessCarousel } = useGetAllCarouselQuery();
   const { data: prodData, error: prodError, isLoading: prodIsLoading, isSuccess: prodIsSuccess, refetch: productRefetch } = useGetAllProductsQuery();
-  const { data: bannerData, error: bannerError, isLoading: bannerIsLoading, isSuccess: bannerIsSuccess} = useGetAllBannerQuery();
+  const { data: bannerData, error: bannerError, isLoading: bannerIsLoading, isSuccess: bannerIsSuccess } = useGetAllBannerQuery();
 
   const [pageReloaded, setPageReloaded] = useState(false)
   const [logoutUser, { isError, isSuccess: logoutSuccess, ...props }] = useLogoutUserMutation()
@@ -114,130 +115,134 @@ export default function Header() {
   }
   return (
     <>
-      <ThemeProvider theme={lightTheme}>
-        <AppBar position="static">
-          <Container maxWidth="xl">
+      <AppBar position="static" sx={{
+          bgcolor: 'background.default'
+        }}>
+        <Container maxWidth="xl" >
+          <Toolbar disableGutters>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px", cursor: 'pointer' }}
+              onClick={() => { reloadPage() }}>
 
-            <Toolbar disableGutters>
-              <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px", cursor: 'pointer' }}
-                onClick={() => { reloadPage() }}>
+              <img src={merikeLogo} style={{ width: '100px' }} />
 
-                <img src={merikeLogo} style={{ width: '100px' }} />
+            </Box>
 
-              </Box>
+            <Box style={{ textDecoration: 'none' }}>
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                sx={{
+                  mr: 2,
+                  display: { xs: 'none', md: 'flex' },
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  letterSpacing: '.3rem',
+                  color: blue[800],
+                  textDecoration: 'none',
+                  cursor: 'pointer'
+                }}
+                onClick={() => { reloadPage() }}
+              >
+                Merikemart
+              </Typography>
+            </Box>
 
-              <Box style={{ textDecoration: 'none' }}>
-                <Typography
-                  variant="h6"
-                  noWrap
-                  component="a"
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'none', md: 'flex' },
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: blue[800],
-                    textDecoration: 'none',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => { reloadPage() }}
-                >
-                  Merikemart
-                </Typography>
-              </Box>
+            <Box sx={{ display: { xs: 'flex', md: 'none' }, flexGrow: 0 }}>
+              <IconButton
+                size="large"
+                aria-label="menu"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+            </Box>
 
-              <Box sx={{ display: { xs: 'flex', md: 'none' }, flexGrow: 0 }}>
-                <IconButton
-                  size="large"
-                  aria-label="menu"
-                  onClick={handleOpenNavMenu}
-                  color="inherit"
-                >
-                  <MenuIcon />
+
+            <Box sx={{ flexGrow: 1 }} />
+            <Search pageReloaded={pageReloaded} />
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
+              onClick={() => navigate('/cart')}>
+              <ShoppingCart
+                cartstyle={{ size: 2, color: "#000", circleBg: "#EBEBE8" }}
+                totalQuantity={totalQuantity}
+              //style={{}} prop can be added
+              />
+            </Box>
+            {
+              user?._id ? (
+                <Box style={{ paddingRight: '20px', textDecoration: 'none', color: grey[800], cursor: 'pointer' }}
+                  onClick={() => logOut()}>
+                  <Typography textAlign="center">Logout</Typography>
+                </Box>
+              ) : (
+                <Box style={{ display: 'flex' }}>
+                  <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}>
+                    <Link to={`/login`} style={{ textDecoration: 'none', color: grey[800] }}>
+                      <Typography textAlign="center">Login</Typography>
+                    </Link>
+                  </Box>
+                  <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}
+                    onClick={() => navigate('/register')}
+                  >
+                    <Typography textAlign="center">Register</Typography>
+                  </Box>
+                </Box>
+              )
+            }
+
+
+
+
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={(e) => { handleOpenUserMenu(e) }} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                 </IconButton>
-              </Box>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={() => {
+                  handleCloseUserMenu()
+                }}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={() => { handleCloseUserMenu() }}>
+                    <Link to={`/${setting.toLowerCase()}`}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </Link>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            <Box sx={{
+              paddingLeft: '10px'
+            }}>
+              <ThemeToggleButton />
+            </Box>
 
-
-              <Box sx={{ flexGrow: 1 }} />
-              <Search pageReloaded={pageReloaded} />
-              <Box sx={{ display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
-                onClick={() => navigate('/cart')}>
-                <ShoppingCart
-                  cartstyle={{ size: 2, color: "#000", circleBg: "#EBEBE8" }}
-                  totalQuantity={totalQuantity}
-                //style={{}} prop can be added
-                />
-              </Box>
-              {
-                user?._id ? (
-                  <Box style={{ paddingRight: '20px', textDecoration: 'none', color: grey[800], cursor: 'pointer' }}
-                    onClick={() => logOut()}>
-                    <Typography textAlign="center">Logout</Typography>
-                  </Box>
-                ) : (
-                  <Box style={{ display: 'flex' }}>
-                    <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}>
-                      <Link to={`/login`} style={{ textDecoration: 'none', color: grey[800] }}>
-                        <Typography textAlign="center">Login</Typography>
-                      </Link>
-                    </Box>
-                    <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}
-                      onClick={() => navigate('/register')}
-                    >
-                      <Typography textAlign="center">Register</Typography>
-                    </Box>
-                  </Box>
-                )
-              }
-
-
-
-
-              <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={(e) => { handleOpenUserMenu(e) }} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={() => {
-                    handleCloseUserMenu()
-                  }}
-                >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={() => { handleCloseUserMenu() }}>
-                      <Link to={`/${setting.toLowerCase()}`}>
-                        <Typography textAlign="center">{setting}</Typography>
-                      </Link>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-
-            </Toolbar>
-          </Container>
-          <Divider />
-          <Box sx={{ padding: '5px 0', backgroundColor: grey[100], overflowX: 'auto', width: '100%' }}>
+          </Toolbar>
+        </Container>
+        <Divider />
+        <Box sx={{ padding: '5px 0', backgroundColor: 'background.paper', overflowX: 'auto', width: '100%' }}>
           <Category categories={categories} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
-          </Box>
-          
-        </AppBar>
-        <Banner />
-      </ThemeProvider>
+        </Box>
+
+      </AppBar>
+      <Banner />
     </>
   )
 }

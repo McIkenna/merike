@@ -7,20 +7,50 @@ import {
   Link,
   IconButton,
   Divider,
-  Stack
+  Stack,
+  Input,
+  backdropClasses
 } from "@mui/material";
-import { Facebook, X, Instagram, LinkedIn, Mail, Phone, LocationOn } from '@mui/icons-material';
+import { Facebook, X, Instagram, LinkedIn, Mail, Phone, LocationOn, Margin } from '@mui/icons-material';
+import { colors } from "../../utils/Themes";
+import { styled } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+
+
+  const SearchButton = styled(IconButton)(({ theme }) => ({
+    '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.dark,
+        padding: 'none',
+        Margin: 'none'
+      },
+  }));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+    color: 'inherit',
+    
+    '& .MuiInputBase-input': {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: '20ch',
+      },
+    },
+  }));
 export default function Footer() {
   const footerSections = [
-    {
-      title: "Products",
-      links: [
-        { name: "Features", href: "#" },
-        { name: "Pricing", href: "#" },
-        { name: "Reviews", href: "#" },
-        { name: "Updates", href: "#" }
-      ]
-    },
+    // {
+    //   title: "Products",
+    //   links: [
+    //     { name: "Features", href: "#" },
+    //     { name: "Pricing", href: "#" },
+    //     { name: "Reviews", href: "#" },
+    //     { name: "Updates", href: "#" }
+    //   ]
+    // },
     {
       title: "Company",
       links: [
@@ -52,8 +82,8 @@ export default function Footer() {
     <Box
       component="footer"
       sx={{
-        bgcolor: "grey.900",
-        color: "grey.300",
+        bgcolor: 'background.dark',
+        color: "background.paper",
         py: 6,
         mt: "auto"
       }}
@@ -65,29 +95,28 @@ export default function Footer() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              color="white"
+              color='primary.light'
               gutterBottom
             >
-              Your Brand
+              Merikemart
             </Typography>
             <Typography variant="body2" sx={{ mb: 2, maxWidth: 300 }}>
-              Building exceptional digital experiences that inspire and connect
-              people around the world.
+              Shop anytime, anywhere, and experience online shopping made simple, reliable, and rewarding with Merikemart today.
             </Typography>
             
             {/* Contact Info */}
             <Stack spacing={1}>
               <Box display="flex" alignItems="center" gap={1}>
                 <Mail size={16} />
-                <Typography variant="body2">contact@yourwebsite.com</Typography>
+                <Typography variant="body2">merikellc@gmail.com</Typography>
               </Box>
               <Box display="flex" alignItems="center" gap={1}>
                 <Phone size={16} />
-                <Typography variant="body2">+1 (555) 123-4567</Typography>
+                <Typography variant="body2">+1 (912) 541-0818</Typography>
               </Box>
               <Box display="flex" alignItems="center" gap={1}>
                 <LocationOn size={16} />
-                <Typography variant="body2">San Francisco, CA</Typography>
+                <Typography variant="body2">Chicago, IL</Typography>
               </Box>
             </Stack>
           </Grid>
@@ -98,7 +127,7 @@ export default function Footer() {
               <Typography
                 variant="subtitle1"
                 fontWeight="600"
-                color="white"
+                color='primary.light'
                 gutterBottom
               >
                 {section.title}
@@ -128,7 +157,7 @@ export default function Footer() {
             <Typography
               variant="subtitle1"
               fontWeight="600"
-              color="white"
+               color='primary.light'
               gutterBottom
             >
               Stay Updated
@@ -144,34 +173,28 @@ export default function Footer() {
                 flexDirection: { xs: "column", sm: "row" }
               }}
             >
-              <input
+              <StyledInputBase
                 type="email"
                 placeholder="Enter your email"
-                style={{
-                  flex: 1,
-                  padding: "10px 12px",
-                  border: "1px solid #555",
-                  borderRadius: "4px",
-                  backgroundColor: "#1a1a1a",
-                  color: "#fff",
-                  outline: "none"
-                }}
+                sx={{ ml: 1, flex: 1,   
+                  color: 'text.primary', border: '1px solid', 
+                  borderColor: 'background.main', borderRadius: '4px' }}
               />
-              <button
+              <SearchButton
                 type="submit"
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#1976d2",
-                  color: "#fff",
-                  border: "none",
+                sx={{
+                  backgroundColor: 'primary.dark',
+                  color: 'primary.light',
                   borderRadius: "4px",
                   cursor: "pointer",
-                  fontWeight: "600",
-                  whiteSpace: "nowrap"
+                  fontSize: "1rem",
+                   border: '1px solid',
+                  borderColor: 'background.main'
+
                 }}
               >
                 Subscribe
-              </button>
+              </SearchButton>
             </Box>
           </Grid>
         </Grid>
@@ -186,8 +209,8 @@ export default function Footer() {
           alignItems="center"
           gap={2}
         >
-          <Typography variant="body2" color="grey.500">
-            © {new Date().getFullYear()} Your Brand. All rights reserved.
+          <Typography variant="body2" color='secondary.light'>
+            © {new Date().getFullYear()} Merike. All rights reserved.
           </Typography>
 
           {/* Social Links */}
@@ -198,10 +221,10 @@ export default function Footer() {
                 href={social.href}
                 aria-label={social.label}
                 sx={{
-                  color: "grey.400",
+                  color:'secondary.light',
                   "&:hover": {
                     color: "primary.main",
-                    bgcolor: "grey.800"
+                    bgcolor: 'background.dark'
                   }
                 }}
                 size="small"
@@ -215,7 +238,7 @@ export default function Footer() {
           <Box display="flex" gap={2}>
             <Link
               href="#"
-              color="grey.500"
+              color='secondary.light'
               underline="hover"
               variant="body2"
               sx={{ "&:hover": { color: "primary.main" } }}
@@ -224,7 +247,7 @@ export default function Footer() {
             </Link>
             <Link
               href="#"
-              color="grey.500"
+              color='secondary.light'
               underline="hover"
               variant="body2"
               sx={{ "&:hover": { color: "primary.main" } }}

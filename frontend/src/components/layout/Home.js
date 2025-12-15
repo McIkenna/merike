@@ -190,7 +190,8 @@ export default function Home() {
 
 
   return (
-    <Box>
+    <Box
+    >
       <MetaData title={'Buy Best Products Online'} />
       <CarouselBanner carouselItems={carouselItems}/>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>

@@ -157,13 +157,15 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
             pb: 1,
             pr: 3,
             pl: 3,
-            bgcolor: grey[100],
+            // bgcolor: grey[100],
+            bgcolor:'background.default',
             borderRadius: 2
           }}
         >
           <Typography
             variant="body1"
             sx={{ fontWeight: "bold", fontSize: "17px" }}
+            color='text.secondary'
           >
             {qtyPerItem}
           </Typography>

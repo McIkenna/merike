@@ -9,19 +9,17 @@ import {
   AllCommunityModule, // or AllEnterpriseModule
 } from 'ag-grid-community';
 
-import { lightTheme, darkTheme } from './utils/Themes'
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeToggleProvider } from './utils/ThemeContext';
 
 // Register the module
 ModuleRegistry.registerModules([
   AllCommunityModule, // or AllEnterpriseModule
 ]);
 ReactDOM.render(
+   <ThemeToggleProvider>
   <Provider store={store}>
-    <ThemeProvider theme={darkTheme}>
-
     <App />
-    </ThemeProvider>
-  </Provider>,
+  </Provider>
+   </ThemeToggleProvider>,
   document.getElementById('root')
 )

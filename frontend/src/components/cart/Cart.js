@@ -164,13 +164,15 @@ const goToShopify = () => {
                                                         pb: 1,
                                                         pr: 2,
                                                         pl: 2,
-                                                        bgcolor: grey[100],
+                                                        bgcolor:'background.default',
                                                         borderRadius: 2
                                                     }}
                                                 >
                                                     <Typography
                                                         variant="body1"
-                                                        sx={{ fontWeight: "bold", fontSize: "17px" }}
+                                                        sx={{ fontWeight: "bold", 
+                                                            fontSize: "17px"
+                                                         }}
                                                     >
                                                         {item.quantity}
                                                     </Typography>

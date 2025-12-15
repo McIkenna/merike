@@ -10,11 +10,11 @@ export const Products = ({ products }) => {
   return (
     <Box>
 
-      <Grid item container>
+      <Grid item container spacing={2}>
         {
           !products?.length ? <Loader /> :
             products?.map(product =>
-              <Grid item md={3} sm={3} xs={6}>
+              <Grid item md={2} sm={2} xs={6} >
                 <BoxCard
                   product={product}
                 />

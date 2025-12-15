@@ -16,7 +16,12 @@ import { SelectHome } from './components/layout/SelectHome';
 function App() {
   return (
     <Router>
-  <div>
+  <Box
+  sx={{
+    backgroundColor: 'background.default',
+    color: 'text.primary',
+    minHeight: '100vh',
+  }}>
       <Header/>
       <Box sx={{ padding: '2%', }}>
       <Routes>
@@ -36,7 +41,7 @@ function App() {
       </Box>
       <Footer/>
   
-    </div>
+    </Box>
     </Router>
   
   );
