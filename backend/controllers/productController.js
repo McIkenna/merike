@@ -2,17 +2,22 @@ const Product = require('../models/product');
 const ErrorHandler = require('../utils/ErrorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const ApiFeatures = require('../utils/ApiFeatures');
+const User = require('../models/user')
 
 exports.newProduct = catchAsyncErrors(async (req, res, next) => {
     try{
         req.body.user = req.user.id;
+        if (!req.body.user) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
         const product = await Product.create(req.body);
         res.status(201).json({ 
+            statusCode: 201,
             success: true, 
             product 
         });
     }catch (err) {
-        const message = Object.values(err.errors).map(value => value);
+        const message = Object.values(err.errors).map(value => value.message);
         return next(new ErrorHandler(message , 400))
     }
    
@@ -44,6 +49,26 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
     
 })
 
+exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
+    try {
+        // Fetch all products from the database
+        const products = await Product.find();
+
+        // Count the total number of products
+        const productCount = products.length;
+
+        // Send the response with all products and the total count
+        res.status(200).json({
+            success: true,
+            productCount, // Total number of products
+            products, // All products in the database
+        });
+    } catch (err) {
+        // Handle any errors that occur during the process
+        return next(new ErrorHandler(err.message, 400));
+    }
+});
+
 exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
     try{
         const product = await Product.findById(req.params.id);
@@ -57,6 +82,24 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
         }
     }catch(err){
         const message = `Resource not found. id: ${req.params.id}`
+        return next(new ErrorHandler(message , 400))
+    }
+    
+})
+
+exports.getProductBySeller = catchAsyncErrors(async (req, res, next) => {
+    try{
+        const product = await Product.find({seller: req.params.seller});
+        if (product) {
+            res.status(200).json({
+                success: true,
+                product
+            })
+        } else {
+            return next(new ErrorHandler('Product not found', 404))
+        }
+    }catch(err){
+        const message = `Resource not found. seller: ${req.params.seller}`
         return next(new ErrorHandler(message , 400))
     }
     
@@ -82,7 +125,6 @@ exports.getSingleProductByName = catchAsyncErrors(async (req, res, next) => {
 exports.getProductsByCategory = catchAsyncErrors(async (req, res, next) => {
     try{
     const product = await Product.find({category: req.params.category});
-    console.log('product', product);
     if (product) {
         res.status(200).json({
             success: true,
@@ -107,6 +149,7 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
                 
             })
             res.status(200).json({
+                statusCode: 200,
                 success: true,
                 product
             })
@@ -118,17 +161,18 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
     }
 })
 
-exports.deleteProduct = async(req, res) => {
+exports.deleteProduct = catchAsyncErrors(async(req, res, next) => {
     try{
         const product = await Product.findByIdAndDelete(req.params.id);
         res.status(200).json({
+            statusCode: 200,
             success: true,
             message: `${product.name} deleted successfully`
         })
     }catch(err){
         return next(new ErrorHandler('Product does not exist', 404))
     }
-}
+})
 
 //New review
 exports.createProductReview = catchAsyncErrors(async(req, res, next) => {

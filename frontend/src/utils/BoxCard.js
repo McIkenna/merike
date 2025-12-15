@@ -1,113 +1,97 @@
 import * as React from 'react';
-import {Box, Paper, CardMedia, CardContent, Typography, Button, IconButton} from '@mui/material';
+import { Box, Paper, CardMedia, CardContent, Typography, Button, IconButton } from '@mui/material';
 // import {AddOutlinedIcon, RemoveOutlinedIcon} from '@mui/icons-material';
-import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { styled } from '@mui/material/styles';
-import ReviewRating from './ReviewRating';
 import { Link } from 'react-router-dom';
-import {
-    grey,
-    lightGreen,
-    lime,
-    green,
-    cyan,
-    teal,
-    red,
-    purple,
-    deepPurple,
-    indigo,
-    blue,
-    orange,
-    pink,
-    amber,
-    brown,
-    blueGrey,
-    deepOrange
-  } from "@mui/material/colors";
+import { colors } from './Themes';
 export default function BoxCard(props) {
 
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-      }));
-// console.log('props', props)
-const {
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.paper : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary
+  }));
+  // console.log('props', props)
+  const {
     _id,
     category,
     name,
     description,
     numOfReviews,
     images,
+    image,
     price,
     ratings
-} = props?.product
+  } = props?.product
 
   return (
     <Box
     >
       <Item elevation={0}>
-      <Link to={`product/${_id}`} style={{ textDecoration: 'none'}}>
-              <CardMedia
-                component="img"
-                image={images[0].url}
-              />
-                  </Link>
-              <CardContent sx={{ p: 3, mb: 0 }}>
-                <Box sx={{ mb: 4 }}>
-                    <Link to={`product/${_id}`} style={{ textDecoration: 'none'}}>
-                    <Typography variant="h6" sx={{ mb: 1, fontWeight: "bolder", color: blueGrey[700] }}>
-                   {name}
-                  </Typography>
-                    </Link>
-                  <Typography variant="h6" sx={{fontWeight: "bold", color: green[800]}}>
-                     $ {price}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    mb: 4,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      pt: 1,
-                      pb: 1,
-                      pr: 3,
-                      pl: 3,
-                      bgcolor: grey[100],
-                      borderRadius: 2
-                    }}
-                  >
-                    <Typography
-                      variant="body1"
-                      sx={{ fontWeight: "bold", fontSize: "17px" }}
-                    >
-                      1
-                    </Typography>
-                  </Box>
-                  <Button variant="contained" color="primary">
-                    Add to Cart
-                </Button>
-                  <Box>
-                    <IconButton variant="body1" size='large'>
-                      <AddOutlinedIcon size={2} />
-                    </IconButton>
-                    <IconButton variant="body1" size='large'>
-                      <RemoveOutlinedIcon size={2} />
-                    </IconButton>
-                  </Box>
-                </Box>
-                
-                <ReviewRating value={ratings}/>
-              </CardContent>
+        <Box>
+        
+        <CardContent sx={{mb: 0 }}>
+        <Link to={`/product/${_id}`} style={{ textDecoration: 'none' }}>
+          <Box sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "250px",
+            overflow: "hidden",
+            padding: '10px',
+            borderRadius: '8px',
+          }}>
+          <CardMedia
+            component="img"
+            image={images?.[0]?.url ?? image}
+            sx={{
+              height: '450px',
+              objectFit: 'contain', // Ensures the image covers the area without distortion
+              p:2,
+              transition: 'transform 0.3s ease-in-out', // Adds a smooth hover effect
+              '&:hover': {
+                transform: 'scale(1.05)', // Slightly enlarges the image on hover
+              },
+              
+            }}
+          />
+          </Box>
+          
+        </Link>
+          <Box sx={{ mb: 4}}>
+            <Link to={`/product/${_id}`} style={{ textDecoration: 'none' }}>
+              <Typography 
+              variant="body1"
+            sx={{
+              fontWeight: 600,
+              color: 'text.primary',
+              mb: 1,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              minHeight: 48,
+              lineHeight: 1.5,
+              '&:hover': {
+                color: 'text.secondary',
+                textDecoration: 'underline',
+              }
+            }}>
+                {name}
+              </Typography>
+            </Link>
+            <Typography 
+            variant="h6"
+            fontWeight="700"
+            color="text.primary">
+              $ {price}
+            </Typography>
+          </Box>
+        </CardContent>
+        </Box>
       </Item>
     </Box>
   );

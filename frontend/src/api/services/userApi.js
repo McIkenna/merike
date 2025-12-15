@@ -21,7 +21,7 @@ export const userApi = createApi({
         }),
         loginUser: build.mutation({
             query: (reqBody) => {
-                console.log(reqBody)
+                // console.log(reqBody)
                 // const { currentPage, keyword } = reqParams
             return {
                 // headers: 'headers',
@@ -32,14 +32,12 @@ export const userApi = createApi({
         },
             providesTags: ['login']
         }),
-        logoutUser: build.query({
-            query: () =>(
-                {
+        logoutUser: build.mutation({
+            query: () => ({
                 url: `/api/v1/logout`,
-                method: 'GET'
+                method: 'POST'
             }),
-            providesTags: ['logOut']
-     
+            invalidatesTags: ['logOut']
         }),
         getUser: build.query({
             query: (params) => (
@@ -54,4 +52,4 @@ export const userApi = createApi({
 
 })
 
-export const {useCreateUserMutation, useLoginUserMutation ,useGetUserQuery, useLogoutUserQuery} = userApi;
+export const {useCreateUserMutation, useLoginUserMutation ,useGetUserQuery, useLogoutUserMutation} = userApi;

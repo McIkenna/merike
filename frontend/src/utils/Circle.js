@@ -18,19 +18,22 @@ const useStyles = makeStyles({
 });
 
 const Circle = (props) => {
+  const { totalQuantity, cartstyle } = props;
   const classes = useStyles();
   return (
     <div>
       <div
         //  In order to apply props received, we have used style property
         style={{
-          backgroundColor: `${props.cartstyle.circleBg}`,
-          color: `${props.cartstyle.color}`,
-          border: `solid #E7625F`
+          backgroundColor: `${cartstyle.circleBg}`,
+          color: `${cartstyle.color}`,
+          paddingLeft: "5px",
+          border: "1px solid #000",
+          
         }}
         className={classes.circle}
       >
-        <span>{props.cartstyle.size}</span>
+        <span>{totalQuantity}</span>
       </div>
     </div>
   );

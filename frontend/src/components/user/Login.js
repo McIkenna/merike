@@ -1,29 +1,12 @@
 import React, {useState, useEffect} from 'react'
-import {Button, TextField, Link, Grid, Typography} from "@mui/material";
+import {Button, TextField, Link, Grid, Typography, Box} from "@mui/material";
 import { withStyles } from "@mui/styles";
 import { useMediaQuery } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLoginUserMutation } from '../../api/services/userApi';
 import { useNavigate } from "react-router";
-// const TextField = withStyles({
-//   root: {
-//     "& label.Mui-focused": {
-//       color: "white"
-//     },
-
-//     "& .MuiOutlinedInput-root": {
-//       "& fieldset": {
-//         borderColor: "blue"
-//       },
-//       "&:hover fieldset": {
-//         borderColor: "white"
-//       },
-//       "&.Mui-focused fieldset": {
-//         borderColor: "blue"
-//       }
-//     }
-//   }
-// })(TextField);
+import { red } from "@mui/material/colors";
+import { setToken, setUser } from '../../api/actions';
 
 export default function Login() {
   const mediaLessthanmd = useMediaQuery("min-width : 900px");
@@ -34,20 +17,19 @@ export default function Login() {
   const [state, setState] = useState(emptyState);
   // const alert = useAlert()
   const [error, setError] = useState('');
-  useDispatch()
+  const dispatch = useDispatch()
   const [loginUser, {isLoading, isError, isSuccess, ...props}] = useLoginUserMutation()
   const navigate = useNavigate()
-  // const { isAuthenticated, error, loading} = useSelector(state => state.auth)
-  console.log('props -->', props)
+  const {auth} = useSelector(state => state)
+  const {user, token} = auth
 
   useEffect(() => {
-    if(isSuccess){
+    if(user?._id && token) {
       navigate('/')
-    }
-    if(isError){
+      setState(emptyState)
       setError('')
     }
-  })
+  }, [user?._id, token, navigate])
 
   const handleStateChange = (e) => {
     const {name, value} = e.target;
@@ -63,20 +45,22 @@ export default function Login() {
     e.preventDefault();
     const reqBody = state
     loginUser(reqBody).unwrap().then((response) => {
-      console.log('response ->', response);
+      localStorage.setItem('token', response?.token)
+      localStorage.setItem('user', JSON.stringify(response?.user))
+      dispatch(setToken(response?.token))
+      dispatch(setUser(response?.user))
     }).catch((error) => {
-      const {data} = error;
-      setError(data?.message)
-      // console.log('error', error)
+      setError(error?.data?.message)
     });
     
    
   };
 
+  console.log('error', error)
   return (
     <>
       <form style={{ marginTop: "5vh" }} onSubmit={handleSubmit}>
-        <div style={{ display: "flex" }}>
+        <Box style={{ display: "flex" }}>
           {!mediaLessthanmd && (
             <Grid container style={{ flex: "6" }}>
               <img
@@ -91,21 +75,25 @@ export default function Login() {
               />
             </Grid>
           )}
-          <div style={{ flex: "6" }}>
+          <Box style={{ flex: "6" }}>
+            <Box style={{ textAlign: "left", paddingBottom: "20px" }}>
             <Typography component="h1" variant="h5" sx={{ mb: "20" }}>
               SIGN IN
             </Typography>
+            </Box>
+            
 
             <Grid
               container
               spacing={2}
               style={{
                 display: mediaLessthanmd && "flex",
-                alignItems: mediaLessthanmd && "center",
-                justifyContent: mediaLessthanmd && "center"
+                alignItems: mediaLessthanmd && "left",
+                justifyContent: mediaLessthanmd && "left"
               }}
             >
               <Grid item md={12} xs={8}>
+                <Box sx={{pb: '20px'}}>
                 <TextField
                   name="email"
                   label="Email"
@@ -126,9 +114,8 @@ export default function Login() {
                   }}
                   type="email"
                 />
-              </Grid>
-
-              <Grid item md={12} xs={8}>
+                </Box>
+                <Box sx={{pb: '10px'}}>
                 <TextField
                   name="password"
                   label="Password"
@@ -149,16 +136,18 @@ export default function Login() {
                   }}
                   type="password"
                 />
-              </Grid>
-              <span style={{ color: 'red'}}>{error ? error : ''}</span>
-              <Button
+                </Box>
+                <Typography variant="subtitle1" sx={{color: red['500']}}>{error}</Typography>
+                <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 2, mb: 2, p:'10px', borderRadius: '20px', alignItems: 'center', justifyContent: 'center'}}
               >
-                "Log In"
+                <Typography varaint='h1'>Log In</Typography>
               </Button>
+              
+              </Grid>
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
@@ -172,8 +161,8 @@ export default function Login() {
                 </Grid>
               </Grid>
             </Grid>
-          </div>
-        </div>
+          </Box>
+        </Box>
       </form>
     </>
   );

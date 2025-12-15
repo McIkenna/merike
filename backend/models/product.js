@@ -56,20 +56,16 @@ const productSchema = new mongoose.Schema({
             user:{
                 type: mongoose.Schema.ObjectId,
                 ref: 'User',
-                required: true
             },
             name: {
                 type: String,
-                required: true,
                 maxLength: [100, 'review name cannot be more than 100 characters'],
             },
             rating: {
                 type: Number,
-                required: true,
             },
             comment: {
                 type: String,
-                required: true,
                 maxLength: [300, 'Comment cannot be more than 300 characters'],
             }
         }
@@ -81,7 +77,11 @@ const productSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+
+    },
+    updatedAt: {
+        type: Date
     }
 });
 
