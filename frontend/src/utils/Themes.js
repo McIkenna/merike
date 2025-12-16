@@ -16,8 +16,9 @@ export const colors = {
   },
   primaryGreen: {
     light: '#b8d1c1',
-    main: '#418459',
-    dark: '#0a3d1d',
+    main: '#69f0ae',
+    dark: '#0b4b22ff',
+    moredark: '#062712ff',
     contrastText: '#e7f0ea',
   },
   primaryLight: {
@@ -28,7 +29,7 @@ export const colors = {
   },
   neutral: {
     black: '#212121',
-    darkGray: '#949494ff',
+    darkGray: '#777676ff',
     gray: '#bdbdbdff',
     white: '#ffffffff',
     lightGray: '#e3e3e3ff',
@@ -53,20 +54,21 @@ export const darkTheme = createTheme({
     },
     secondary: {
       light: colors.primaryRed.light,
-      main: colors.primaryRed.main,
+      main: colors.primaryRed.light,
       dark: colors.primaryRed.dark,
       contrastText: colors.primaryRed.contrastText,
     },
     success: {
       light: colors.primaryGreen.light,
-      main: colors.primaryGreen.main,
-      dark: colors.primaryGreen.dark,
+      main: colors.primaryGreen.dark,
+      dark: colors.primaryGreen.moredark,
       contrastText: colors.primaryGreen.contrastText,
     },
     text: {
       primary: colors.text.white,
       secondary: colors.text.primary,
       light: colors.text.light,
+      white: colors.text.secondary
 
     },
     background: {
@@ -74,7 +76,11 @@ export const darkTheme = createTheme({
       paper: colors.neutral.darkGray,
       dark: colors.neutral.black,
     },
-    divider: colors.neutral.gray,
+    divider: {
+      main: colors.neutral.gray,
+      dark: colors.neutral.darkGray,
+      black: colors.neutral.black,
+    }
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -108,8 +114,8 @@ export const lightTheme = createTheme({
     },
     success: {
       light: colors.primaryGreen.contrastText,
-      main: colors.primaryGreen.light,
-      dark: colors.primaryGreen.main,
+      main: colors.primaryGreen.main,
+      dark: colors.primaryGreen.dark,
       contrastText: colors.primaryGreen.contrastText,
     },
     error: {
@@ -122,13 +128,18 @@ export const lightTheme = createTheme({
       primary: colors.text.primary,
       secondary: colors.text.black,
       light: colors.text.light,
+      white: colors.text.white
     },
     background: {
       default: colors.neutral.white,
       paper: colors.neutral.lightGray,
       dark: colors.neutral.darkGray,
     },
-    divider: colors.neutral.lightGray,
+    divider: {
+      main: colors.neutral.lightGray,
+      dark: colors.neutral.gray,
+      black: colors.neutral.darkGray,
+    }
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',

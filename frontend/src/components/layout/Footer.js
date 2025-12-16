@@ -8,82 +8,69 @@ import {
   IconButton,
   Divider,
   Stack,
-  Input,
-  backdropClasses
+  Button
 } from "@mui/material";
-import { Facebook, X, Instagram, LinkedIn, Mail, Phone, LocationOn, Margin } from '@mui/icons-material';
-import { colors } from "../../utils/Themes";
+import { Facebook, X, Instagram, LinkedIn, Mail, Phone, LocationOn } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
+import tiktokLogo from '../../static/images/tiktok.png'
 
-
-  const SearchButton = styled(IconButton)(({ theme }) => ({
-    '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.dark,
-        padding: 'none',
-        Margin: 'none'
-      },
-  }));
+const SearchButton = styled(Button)(({ theme }) => ({
+  textTransform: 'none',
+  '&:hover': {
+    backgroundColor: theme.palette.primary.dark,
+  },
+}));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
-      },
+  color: theme.palette.text.primary,
+  width: '100%',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 1.5),
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.grey[100],
+    borderRadius: theme.shape.borderRadius,
+    '&:focus': {
+      backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : theme.palette.background.paper,
     },
-  }));
+  },
+}));
+
 export default function Footer() {
   const footerSections = [
-    // {
-    //   title: "Products",
-    //   links: [
-    //     { name: "Features", href: "#" },
-    //     { name: "Pricing", href: "#" },
-    //     { name: "Reviews", href: "#" },
-    //     { name: "Updates", href: "#" }
-    //   ]
-    // },
     {
       title: "Company",
       links: [
-        { name: "About Us", href: "#" },
-        { name: "Careers", href: "#" },
-        { name: "Press", href: "#" },
+        { name: "About Us", href: "/aboutUs" },
+        { name: "Privacy Policy", href: "/privacyPolicy" },
         { name: "Blog", href: "#" }
       ]
     },
     {
       title: "Support",
       links: [
-        { name: "Help Center", href: "#" },
-        { name: "Contact Us", href: "#" },
-        { name: "FAQs", href: "#" },
-        { name: "Terms of Service", href: "#" }
+        { name: "Help Center", href: "/contactus" },
+        { name: "Contact Us", href: "/contactus" },
+        { name: "FAQs", href: "/faqs" },
+        { name: "Terms of Service", href: "/terms" }
       ]
     }
   ];
 
   const socialLinks = [
-    { icon: <Facebook size={20} />, href: "#", label: "Facebook" },
-    { icon: <X size={20} />, href: "#", label: "X" },
-    { icon: <Instagram size={20} />, href: "#", label: "Instagram" },
-    { icon: <LinkedIn size={20} />, href: "#", label: "LinkedIn" }
+    { icon: <Facebook fontSize="small" />, href: "https://www.facebook.com/profile.php?id=61584930010482", label: "Facebook" },
+    { icon: <X fontSize="small" />, href: "https://x.com/merikemart", label: "X" },
+    { icon: <Instagram fontSize="small" />, href: "https://www.instagram.com/merikemart/", label: "Instagram" },
+    { icon: <img src={tiktokLogo} style={{ width: '20px' }}/>, href: "https://www.tiktok.com/@merikemart?_r=1&_t=ZP-92FmeMxeDHT", label: "TikTok"}
   ];
 
   return (
     <Box
       component="footer"
       sx={{
-        bgcolor: 'background.dark',
-        color: "background.paper",
+        bgcolor: (theme) => theme.palette.mode === 'dark' ? theme.palette.grey[900] : theme.palette.grey[200],
+        color: (theme) => theme.palette.text.primary,
         py: 6,
         mt: "auto"
       }}
@@ -95,28 +82,38 @@ export default function Footer() {
             <Typography
               variant="h5"
               fontWeight="bold"
-              color='primary.light'
+              color='primary.main'
               gutterBottom
             >
               Merikemart
             </Typography>
-            <Typography variant="body2" sx={{ mb: 2, maxWidth: 300 }}>
+            <Typography 
+              variant="body2" 
+              color="text.primary"
+              sx={{ mb: 2, maxWidth: 300, lineHeight: 1.6 }}
+            >
               Shop anytime, anywhere, and experience online shopping made simple, reliable, and rewarding with Merikemart today.
             </Typography>
             
             {/* Contact Info */}
-            <Stack spacing={1}>
+            <Stack spacing={1.5}>
               <Box display="flex" alignItems="center" gap={1}>
-                <Mail size={16} />
-                <Typography variant="body2">merikellc@gmail.com</Typography>
+                <Mail fontSize="small" color="primary" />
+                <Typography variant="body2" color="text.primary">
+                  merikemart@gmail.com
+                </Typography>
               </Box>
               <Box display="flex" alignItems="center" gap={1}>
-                <Phone size={16} />
-                <Typography variant="body2">+1 (912) 541-0818</Typography>
+                <Phone fontSize="small" color="primary" />
+                <Typography variant="body2" color="text.primary">
+                  +1 (912) 541-0818
+                </Typography>
               </Box>
               <Box display="flex" alignItems="center" gap={1}>
-                <LocationOn size={16} />
-                <Typography variant="body2">Chicago, IL</Typography>
+                <LocationOn fontSize="small" color="primary" />
+                <Typography variant="body2" color="text.primary">
+                  Chicago, IL
+                </Typography>
               </Box>
             </Stack>
           </Grid>
@@ -127,8 +124,9 @@ export default function Footer() {
               <Typography
                 variant="subtitle1"
                 fontWeight="600"
-                color='primary.light'
+                color='primary.main'
                 gutterBottom
+                sx={{ mb: 2 }}
               >
                 {section.title}
               </Typography>
@@ -137,12 +135,16 @@ export default function Footer() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    color="inherit"
+                    color="text.primary"
                     underline="hover"
                     sx={{
                       display: "block",
                       transition: "color 0.2s",
-                      "&:hover": { color: "primary.main" }
+                      fontSize: "0.875rem",
+                      "&:hover": { 
+                        color: "primary.main",
+                        textDecoration: "none"
+                      }
                     }}
                   >
                     {link.name}
@@ -153,20 +155,26 @@ export default function Footer() {
           ))}
 
           {/* Newsletter Section */}
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={4}>
             <Typography
               variant="subtitle1"
               fontWeight="600"
-               color='primary.light'
+              color='primary.main'
               gutterBottom
+              sx={{ mb: 2 }}
             >
               Stay Updated
             </Typography>
-            <Typography variant="body2" sx={{ mb: 2 }}>
-              Subscribe to our newsletter for the latest updates.
+            <Typography 
+              variant="body2" 
+              color="text.primary"
+              sx={{ mb: 2, lineHeight: 1.6 }}
+            >
+              Subscribe to our newsletter for the latest updates and exclusive offers.
             </Typography>
             <Box
               component="form"
+              onSubmit={(e) => e.preventDefault()}
               sx={{
                 display: "flex",
                 gap: 1,
@@ -176,21 +184,18 @@ export default function Footer() {
               <StyledInputBase
                 type="email"
                 placeholder="Enter your email"
-                sx={{ ml: 1, flex: 1,   
-                  color: 'text.primary', border: '1px solid', 
-                  borderColor: 'background.main', borderRadius: '4px' }}
+                required
+                sx={{ flex: 1 }}
               />
               <SearchButton
                 type="submit"
+                variant="contained"
+                color="primary"
                 sx={{
-                  backgroundColor: 'primary.dark',
-                  color: 'primary.light',
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "1rem",
-                   border: '1px solid',
-                  borderColor: 'background.main'
-
+                  px: 3,
+                  py: 1,
+                  whiteSpace: 'nowrap',
+                  minWidth: { xs: '100%', sm: 'auto' }
                 }}
               >
                 Subscribe
@@ -199,7 +204,14 @@ export default function Footer() {
           </Grid>
         </Grid>
 
-        <Divider sx={{ my: 4, borderColor: "grey.800" }} />
+        <Divider 
+          sx={{ 
+            my: 4, 
+            borderColor: (theme) => theme.palette.mode === 'dark' 
+              ? theme.palette.grey[800] 
+              : theme.palette.grey[300]
+          }} 
+        />
 
         {/* Bottom Section */}
         <Box
@@ -209,22 +221,30 @@ export default function Footer() {
           alignItems="center"
           gap={2}
         >
-          <Typography variant="body2" color='secondary.light'>
-            © {new Date().getFullYear()} Merike. All rights reserved.
+          <Typography variant="body2" color='text.primary'>
+            © {new Date().getFullYear()} Merikemart - A Subsidiary of Merike LLC. All rights reserved.
           </Typography>
 
           {/* Social Links */}
           <Box display="flex" gap={1}>
             {socialLinks.map((social) => (
               <IconButton
+                target="_"
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
                 sx={{
-                  color:'secondary.light',
+                  color: 'text.primary',
+                  border: 1,
+                  borderColor: (theme) => theme.palette.mode === 'dark' 
+                    ? theme.palette.grey[700] 
+                    : theme.palette.grey[300],
                   "&:hover": {
                     color: "primary.main",
-                    bgcolor: 'background.dark'
+                    borderColor: "primary.main",
+                    bgcolor: (theme) => theme.palette.mode === 'dark' 
+                      ? theme.palette.grey[800] 
+                      : theme.palette.grey[100]
                   }
                 }}
                 size="small"
@@ -235,24 +255,48 @@ export default function Footer() {
           </Box>
 
           {/* Legal Links */}
-          <Box display="flex" gap={2}>
+          <Box display="flex" gap={2} flexWrap="wrap" justifyContent="center">
             <Link
-              href="#"
-              color='secondary.light'
+              href="/privacyPolicy"
+              color='text.primary'
               underline="hover"
               variant="body2"
-              sx={{ "&:hover": { color: "primary.main" } }}
+              sx={{ 
+                "&:hover": { 
+                  color: "primary.main",
+                  textDecoration: "none"
+                } 
+              }}
             >
               Privacy Policy
             </Link>
             <Link
-              href="#"
-              color='secondary.light'
+              href="/terms"
+              color='text.primary'
               underline="hover"
               variant="body2"
-              sx={{ "&:hover": { color: "primary.main" } }}
+              sx={{ 
+                "&:hover": { 
+                  color: "primary.main",
+                  textDecoration: "none"
+                } 
+              }}
             >
-              Terms
+              Terms of Service
+            </Link>
+            <Link
+              href="/privacyPolicy"
+              color='text.primary'
+              underline="hover"
+              variant="body2"
+              sx={{ 
+                "&:hover": { 
+                  color: "primary.main",
+                  textDecoration: "none"
+                } 
+              }}
+            >
+              Cookie Policy
             </Link>
           </Box>
         </Box>

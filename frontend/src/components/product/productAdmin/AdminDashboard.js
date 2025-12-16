@@ -53,7 +53,7 @@ export const AdminDashboard = () => {
                 <Grid item sm={2} md={2} xl={2}>
                     <Box
                         sx={{
-                            backgroundColor: grey['100'],
+                            backgroundColor: 'background.paper',
                             display: 'flex',
                             flexDirection: 'column',
                             width: '100%',
@@ -63,11 +63,11 @@ export const AdminDashboard = () => {
                             Object.entries(userPage)?.map(([key, page]) =>
                                 <Button sx={{
                                     margin: '10px',
-                                    backgroundColor: activePage === key ? colors.primaryBlue.dark : 'default',
-                                    color: activePage === key ? colors.neutral.white : 'default',
+                                    backgroundColor: activePage === key ? 'primary.dark': colors.neutral.gray,
+                                    color: activePage === key ? 'text.primary' : colors.neutral.darkGray,
                                     '&:hover': {
-                                        backgroundColor: colors.primaryBlue.light,
-                                        color: colors.neutral.black
+                                        backgroundColor: 'primary.main',
+                                        color: 'text.black'
                                     }
                                     
                                 }}

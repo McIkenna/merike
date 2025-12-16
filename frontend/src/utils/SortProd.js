@@ -10,6 +10,7 @@ import {
     Divider,
     Slider
 } from '@mui/material';
+import { neutral } from './Themes';
 
 const SortProd = ({
     onSortChange,
@@ -86,7 +87,7 @@ const SortProd = ({
             </Box>
             <Divider />
             {/* Header */}
-            <Box sx={{ p: 2, bgcolor: 'grey.50' }}>
+            <Box sx={{ p: 2, bgcolor: 'background.main'}}>
                 <Typography variant="h6" fontWeight="600">
                     Sort
                 </Typography>
@@ -127,7 +128,7 @@ const SortProd = ({
                                     m: 0,
                                     width: '100%',
                                     '&:hover': {
-                                        bgcolor: 'grey.50'
+                                        bgcolor: 'neutral.main'
                                     }
                                 }}
                             />
