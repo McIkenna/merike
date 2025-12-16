@@ -257,7 +257,7 @@ export default function Footer() {
           {/* Legal Links */}
           <Box display="flex" gap={2} flexWrap="wrap" justifyContent="center">
             <Link
-              href="/privacy"
+              href="/privacyPolicy"
               color='text.primary'
               underline="hover"
               variant="body2"
@@ -285,7 +285,7 @@ export default function Footer() {
               Terms of Service
             </Link>
             <Link
-              href="/cookies"
+              href="/privacyPolicy"
               color='text.primary'
               underline="hover"
               variant="body2"

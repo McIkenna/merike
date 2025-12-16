@@ -24,11 +24,12 @@ import { useMyOrdersQuery } from '../../api/services/orderApi';
 import { Category } from '../category/Category'
 import { useGetAllBannerQuery } from '../../api/services/bannerApi';
 import ThemeToggleButton from '../../utils/ThemeToggleButton';
+import userAvatar from '../../static/images/user.png'
 
 
 export default function Header() {
   // const pages = ['Products', 'Pricing', 'Blog'];
-  const settings = ['Profile', 'Account', 'Dashboard'];
+  const settings = ['Profile', 'Dashboard'];
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   // const [category, setCategory] = useState(null);
@@ -116,8 +117,8 @@ export default function Header() {
   return (
     <>
       <AppBar position="static" sx={{
-          bgcolor: 'background.default'
-        }}>
+        bgcolor: 'background.default'
+      }}>
         <Container maxWidth="xl" >
           <Toolbar disableGutters>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, paddingRight: "10px", cursor: 'pointer' }}
@@ -195,14 +196,14 @@ export default function Header() {
 
 
 
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0}}>
               <Tooltip title="Open settings">
                 <IconButton onClick={(e) => { handleOpenUserMenu(e) }} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="Remy Sharp" src={userAvatar} />
                 </IconButton>
               </Tooltip>
               <Menu
-                sx={{ mt: '45px' }}
+                sx={{ mt: '45px',  }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{
@@ -218,11 +219,26 @@ export default function Header() {
                 onClose={() => {
                   handleCloseUserMenu()
                 }}
+
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={() => { handleCloseUserMenu() }}>
-                    <Link to={`/${setting.toLowerCase()}`}>
-                      <Typography textAlign="center">{setting}</Typography>
+                  <MenuItem key={setting} onClick={() => { handleCloseUserMenu() }}
+                    sx={{
+
+                      '&:hover': {
+                        bgcolor: 'background.dark'
+                      }
+                    }}
+                  >
+                    <Link to={`/${setting.toLowerCase()}`}
+
+                    >
+                      <Typography textAlign="center"
+                        sx={{
+                          color: 'text.primary',
+
+                        }}
+                      >{setting}</Typography>
                     </Link>
                   </MenuItem>
                 ))}

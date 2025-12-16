@@ -29,7 +29,7 @@ export const colors = {
   },
   neutral: {
     black: '#212121',
-    darkGray: '#949494ff',
+    darkGray: '#777676ff',
     gray: '#bdbdbdff',
     white: '#ffffffff',
     lightGray: '#e3e3e3ff',
@@ -68,6 +68,7 @@ export const darkTheme = createTheme({
       primary: colors.text.white,
       secondary: colors.text.primary,
       light: colors.text.light,
+      white: colors.text.secondary
 
     },
     background: {
@@ -75,7 +76,11 @@ export const darkTheme = createTheme({
       paper: colors.neutral.darkGray,
       dark: colors.neutral.black,
     },
-    divider: colors.neutral.gray,
+    divider: {
+      main: colors.neutral.gray,
+      dark: colors.neutral.darkGray,
+      black: colors.neutral.black,
+    }
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -123,13 +128,18 @@ export const lightTheme = createTheme({
       primary: colors.text.primary,
       secondary: colors.text.black,
       light: colors.text.light,
+      white: colors.text.white
     },
     background: {
       default: colors.neutral.white,
       paper: colors.neutral.lightGray,
       dark: colors.neutral.darkGray,
     },
-    divider: colors.neutral.lightGray,
+    divider: {
+      main: colors.neutral.lightGray,
+      dark: colors.neutral.gray,
+      black: colors.neutral.darkGray,
+    }
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
