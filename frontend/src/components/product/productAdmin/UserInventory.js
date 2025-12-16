@@ -100,7 +100,7 @@ export const UserInventory = (props) => {
                 }}>
                     <EditNoteOutlinedIcon
                         style={{
-                            color: colors.primaryBlue.dark,
+                            color: colors.primaryBlue.main,
                             border: 'none',
                             backgroundColor: colors.neutral.lightGray,
                             cursor: 'pointer',
@@ -111,7 +111,7 @@ export const UserInventory = (props) => {
                     />
                     <DeleteOutlineOutlinedIcon
                         style={{
-                            color: colors.primaryRed.light,
+                            color: colors.primaryRed.main,
                             border: 'none',
                             backgroundColor: colors.neutral.lightGray,
                             padding: '5px',
@@ -263,7 +263,15 @@ export const UserInventory = (props) => {
                             disabled={activePage === 'ProductForm'} 
                             variant="outlined" 
                             onClick={(e) => changePageAndClear(e)}
-                            color='primary'>Add Listing</Button>
+                            sx={{
+                                borderColor: colors.primaryBlue.main,
+                                color: colors.primaryBlue.main,
+                                '&:hover': {
+                                    backgroundColor: colors.primaryBlue.light,
+                                    color: colors.neutral.black
+                                }
+
+                            }}>Add Listing</Button>
                             <Button 
                             name='UpdateProductForm'
                              disabled={!selectedRow || activePage === 'UpdateProductForm'} 
@@ -273,13 +281,23 @@ export const UserInventory = (props) => {
                                 borderColor: colors.primaryGreen.dark,
                                 color: colors.primaryGreen.dark,
                                 '&:hover': {
-                                    backgroundColor: colors.primaryGreen.light,
+                                    backgroundColor: colors.primaryGreen.main,
                                     color: colors.neutral.black
                                 }
                             }}
                              >Edit Listing</Button>
                             {/* <Button disabled={!selectedRow} variant="outlined">Update Listing</Button> */}
-                            <Button disabled={!selectedRow} variant="outlined" color="error" onClick={() =>setShowDeleteModal(true)}>Delete Listing</Button>
+                            <Button 
+                            disabled={!selectedRow} variant="outlined" 
+                             sx={{
+                                borderColor: colors.primaryRed.main,
+                                color: colors.primaryRed.main,
+                                '&:hover': {
+                                    backgroundColor: colors.primaryRed.light,
+                                    color: colors.neutral.black
+                                }
+                            }}
+                            onClick={() =>setShowDeleteModal(true)}>Delete Listing</Button>
                         </Stack>
                         {activePage === 'Listing' ? <Box>
                             <TextField
@@ -291,7 +309,17 @@ export const UserInventory = (props) => {
                                 onChange={onFilterTextBoxChanged} />
                         </Box>
                             :
-                            <Button name='Listing' variant="outlined" color="secondary" onClick={(e) => changePageAndClear(e)}>Back to listing</Button>
+                            <Button 
+                            name='Listing' variant="outlined" 
+                            sx={{
+                                borderColor: colors.primaryGreen.dark,
+                                color: colors.primaryGreen.dark,
+                                '&:hover': {
+                                    backgroundColor: colors.primaryGreen.light,
+                                    color: colors.neutral.black
+                                }
+                            }}
+                             onClick={(e) => changePageAndClear(e)}>Back to listing</Button>
                         }
 
                     </Box>

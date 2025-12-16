@@ -13,6 +13,7 @@ import {
 import { Facebook, X, Instagram, LinkedIn, Mail, Phone, LocationOn } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
+import tiktokLogo from '../../static/images/tiktok.png'
 
 const SearchButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
@@ -60,7 +61,8 @@ export default function Footer() {
   const socialLinks = [
     { icon: <Facebook fontSize="small" />, href: "https://www.facebook.com/profile.php?id=61584930010482", label: "Facebook" },
     { icon: <X fontSize="small" />, href: "https://x.com/merikemart", label: "X" },
-    { icon: <Instagram fontSize="small" />, href: "https://www.instagram.com/merikemart/", label: "Instagram" }
+    { icon: <Instagram fontSize="small" />, href: "https://www.instagram.com/merikemart/", label: "Instagram" },
+    { icon: <img src={tiktokLogo} style={{ width: '20px' }}/>, href: "https://www.tiktok.com/@merikemart?_r=1&_t=ZP-92FmeMxeDHT", label: "TikTok"}
   ];
 
   return (
@@ -227,6 +229,7 @@ export default function Footer() {
           <Box display="flex" gap={1}>
             {socialLinks.map((social) => (
               <IconButton
+                target="_"
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}

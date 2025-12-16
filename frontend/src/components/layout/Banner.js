@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Box, Typography, Collapse, Button, Paper } from '@mui/material';
-import { blueGrey, green } from '@mui/material/colors';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Collapse, Paper } from '@mui/material';
+import { green } from '@mui/material/colors';
 import { keyframes } from '@emotion/react';
 import { useSelector } from 'react-redux';
 
@@ -32,66 +32,85 @@ const fadeOut = keyframes`
   }
 `;
 
+
 const Banner = () => {
   const [open, setOpen] = useState(true);
-  const { stateStore, auth } = useSelector((state) => state)
-
-  const { bannerData } = stateStore;
-
-  const handleToggle = () => {
-    setOpen(!open);
-  };
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Use mock data - replace with your Redux selector
+  const { stateStore } = useSelector((state) => state)
+  const { bannerItems } = stateStore;
 
   // Calculate animation duration based on text length
   const calculateAnimationDuration = (text) => {
     if (!text) return 10;
     
     const textLength = text.length;
-    // Base duration: 10 seconds for ~50 characters
-    // Add 0.1 second for each additional character
-    // Minimum 5 seconds, maximum 30 seconds
-    const duration = Math.max(10, Math.min(50, 20 + (textLength) * 0.1));
+    const duration = Math.max(5, Math.min(50, 10 + (textLength) * 0.1));
     
     return duration;
   };
 
+  useEffect(() => {
+    if (!bannerItems || bannerItems.length === 0) return;
+
+    const currentItem = bannerItems[currentIndex];
+    const fullText = `(${currentItem?.name}) - ${currentItem?.description}`;
+    const animationDuration = calculateAnimationDuration(fullText);
+    
+    // Move to next item after animation completes
+    const timer = setTimeout(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % bannerItems.length);
+    }, animationDuration * 1000);
+
+    return () => clearTimeout(timer);
+  }, [currentIndex, bannerItems]);
+
+  if (!bannerItems || bannerItems.length === 0) {
+    return null;
+  }
+
+  const currentItem = bannerItems[currentIndex];
+  const fullText = `(${currentItem?.name}) - ${currentItem?.description}`;
+  const animationDuration = calculateAnimationDuration(fullText);
+
   return (
     <Box>
       <Collapse in={open}>
-        <Paper elevation={3} sx={{ 
+        <Paper 
+          elevation={3} 
+          sx={{ 
             padding: '16px', 
             marginTop: '0', 
-            backgroundColor: green['A200'],
-          }}>
-           {bannerData?.map((advert, index) => {
-             const fullText = `(${advert?.name}) - ${advert?.description}`;
-             const animationDuration = calculateAnimationDuration(fullText);
-             
-             return (
-               <Box 
-                 key={index}
-                 sx={{ 
-                   display: 'flex', 
-                   justifyContent: 'space-between', 
-                   alignItems: 'center',  
-                   overflow: 'hidden',
-                   animation: `${open ? fadeIn : fadeOut} 5s`,
-                   marginBottom: index < bannerData.adverts.length - 1 ? '8px' : '0'
-                 }}
-               >
-                 <Typography 
-                   variant="h7"
-                   sx={{ 
-                     whiteSpace: 'nowrap', 
-                     display: 'inline-block', 
-                     animation: `${moveLeft} ${animationDuration}s linear infinite` 
-                   }}
-                 >
-                   {fullText}
-                 </Typography>
-               </Box>
-             );
-           })}
+            backgroundColor: 'success.main',
+            display: 'flex',
+            position: 'relative',
+            borderRadius: '0px'
+
+          }}
+        >
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',  
+              overflow: 'hidden',
+              width: '100%',
+              animation: `${fadeIn} 0.5s ease-in-out`
+            }}
+          >
+            <Typography 
+              variant="h6"
+              sx={{ 
+                whiteSpace: 'nowrap', 
+                display: 'flex', 
+                animation: `${moveLeft} ${animationDuration}s linear infinite`,
+                fontWeight: 500
+              }}
+            >
+              {fullText}
+            </Typography>
+          </Box>
         </Paper>
       </Collapse>
     </Box>

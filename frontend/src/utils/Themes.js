@@ -16,8 +16,9 @@ export const colors = {
   },
   primaryGreen: {
     light: '#b8d1c1',
-    main: '#418459',
-    dark: '#0a3d1d',
+    main: '#69f0ae',
+    dark: '#0b4b22ff',
+    moredark: '#062712ff',
     contrastText: '#e7f0ea',
   },
   primaryLight: {
@@ -53,14 +54,14 @@ export const darkTheme = createTheme({
     },
     secondary: {
       light: colors.primaryRed.light,
-      main: colors.primaryRed.main,
+      main: colors.primaryRed.light,
       dark: colors.primaryRed.dark,
       contrastText: colors.primaryRed.contrastText,
     },
     success: {
       light: colors.primaryGreen.light,
-      main: colors.primaryGreen.main,
-      dark: colors.primaryGreen.dark,
+      main: colors.primaryGreen.dark,
+      dark: colors.primaryGreen.moredark,
       contrastText: colors.primaryGreen.contrastText,
     },
     text: {
@@ -108,8 +109,8 @@ export const lightTheme = createTheme({
     },
     success: {
       light: colors.primaryGreen.contrastText,
-      main: colors.primaryGreen.light,
-      dark: colors.primaryGreen.main,
+      main: colors.primaryGreen.main,
+      dark: colors.primaryGreen.dark,
       contrastText: colors.primaryGreen.contrastText,
     },
     error: {

@@ -112,7 +112,7 @@ const CarouselBanner = ({carouselItems}) => {
                 <IconButton 
                     onClick={handlePause} 
                     sx={{
-                        backgroundColor: 'success.dark', 
+                        backgroundColor: 'success.main', 
                         color: 'neutral.dark',
                         width: { xs: '36px', sm: '42px', md: '48px' },
                         height: { xs: '36px', sm: '42px', md: '48px' },
