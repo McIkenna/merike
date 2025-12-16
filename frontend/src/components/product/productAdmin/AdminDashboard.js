@@ -64,7 +64,7 @@ export const AdminDashboard = () => {
                                 <Button sx={{
                                     margin: '10px',
                                     backgroundColor: activePage === key ? 'primary.dark': colors.neutral.gray,
-                                    color: activePage === key ? 'text.primary' : colors.neutral.darkGray,
+                                    color: activePage === key ? 'text.light' : colors.neutral.darkGray,
                                     '&:hover': {
                                         backgroundColor: 'primary.main',
                                         color: 'text.black'

@@ -32,6 +32,7 @@ import {
     Email
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
+import { AgGridReact } from 'ag-grid-react';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(3),
@@ -42,8 +43,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 const IconWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    gap: 1,
+    marginBottom: 1,
 }));
 
 export const PrivacyPolicy = () => {
@@ -84,13 +85,35 @@ export const PrivacyPolicy = () => {
         },
     ];
 
+    const header = [
+        {
+
+                headerName: 'Category',
+                field: 'category',
+                flex: 0.5
+            },
+            {
+
+                headerName: 'Examples',
+                field: 'examples',
+                flex: 1
+            },
+            {
+
+                headerName: 'Purpose',
+                field: 'purpose',
+                flex: 1
+            }
+
+    ]
+
     return (
         <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', py: 6 }}>
             <Container maxWidth="lg">
                 {/* Header */}
                 <Box sx={{ textAlign: 'center', mb: 6 }}>
                     <IconWrapper sx={{ justifyContent: 'center' }}>
-                        <Security fontSize="large" color="primary" />
+                        <Security fontSize="large" color='primary.main' />
                         <Typography variant='h3' sx={{ fontWeight: 700 }}>
                             Privacy Policy
                         </Typography>
@@ -101,12 +124,17 @@ export const PrivacyPolicy = () => {
                     <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
                         <Chip 
                             label={`Last Updated: ${lastUpdated}`} 
-                            color="primary" 
+                            
                             variant="outlined" 
+                            sx={{
+                                color:"primary.main" 
+                            }}
                         />
                         <Chip 
                             label={`Effective Date: ${effectiveDate}`} 
-                            color="primary" 
+                            sx={{
+                                color:"primary.main" 
+                            }}
                             variant="outlined" 
                         />
                     </Box>
@@ -132,7 +160,7 @@ export const PrivacyPolicy = () => {
                     <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                             <IconWrapper>
-                                <Visibility color="primary" />
+                                <Visibility color="primary.main" />
                                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                                     1. Information We Collect
                                 </Typography>
@@ -206,25 +234,36 @@ export const PrivacyPolicy = () => {
                             <Typography variant="subtitle1" sx={{ fontWeight: 600, mt: 3, mb: 2 }}>
                                 C. Data Collection Summary
                             </Typography>
-                            <TableContainer component={Paper} variant="outlined">
-                                <Table size="small">
+                            <TableContainer component={Paper} >
+                                {/* <Table size="small">
                                     <TableHead>
-                                        <TableRow>
-                                            <TableCell sx={{ fontWeight: 600 }}>Category</TableCell>
-                                            <TableCell sx={{ fontWeight: 600 }}>Examples</TableCell>
-                                            <TableCell sx={{ fontWeight: 600 }}>Purpose</TableCell>
+                                        <TableRow >
+                                            <TableCell sx={{ fontWeight: 600, color: 'text.primary'}}>Category</TableCell>
+                                            <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Examples</TableCell>
+                                            <TableCell sx={{ fontWeight: 600 , color: 'text.primary'}}>Purpose</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {dataCollectionTable.map((row, index) => (
                                             <TableRow key={index}>
-                                                <TableCell>{row.category}</TableCell>
-                                                <TableCell>{row.examples}</TableCell>
-                                                <TableCell>{row.purpose}</TableCell>
+                                                <TableCell sx={{color: 'text.primary'}}>{row.category}</TableCell>
+                                                <TableCell sx={{color: 'text.primary'}}>{row.examples}</TableCell>
+                                                <TableCell sx={{color: 'text.primary'}}>{row.purpose}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
-                                </Table>
+                                </Table> */}
+
+                                <Box>
+                                                    <div className="ag-theme-quartz" style={{ height: '30vh', width: '100%'}}>
+                                                        <AgGridReact
+                                                            rowData={dataCollectionTable}
+                                                            columnDefs={header}
+                                                            rowHeight={50}
+                                                        />
+                                                    </div>
+                                
+                                                </Box>
                             </TableContainer>
                         </AccordionDetails>
                     </Accordion>
@@ -233,7 +272,7 @@ export const PrivacyPolicy = () => {
                     <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                             <IconWrapper>
-                                <VerifiedUser color="primary" />
+                                <VerifiedUser color="primary.main" />
                                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                                     2. How We Use Your Information
                                 </Typography>
@@ -300,7 +339,7 @@ export const PrivacyPolicy = () => {
                     <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                             <IconWrapper>
-                                <Share color="primary" />
+                                <Share color="primary.main" />
                                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                                     3. How We Share Your Information
                                 </Typography>
@@ -358,7 +397,7 @@ export const PrivacyPolicy = () => {
                     <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                             <IconWrapper>
-                                <Cookie color="primary" />
+                                <Cookie color="primary.main" />
                                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                                     4. Cookies and Tracking Technologies
                                 </Typography>
@@ -426,7 +465,7 @@ export const PrivacyPolicy = () => {
                     <Accordion expanded={expanded === 'panel5'} onChange={handleChange('panel5')}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                             <IconWrapper>
-                                <Lock color="primary" />
+                                <Lock color="primary.main" />
                                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                                     5. Data Security
                                 </Typography>
@@ -527,7 +566,7 @@ export const PrivacyPolicy = () => {
                     <Accordion expanded={expanded === 'panel7'} onChange={handleChange('panel7')}>
                         <AccordionSummary expandIcon={<ExpandMore />}>
                             <IconWrapper>
-                                <Delete color="primary" />
+                                <Delete color="primary.main" />
                                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                                     7. Data Retention
                                 </Typography>

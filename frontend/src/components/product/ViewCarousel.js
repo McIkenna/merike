@@ -6,7 +6,8 @@ import {
   CardMedia, 
   Typography, 
   IconButton,
-  Container
+  Container,
+  Link
 } from '@mui/material';
 import { ArrowBack, ArrowForward} from '@mui/icons-material';
 // import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
@@ -80,6 +81,7 @@ const ViewCarousel = ( {allProducts, viewedProducts}) => {
                 }
               }}
             >
+               <Link href={`/product/${product?._id }`} sx={{ textDecoration: 'none', cursor: 'pointer'}} key={product?.id}>
               <CardMedia
                 component="img"
                 height="260"
@@ -97,15 +99,22 @@ const ViewCarousel = ( {allProducts, viewedProducts}) => {
                   fontWeight="600"
                   noWrap
                   mb={1}
+                  sx={{
+                    color: 'text.primary'
+                  }}
                 >
                   {product?.name}
                 </Typography>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Typography variant="h7" component="span" fontWeight="bold">
+                  <Typography variant="h7" component="span" fontWeight="bold"
+                  sx={{
+                    color: 'text.primary'
+                  }}>
                     ${product?.price}
                   </Typography>
                 </Box>
               </CardContent>
+              </Link>
             </Card>
           ))}
         </Box>

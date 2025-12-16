@@ -172,17 +172,38 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
         </Box>
 
         <Box sx={{ display: 'flex' }}>
-          <IconButton variant="body1" size='large' sx={{ background: red[500], color: 'white', marginRight: '10px' }}
+          <IconButton variant="body1" size='large' sx={{ 
+            bgcolor: 'secondary.dark', 
+            color: 'text.light', marginRight: '10px',
+            '&:hover':{
+            bgcolor: 'secondary.main',
+            color: 'text.primary',
+          } 
+           }}
             onClick={() => removeItem()}>
             <RemoveOutlined size={2} />
           </IconButton>
-          <IconButton variant="body1" size='large' sx={{ background: green[500], color: 'white' }}
+          <IconButton variant="body1" size='large' sx={{ 
+            bgcolor: 'success.main', 
+            color: 'text.light',
+          '&:hover':{
+            bgcolor: 'success.light',
+            color: 'text.primary',
+          } }}
             onClick={() => addItem()}>
             <AddOutlined size={2} />
           </IconButton>
 
         </Box>
-        <Button variant="contained" color="primary"
+        <Button variant="contained" sx={{
+          color: 'text.light',
+          bgcolor: 'primary.dark',
+          '&:hover':{
+            bgcolor: 'primary.main',
+            color: 'text.primary',
+          }
+
+        }}
           onClick={() => addItemToCart()}
           disabled={product.stock === 0 || qtyPerItem === 0}>
           Add to Cart
