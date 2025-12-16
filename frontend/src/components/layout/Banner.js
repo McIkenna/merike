@@ -82,7 +82,7 @@ const Banner = () => {
           sx={{ 
             padding: '16px', 
             marginTop: '0', 
-            backgroundColor: 'success.main',
+            backgroundColor: 'success.light',
             display: 'flex',
             position: 'relative',
             borderRadius: '0px'

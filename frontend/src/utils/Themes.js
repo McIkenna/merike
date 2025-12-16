@@ -59,7 +59,7 @@ export const darkTheme = createTheme({
       contrastText: colors.primaryRed.contrastText,
     },
     success: {
-      light: colors.primaryGreen.light,
+      light: colors.primaryGreen.main,
       main: colors.primaryGreen.dark,
       dark: colors.primaryGreen.moredark,
       contrastText: colors.primaryGreen.contrastText,
