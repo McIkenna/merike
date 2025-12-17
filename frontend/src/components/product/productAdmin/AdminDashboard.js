@@ -1,12 +1,8 @@
-import React, { useState } from 'react'
-import { Grid, Box, Typography, Button } from '@mui/material'
-import { green, red, grey } from '@mui/material/colors'
-import ProductForm from './ProductForm'
+import { useState } from 'react'
+import { Grid, Box, Button } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { UserInventory } from './UserInventory'
 import { useGetProductBySellerQuery } from '../../../api/services/productApi'
-import Carousel from 'react-material-ui-carousel'
-import Banner from '../../layout/Banner'
 import CarouselForm from './CarouselForm'
 import BannerForm from './BannerForm'
 import Snackbar from '@mui/material/Snackbar';
@@ -17,7 +13,7 @@ export const AdminDashboard = () => {
     const { stateStore, auth } = useSelector(state => state);
     const { user } = auth
     const { categories } = stateStore
-    const { data, isError, isSuccess, isFetching, isLoading, refetch } = useGetProductBySellerQuery(user?._id)
+    const { data, isFetching, refetch } = useGetProductBySellerQuery(user?._id)
    const userPage = {
     UserInventory: 'Inventory',
     CarouselManagement: 'Carousel Management',

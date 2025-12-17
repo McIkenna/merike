@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import { Box, Container, List, ListItem, ListItemText, Divider, Typography, Paper, Grid, IconButton, Button } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTotalPrice, setTotalQuantity, setCartItems } from '../../api/actions';
@@ -14,12 +14,12 @@ export const Cart = () => {
     const { stateStore, auth } = useSelector(state => state);
     const { cartItems, totalQuantity, totalPrice } = stateStore;
 
-    const [checkoutUrl, setCheckoutUrl] = useState(null);
-    const [checkoutOrder, {data, error, isError, isLoading, isSuccess}] = useCheckoutOrderMutation()
+    // const [checkoutUrl, setCheckoutUrl] = useState(null);
+    const [ {data, error, isError, isLoading, isSuccess}] = useCheckoutOrderMutation()
     
-      // Initialize the Shopify client
+    //   // Initialize the Shopify client
 
-      const [loading, setLoading] = useState(false);
+    //   const [loading, setLoading] = useState(false);
 
 
 
@@ -112,6 +112,21 @@ const goToShopify = () => {
         dispatch(setTotalQuantity(totalQuantity));
         dispatch(setTotalPrice(totalPrice));
     }
+
+
+const truncatedCartItems = useMemo(() => {
+    if(!cartItems || cartItems.length === 0) return null;
+
+    return cartItems.map(item => ({
+    ...item,
+    name: item.name.length > 10
+      ? item.name.slice(0, 10)
+      : item.name
+  }));
+
+}, [cartItems])
+
+console.log('truncatedCartItems --->', truncatedCartItems)
 
     return (
         <Box>
@@ -293,7 +308,7 @@ const goToShopify = () => {
                                     >
                                        Login to Checkout
                                     </Button> :
-                                    <Checkout cartItems={cartItems}/>
+                                    <Checkout cartItems={truncatedCartItems}/>
                                             }
                                 </Box>
 

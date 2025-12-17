@@ -1,41 +1,30 @@
-import React from "react";
-import { makeStyles } from "@mui/styles";
+import { Box } from "@mui/material";
 
-const useStyles = makeStyles({
-  circle: {
-    //defining circle
-    height: "20px",
-    width: "20px",
-    borderRadius: "40%",
-    //postion absolute helps to put
-    //element relative to containing unit
-    position: "absolute",
-    //adjusting positon of circle
-    bottom: "25px",
-    left: "14px",
-    fontWeight: "bold"
-  }
-});
-
-const Circle = (props) => {
-  const { totalQuantity, cartstyle } = props;
-  const classes = useStyles();
+const Circle = ({ totalQuantity, cartstyle }) => {
+  if (!totalQuantity || totalQuantity === 0) return null;
+  
   return (
-    <div>
-      <div
-        //  In order to apply props received, we have used style property
-        style={{
-          backgroundColor: `${cartstyle.circleBg}`,
-          color: `${cartstyle.color}`,
-          paddingLeft: "5px",
-          border: "1px solid #000",
-          
-        }}
-        className={classes.circle}
-      >
-        <span>{totalQuantity}</span>
-      </div>
-    </div>
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '-5px',
+        right: '-5px',
+        bgcolor: 'secondary.dark',
+        color: 'text.primary',
+        borderRadius: '50%',
+        width: '24px',
+        height: '24px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '12px',
+        fontWeight: '600',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+        ...cartstyle
+      }}
+    >
+      {totalQuantity > 99 ? '99+' : totalQuantity}
+    </Box>
   );
 };
 export default Circle;

@@ -1,22 +1,49 @@
 import React from 'react'
 import Circle from './Circle';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { green, red, grey } from '@mui/material/colors';
 
-  
-export default function ShoppingCart(props) {
-  const {totalQuantity, cartstyle} = props;
-    
+
+export default function ShoppingCart({ 
+  totalQuantity = 0, 
+  cartstyle, 
+  iconColor = '#1f2937',
+  iconSize = 28,
+  style,
+  onClick,
+  showBadge = true
+}) {
   return (
-    <div style={{ position: "relative", ...props.style, margin: '20px 40px  20px 40px'}}>
-    <ShoppingCartIcon
+    <button
+      onClick={onClick}
       style={{
-        color: grey[800],
-        fontSize: '36px'
+        position: 'relative',
+        background: 'none',
+        border: 'none',
+        padding: '12px',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '8px',
+        transition: 'all 0.2s ease',
+        ...style
       }}
-    />
-     <Circle cartstyle={cartstyle} totalQuantity={totalQuantity}/>
-   
-  </div>
-  )
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = '#f3f4f6';
+        e.currentTarget.style.transform = 'scale(1.05)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = 'transparent';
+        e.currentTarget.style.transform = 'scale(1)';
+      }}
+      aria-label={`Shopping cart with ${totalQuantity} items`}
+    >
+      <ShoppingCartIcon
+        size={iconSize}
+        color={iconColor}
+        strokeWidth={2}
+      />
+      {showBadge && <Circle cartstyle={cartstyle} totalQuantity={totalQuantity} />}
+    </button>
+  );
 }

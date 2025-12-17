@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Box, Typography, Collapse, Paper } from '@mui/material';
-import { green } from '@mui/material/colors';
 import { keyframes } from '@emotion/react';
 import { useSelector } from 'react-redux';
 
@@ -23,18 +22,17 @@ const fadeIn = keyframes`
   }
 `;
 
-const fadeOut = keyframes`
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-`;
+// const fadeOut = keyframes`
+//   from {
+//     opacity: 1;
+//   }
+//   to {
+//     opacity: 0;
+//   }
+// `;
 
 
 const Banner = () => {
-  const [open, setOpen] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   
   // Use mock data - replace with your Redux selector
@@ -76,7 +74,7 @@ const Banner = () => {
 
   return (
     <Box>
-      <Collapse in={open}>
+      <Collapse in={true}>
         <Paper 
           elevation={3} 
           sx={{ 

@@ -13,12 +13,7 @@ import {
     ListItemText,
     Chip,
     Alert,
-    Table,
-    TableBody,
-    TableCell,
     TableContainer,
-    TableHead,
-    TableRow
 } from '@mui/material';
 import { 
     ExpandMore, 
@@ -28,8 +23,7 @@ import {
     Visibility,
     Share,
     Cookie,
-    Delete,
-    Email
+    Delete
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { AgGridReact } from 'ag-grid-react';
