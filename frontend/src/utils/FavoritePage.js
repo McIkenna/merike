@@ -24,6 +24,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { setFavorites } from '../api/actions';
+import { AddItemToCart } from '../components/cart/cartUtils/AddItemToCart';
+import { CustomSnackbar } from './CustomSnackbar';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   position: 'relative',
@@ -102,15 +104,18 @@ export const FavoritePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { stateStore } = useSelector(state => state);
-  const { favorites, products} = stateStore;
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+
+  const { favorites, products, totalPrice, totalQuantity, cartItems } = stateStore;
   // Correctly map favorite IDs to their corresponding products
   const favoriteProducts = useMemo(() => {
-    if (!products || products.length === 0 || !favorites || favorites.length === 0) {
+    if (!products || products?.length === 0 || !favorites || favorites.length === 0) {
       return [];
     }
 
     // Filter products that exist in favorites array
-    return products?.filter(product => favorites?.includes(product._id));
+    return products?.filter(product => favorites?.includes(product?._id));
   }, [products, favorites]);
 
   const handleRemoveFavorite = (productId) => {
@@ -124,14 +129,25 @@ export const FavoritePage = () => {
     localStorage.setItem('favorites', JSON.stringify([]));
   };
 
-  const handleAddToCart = (product) => {
-    // Add to cart functionality
-    console.log('Add to cart:', product);
-  };
+ 
 
   const handleViewProduct = (productId) => {
     navigate(`/product/${productId}`);
   };
+
+  const handleAddToCart = async (product) => {
+      await AddItemToCart(
+        product,
+        1, 
+        cartItems, 
+        dispatch, 
+        setOpenSnackbar, 
+        setSnackbarMessage, 
+        totalPrice,  
+        totalQuantity)
+
+        
+    }
 
   // Empty State
   if (favoriteProducts.length === 0) {
@@ -400,6 +416,10 @@ export const FavoritePage = () => {
           Continue Shopping
         </Button>
       </Box>
+      <CustomSnackbar
+      openSnackbar={openSnackbar}
+      snackbarMessage={snackbarMessage}
+      setOpenSnackbar={setOpenSnackbar} />
     </Container>
   );
 }
