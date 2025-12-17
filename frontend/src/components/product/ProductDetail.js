@@ -32,14 +32,17 @@ export default function ProductDetail() {
             <Grid container spacing={2}>
               {/* Additional Product Images */}
               <Grid item xs={6} md={6} sm={6}>
-              <ProductGallery product={product} />
+                <Box >
+                  <ProductGallery product={product} />
+
+                </Box>
+              
               </Grid>
 
               
 
 
               <Grid item xs={6} md={6} sm={6}>
-                {/* Product Details */}
                 <ProductInfo product={product} 
                 setOpenSnackbar={setOpenSnackbar}
                 setSnackbarMessage={setSnackbarMessage}/>
