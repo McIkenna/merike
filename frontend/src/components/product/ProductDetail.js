@@ -31,7 +31,7 @@ export default function ProductDetail() {
           <Box style={{ padding: '10px', marginTop: '20px' }}>
             <Grid container spacing={2}>
               {/* Additional Product Images */}
-              <Grid item xs={6} md={6} sm={6}>
+              <Grid item xs={12} md={6} sm={6}>
                 <Box >
                   <ProductGallery product={product} />
 
@@ -42,7 +42,7 @@ export default function ProductDetail() {
               
 
 
-              <Grid item xs={6} md={6} sm={6}>
+              <Grid item xs={12} md={6} sm={6}>
                 <ProductInfo product={product} 
                 setOpenSnackbar={setOpenSnackbar}
                 setSnackbarMessage={setSnackbarMessage}/>

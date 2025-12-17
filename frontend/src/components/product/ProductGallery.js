@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Box, Grid, IconButton } from '@mui/material';
 import {
     ArrowBackIosNew,
@@ -12,6 +12,7 @@ import 'slick-carousel/slick/slick-theme.css';
 export const ProductGallery = ({ product }) => {
     const images = product?.images || [];
     const [activeIndex, setActiveIndex] = useState(0);
+    const [hoverIndex, setHoverIndex] = useState(null);
 
     if (!images.length) return null;
 
@@ -34,7 +35,8 @@ export const ProductGallery = ({ product }) => {
     const handlePrev = () =>
         setActiveIndex((i) => (i - 1 + images.length) % images.length);
 
-    const changeThumbnail = (index) => setActiveIndex(index)
+    const currentIndex = hoverIndex !== null ? hoverIndex : activeIndex;
+
 
     return (
         <Box
@@ -55,15 +57,18 @@ export const ProductGallery = ({ product }) => {
                                     sx={{
                                         p: 0.5
                                     }}
+                                    onMouseEnter={() => setHoverIndex(index)}
+                                    onMouseLeave={() => setHoverIndex(null)}
 
                                 >
                                     <Box
+                                        key={index}
                                         component="img"
                                         src={img.url}
                                         alt={`Thumbnail ${index + 1}`}
-                                        onClick={changeThumbnail(index)}
                                         sx={{
                                             width: '100%',
+                                            objectFit: 'cover',
                                             borderRadius: 2,
                                             cursor: 'pointer',
                                             border:
@@ -94,8 +99,8 @@ export const ProductGallery = ({ product }) => {
                     >
                         <Box
                             component="img"
-                            src={images[activeIndex]?.url}
-                            alt={`Product image ${activeIndex + 1}`}
+                            src={images[currentIndex]?.url}
+                            alt={`Product image ${currentIndex + 1}`}
                             sx={{
                                 width: '100%',
                                 height: { xs: 260, md: 420 },

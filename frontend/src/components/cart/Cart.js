@@ -37,8 +37,6 @@ const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   borderRadius: theme.spacing(2),
   transition: 'all 0.3s ease',
-  border: '1px solid',
-  borderColor: theme.palette.divider,
   '&:hover': {
     boxShadow: theme.shadows[4],
     transform: 'translateY(-2px)',
@@ -338,7 +336,6 @@ export const Cart = () => {
                             gap: 1,
                             p: 0.5,
                             borderRadius: 2,
-                            bgcolor: 'background.default',
                           }}
                         >
                           <QuantityButton

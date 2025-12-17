@@ -30,7 +30,7 @@ const Checkout = ({ cartItems }) => {
         sx={{
           padding: '20px',
           borderRadius: '40px',
-          color: 'text.white',
+          color: 'text.main',
           bgcolor: 'success.main',
           fontSize: '1.2em',
           fontWeight: 'bold',
