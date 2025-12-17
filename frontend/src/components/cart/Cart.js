@@ -1,353 +1,547 @@
-import React, {useState, useEffect, useMemo} from 'react'
-import { Box, Container, List, ListItem, ListItemText, Divider, Typography, Paper, Grid, IconButton, Button } from '@mui/material';
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Grid,
+  IconButton,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Divider,
+  Badge,
+  Alert,
+  Collapse
+} from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTotalPrice, setTotalQuantity, setCartItems } from '../../api/actions';
-import { AddOutlined, RemoveOutlined, Favorite, ArrowBack } from '@mui/icons-material';
-import { grey, green, blue } from '@mui/material/colors';
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import {
+  AddOutlined,
+  RemoveOutlined,
+  DeleteOutline,
+  ShoppingCartOutlined,
+  LocalOffer,
+  Security,
+  LocalShipping,
+  ArrowForward,
+  ShoppingBag
+} from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useCheckoutOrderMutation } from '../../api/services/checkoutApi';
 import Checkout from '../checkout/Checkout';
+import { styled } from '@mui/material/styles';
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  borderRadius: theme.spacing(2),
+  transition: 'all 0.3s ease',
+  border: '1px solid',
+  borderColor: theme.palette.divider,
+  '&:hover': {
+    boxShadow: theme.shadows[4],
+    transform: 'translateY(-2px)',
+  },
+}));
+
+const QuantityButton = styled(IconButton)(({ theme }) => ({
+  width: 36,
+  height: 36,
+  border: '2px solid',
+  borderColor: theme.palette.divider,
+  '&:hover': {
+    borderColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.light,
+  },
+}));
+
+const SummaryCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  borderRadius: theme.spacing(2),
+  position: 'sticky',
+  top: 100,
+  border: '2px solid',
+  borderColor: theme.palette.primary.main,
+}));
+
+const EmptyCartBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '60vh',
+  padding: theme.spacing(4),
+  textAlign: 'center',
+}));
+
+const FeatureChip = styled(Chip)(({ theme }) => ({
+  borderRadius: theme.spacing(1),
+  fontWeight: 600,
+  '& .MuiChip-icon': {
+    marginLeft: theme.spacing(1),
+  },
+}));
+
 export const Cart = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { stateStore, auth } = useSelector(state => state);
-    const { cartItems, totalQuantity, totalPrice } = stateStore;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { stateStore, auth } = useSelector(state => state);
+  const { cartItems, totalQuantity, totalPrice } = stateStore;
+  const { user } = auth;
+  const [showSavings, setShowSavings] = useState(true);
+  
+  const [{ data }] = useCheckoutOrderMutation();
 
-    // const [checkoutUrl, setCheckoutUrl] = useState(null);
-    const [ {data, error, isError, isLoading, isSuccess}] = useCheckoutOrderMutation()
-    
-    //   // Initialize the Shopify client
-
-    //   const [loading, setLoading] = useState(false);
-
-
-
-    //   const [cartInput, setCartInput] = useState({
-    //     lines: [
-    //       {
-    //         quantity: 1,
-    //         merchandiseId: 'gid://shopify/ProductVariant/1',
-    //       },
-    //     ],
-    //   });
-    
-    //   const handleCheckout = async () => {
-    //     try {
-    //         const response = await checkoutOrder(cartInput).unwrap();
-    //         console.log('Cart created:', response.cartCreate.cart);
-          
-    //     } catch (err) {
-    //       console.error('Failed to create checkout:', err);
-    //     }
-    //   };
-
-
-
-const goToShopify = () => {
+  const goToShopify = () => {
     if (data?.webUrl) {
       window.open(data?.webUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
-  useEffect(()=>{
-    goToShopify()
-  }, [data])
+  useEffect(() => {
+    goToShopify();
+  }, [data]);
 
+  const decreaseQuantity = (item) => {
+    const newCartItems = cartItems.reduce((acc, cartItem) => {
+      if (cartItem.productId === item.productId) {
+        const updatedQuantity = cartItem.quantity - 1;
+        if (updatedQuantity > 0) {
+          acc.push({
+            ...cartItem,
+            quantity: updatedQuantity,
+            total: updatedQuantity * cartItem.price
+          });
+        }
+      } else {
+        acc.push(cartItem);
+      }
+      return acc;
+    }, []);
 
-    const {user} = auth
-    
+    cartStateUpdate(newCartItems);
+  };
 
-    const decreaseQuantity = (item) => {
-        const newCartItems = cartItems.reduce((acc, cartItem) => {
-            if (cartItem.productId === item.productId) {
-                const updatedQuantity = cartItem.quantity - 1;
-                if (updatedQuantity > 0) {
-                    acc.push({
-                        ...cartItem,
-                        quantity: updatedQuantity,
-                        total: updatedQuantity * cartItem.price
-                    });
-                }
-            } else {
-                acc.push(cartItem);
-            }
-            return acc;
-        }, []);
+  const increaseQuantity = (item) => {
+    const newCartItems = cartItems.map(cartItem => {
+      if (cartItem.productId === item.productId) {
+        const updatedQuantity = cartItem.quantity + 1;
+        return {
+          ...cartItem,
+          quantity: updatedQuantity,
+          total: updatedQuantity * cartItem.price
+        };
+      }
+      return cartItem;
+    });
+    cartStateUpdate(newCartItems);
+  };
 
-        cartStateUpdate(newCartItems);
-    }
+  const removeItemFromCart = (item) => {
+    const newCartItems = cartItems.filter(cartItem => cartItem.productId !== item.productId);
+    cartStateUpdate(newCartItems);
+  };
 
-    const increaseQuantity = (item) => {
-        const newCartItems = cartItems.map(cartItem => {
-            if (cartItem.productId === item.productId) {
-                const updatedQuantity = cartItem.quantity + 1;
+  const cartStateUpdate = (newCartItems) => {
+    const totalQuantity = newCartItems.reduce((sum, cartItem) => sum + cartItem.quantity, 0);
+    const totalPrice = newCartItems.reduce((sum, cartItem) => sum + cartItem.total, 0);
+    localStorage.setItem('cartItems', JSON.stringify(newCartItems));
+    localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
+    localStorage.setItem('totalQuantity', JSON.stringify(totalQuantity));
+    dispatch(setCartItems(newCartItems));
+    dispatch(setTotalQuantity(totalQuantity));
+    dispatch(setTotalPrice(totalPrice));
+  };
 
-                return {
-                    ...cartItem,
-                    quantity: updatedQuantity,
-                    total: updatedQuantity * cartItem.price
-                };
-            }
-            return cartItem;
-        });
-        cartStateUpdate(newCartItems);
-    }
-
-
-    const removeItemFromCart = (item) => {
-        // Filter out the item to be removed
-        const newCartItems = cartItems.filter(cartItem => cartItem.productId !== item.productId);
-
-        cartStateUpdate(newCartItems);
-    };
-
-    const cartStateUpdate = (newCartItems) => {
-        const totalQuantity = newCartItems.reduce((sum, cartItem) => sum + cartItem.quantity, 0);
-        const totalPrice = newCartItems.reduce((sum, cartItem) => sum + cartItem.total, 0);
-        localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-        localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
-        localStorage.setItem('totalQuantity', JSON.stringify(totalQuantity));
-        dispatch(setCartItems(newCartItems));
-        dispatch(setTotalQuantity(totalQuantity));
-        dispatch(setTotalPrice(totalPrice));
-    }
-
-
-const truncatedCartItems = useMemo(() => {
-    if(!cartItems || cartItems.length === 0) return null;
-
+  const truncatedCartItems = useMemo(() => {
+    if (!cartItems || cartItems.length === 0) return null;
     return cartItems.map(item => ({
-    ...item,
-    name: item.name.length > 10
-      ? item.name.slice(0, 10)
-      : item.name
-  }));
+      ...item,
+      name: item.name.length > 10 ? item.name.slice(0, 10) : item.name
+    }));
+  }, [cartItems]);
 
-}, [cartItems])
+  const savings = 50; // This could be calculated based on discounts
+  const estimatedTotal = totalPrice - savings;
 
-console.log('truncatedCartItems --->', truncatedCartItems)
-
+  if (cartItems.length === 0) {
     return (
-        <Box>
-            <Typography variant="h4" gutterBottom>
-                Cart ({totalQuantity} items)
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <EmptyCartBox>
+          <Box
+            sx={{
+              width: 120,
+              height: 120,
+              borderRadius: '50%',
+              bgcolor: 'primary.light',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mb: 3,
+            }}
+          >
+            <ShoppingCartOutlined sx={{ fontSize: 60, color: 'primary.main' }} />
+          </Box>
+          <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
+            Your Cart is Empty
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 500 }}>
+            Looks like you haven't added anything to your cart yet. Start shopping and discover amazing products!
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<ShoppingBag />}
+            onClick={() => navigate('/')}
+            sx={{
+              px: 4,
+              py: 1.5,
+              borderRadius: 3,
+              textTransform: 'none',
+              fontSize: '1.1rem',
+              fontWeight: 600,
+            }}
+          >
+            Start Shopping
+          </Button>
+        </EmptyCartBox>
+      </Container>
+    );
+  }
+
+  return (
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Header */}
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <ShoppingCartOutlined sx={{ fontSize: 40, color: 'primary.main' }} />
+          <Box>
+            <Typography variant="h3" sx={{ fontWeight: 700 }}>
+              Shopping Cart
             </Typography>
-            {cartItems.length > 0 ? <Grid container spacing={2}>
-                <Grid item xs={12} md={8}>
-                    <Box>
-                        <Typography variant="h5" gutterBottom>
-                            Items
-                        </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {totalQuantity} {totalQuantity === 1 ? 'item' : 'items'} in your cart
+            </Typography>
+          </Box>
+        </Box>
+        
+        {/* Feature Chips */}
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
+          <FeatureChip
+            icon={<Security />}
+            label="Secure Checkout"
+            color="success"
+            variant="outlined"
+            size="small"
+          />
+          <FeatureChip
+            icon={<LocalShipping />}
+            label="Fast Delivery"
+            color="primary"
+            variant="outlined"
+            size="small"
+          />
+          <FeatureChip
+            icon={<LocalOffer />}
+            label="Best Prices"
+            color="error"
+            variant="outlined"
+            size="small"
+          />
+        </Box>
+      </Box>
 
-                        {cartItems.map((item, index) => (
-                            <Paper elevation={1} sx={{ margin: '10px' }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
-                                    <Box>
-                                        <img src={item?.image} alt={item.name} style={{ width: '100px' }} />
-                                    </Box>
-                                    <Box>
-                                        <ListItem>
-                                            <ListItemText
-                                                primary={item.name}
-                                                secondary={`Price: $${item.price}`}
-                                                primaryTypographyProps={{ fontSize: '1.2em' }}
-                                                secondaryTypographyProps={{ variant: 'subtitle1' }}
-                                                sx={{ padding: '20px' }}
-                                            />
-                                        </ListItem>
-                                    </Box>
-                                    <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
-                                        <Box>
+      <Grid container spacing={3}>
+        {/* Cart Items */}
+        <Grid item xs={12} md={8}>
+          <Box>
+            {cartItems.map((item, index) => (
+              <StyledCard key={item.productId} elevation={0}>
+                <CardContent>
+                  <Grid container spacing={2} alignItems="center">
+                    {/* Product Image */}
+                    <Grid item xs={3} sm={2}>
+                      <Box
+                        sx={{
+                          width: '100%',
+                          aspectRatio: '1/1',
+                          borderRadius: 2,
+                          overflow: 'hidden',
+                          bgcolor: 'background.default',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <img
+                          src={item?.image}
+                          alt={item.name}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      </Box>
+                    </Grid>
 
-                                            <Box sx={{ alignItems: 'center', padding: '10px' }}>
-                                                <Typography variant='h6' color={green[800]} align={'center'}
-                                                    sx={{
-                                                        fontWeight: 'bolder',
-                                                    }}>{`$${item.total?.toFixed(2)}`}</Typography>
-                                            </Box>
-                                            <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }} >
-                                                <Box>
-                                                    <IconButton onClick={() => decreaseQuantity(item)}>
-                                                        <RemoveOutlined />
-                                                    </IconButton>
-                                                </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        pt: 1,
-                                                        pb: 1,
-                                                        pr: 2,
-                                                        pl: 2,
-                                                        bgcolor:'background.default',
-                                                        borderRadius: 2
-                                                    }}
-                                                >
-                                                    <Typography
-                                                        variant="body1"
-                                                        sx={{ fontWeight: "bold", 
-                                                            fontSize: "17px"
-                                                         }}
-                                                    >
-                                                        {item.quantity}
-                                                    </Typography>
-                                                </Box>
-                                                <Box>
-                                                    <IconButton onClick={() => increaseQuantity(item)}>
-                                                        <AddOutlined />
-                                                    </IconButton>
-                                                </Box>
+                    {/* Product Info */}
+                    <Grid item xs={9} sm={5}>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          mb: 0.5,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                        }}
+                      >
+                        {item.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        ${item.price.toFixed(2)} per unit
+                      </Typography>
+                      <Button
+                        size="small"
+                        startIcon={<DeleteOutline />}
+                        onClick={() => removeItemFromCart(item)}
+                        sx={{
+                          color: 'error.main',
+                          textTransform: 'none',
+                          '&:hover': {
+                            bgcolor: 'error.light',
+                          },
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
 
-                                            </Box>
-                                        </Box>
-                                    </Box>
-
-                                </Box>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-around', padding: '10px' }}>
-                                    <Typography variant='subtitle1' color={grey[800]} align={'center'} sx={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => removeItemFromCart(item)}>
-                                        Remove
-                                    </Typography>
-                                    <Typography variant='subtitle1' color={grey[800]} align={'center'} sx={{ textDecoration: 'underline', cursor: 'pointer' }}>
-                                        <IconButton><Favorite /></IconButton> Save for later
-                                    </Typography>
-                                </Box>
-                                {/* {index < cartItems.length - 1 && <Divider />} */}
-                            </Paper>
-                        ))}
-                    </Box>
-
-                </Grid>
-                <Grid item xs={12} md={4}>
-                    {cartItems.length > 0 &&
-                        <Box>
-                            <Box>
-                                <Typography variant="h5" gutterBottom>
-                                    Order Summary
-                                </Typography>
-                            </Box>
-                            <Paper elevation={1}>
-                                <Box
-                                    sx={{
-                                        padding: '20px'
-                                    }}>
-
-                                    <Box>
-                                        <List>
-                                            <ListItem sx={{
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                padding: '5px'
-                                            }}>
-                                                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>Subtotal</Typography>
-                                                <Typography sx={{ fontSize: '1.2em', fontWeight: 'bold', color: green['800'], textDecoration: 'line-through' }}>{`$${totalPrice?.toFixed(2)}`}</Typography>
-
-                                            </ListItem>
-                                            <ListItem sx={{
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                padding: '5px'
-                                            }}>
-                                                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>Savings</Typography>
-                                                <Typography sx={{
-                                                    fontSize: '1.1em',
-                                                    color: grey[700],
-
-                                                }}>{`-$${50}`}</Typography>
-
-                                            </ListItem>
-
-                                            <ListItem sx={{
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                padding: '5px'
-                                            }}>
-                                                <Typography variant='h6' sx={{ fontWeight: 'bold' }}></Typography>
-                                                <Typography sx={{
-                                                    fontSize: '1.2em',
-                                                    fontWeight: 'bold',
-                                                    color: green['800'],
-                                                }}>{`$${200}`}</Typography>
-
-                                            </ListItem>
-                                            {<Divider />}
-                                            <ListItem
-                                                sx={{
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between',
-                                                    padding: '20px'
-                                                }}>
-                                                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>Shipping</Typography>
-                                                <Typography sx={{ fontSize: '1.2em' }}>Calculated during checkout</Typography>
-                                            </ListItem>
-                                            <ListItem
-                                                sx={{
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between',
-                                                    padding: '20px'
-                                                }}>
-                                                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>Taxes</Typography>
-                                                <Typography sx={{ fontSize: '1.2em' }}>Calculated during checkout</Typography>
-                                            </ListItem>
-                                            {<Divider />}
-                                            <ListItem
-                                                sx={{
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between',
-                                                    padding: '20px'
-                                                }}>
-                                                <Typography variant='h6' sx={{ fontWeight: 'bold' }}>Estimated Total</Typography>
-                                                <Typography sx={{ fontSize: '1.2em' }}>Calculated during checkout</Typography>
-                                            </ListItem>
-                                        </List>
-                                    </Box>
-
-                                </Box>
-                                <Box sx={{ padding: '20px' }}>
-                                {!user?._id ?  <Button variant="contained" color="primary" fullWidth sx={{ padding: '20px', borderRadius: '40px' }} disabled={!user?._id}
-                                    // onClick={() => navigate('/checkout')}
-                                    >
-                                       Login to Checkout
-                                    </Button> :
-                                    <Checkout cartItems={truncatedCartItems}/>
-                                            }
-                                </Box>
-
-                            </Paper>
-                            <Box sx={{ color: blue['500'], display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '20px' }}>
-                                <ArrowBack sx={{ paddingRight: '10px'}}/>
-                                <Typography variant="h6" sx={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => navigate('/')}>
-                                    Continue Shopping
-                                </Typography>
-                            </Box>
-                        </Box>}
-                </Grid>
-
-            </Grid>
-                :
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '50vh'
-                    }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <ProductionQuantityLimitsIcon sx={{ fontSize: '7em', color: grey['500'] }} />
-                        <Typography variant="h4" sx={{ color: grey['500'], paddingTop: '20px' }}>
-                            Your cart is empty, add product to cart
-                        </Typography>
-                        <Box sx={{ color: blue['500'], display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: '20px' }}>
-                            <ArrowBack sx={{ paddingRight: '10px'}}/>
-                            <Typography variant="h6" sx={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => navigate('/')}>
-                                Start Shopping
-                            </Typography>
+                    {/* Quantity Controls */}
+                    <Grid item xs={12} sm={5}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: { xs: 'space-between', sm: 'flex-end' },
+                          gap: 2,
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            p: 0.5,
+                            borderRadius: 2,
+                            bgcolor: 'background.default',
+                          }}
+                        >
+                          <QuantityButton
+                            size="small"
+                            onClick={() => decreaseQuantity(item)}
+                          >
+                            <RemoveOutlined fontSize="small" />
+                          </QuantityButton>
+                          <Typography
+                            sx={{
+                              minWidth: 40,
+                              textAlign: 'center',
+                              fontWeight: 700,
+                              fontSize: '1.1rem',
+                            }}
+                          >
+                            {item.quantity}
+                          </Typography>
+                          <QuantityButton
+                            size="small"
+                            onClick={() => increaseQuantity(item)}
+                          >
+                            <AddOutlined fontSize="small" />
+                          </QuantityButton>
                         </Box>
 
+                        <Box sx={{ textAlign: 'right' }}>
+                          <Typography variant="caption" color="text.secondary">
+                            Total
+                          </Typography>
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: 700,
+                              color: 'success.main',
+                            }}
+                          >
+                            ${item.total.toFixed(2)}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </StyledCard>
+            ))}
+          </Box>
 
-                    </Box>
+          {/* Continue Shopping */}
+          <Button
+            variant="outlined"
+            startIcon={<ArrowForward sx={{ transform: 'rotate(180deg)' }} />}
+            onClick={() => navigate('/')}
+            sx={{
+              mt: 2,
+              textTransform: 'none',
+              borderRadius: 2,
+            }}
+          >
+            Continue Shopping
+          </Button>
+        </Grid>
 
+        {/* Order Summary */}
+        <Grid item xs={12} md={4}>
+          <SummaryCard elevation={3}>
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
+              Order Summary
+            </Typography>
+
+            <Box sx={{ mb: 3 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  mb: 1.5,
+                }}
+              >
+                <Typography variant="body1">Subtotal</Typography>
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                  ${totalPrice.toFixed(2)}
+                </Typography>
+              </Box>
+
+              <Collapse in={showSavings}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    mb: 1.5,
+                    p: 1.5,
+                    bgcolor: 'success.light',
+                    borderRadius: 1,
+                  }}
+                >
+                  <Typography variant="body1" sx={{ fontWeight: 600, color: 'success.dark' }}>
+                    Savings
+                  </Typography>
+                  <Typography variant="body1" sx={{ fontWeight: 700, color: 'success.dark' }}>
+                    -${savings.toFixed(2)}
+                  </Typography>
                 </Box>
-            }
-        </Box>
-    )
+              </Collapse>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  mb: 1.5,
+                }}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  Shipping
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Calculated at checkout
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  Taxes
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Calculated at checkout
+                </Typography>
+              </Box>
+
+              <Divider sx={{ my: 2 }} />
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  p: 2,
+                  bgcolor: 'primary.light',
+                  borderRadius: 2,
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                  Estimated Total
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: 'primary.dark' }}>
+                  ${estimatedTotal.toFixed(2)}
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Checkout Button */}
+            {!user?._id ? (
+              <Alert severity="info" sx={{ mb: 2 }}>
+                Please log in to proceed with checkout
+              </Alert>
+            ) : null}
+
+            {!user?._id ? (
+              <Button
+                variant="contained"
+                fullWidth
+                size="large"
+                onClick={() => navigate('/login')}
+                sx={{
+                  py: 1.5,
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  mb: 2,
+                }}
+              >
+                Login to Checkout
+              </Button>
+            ) : (
+              <Checkout cartItems={truncatedCartItems} />
+            )}
+
+            {/* Security Badge */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 1,
+                mt: 2,
+                p: 1.5,
+                bgcolor: 'background.default',
+                borderRadius: 1,
+              }}
+            >
+              <Security color="success" fontSize="small" />
+              <Typography variant="caption" color="text.secondary">
+                Secure SSL Encrypted Checkout
+              </Typography>
+            </Box>
+          </SummaryCard>
+        </Grid>
+      </Grid>
+    </Container>
+  );
 }

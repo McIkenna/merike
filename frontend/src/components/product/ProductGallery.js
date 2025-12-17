@@ -44,6 +44,13 @@ export const ProductGallery = ({ product }) => {
                     // ref={(slider) => (this.thumbnailSlider = slider)}
                     >
                         {productImages.map((image, index) => (
+                            <Box
+                            sx={{
+                                border: '1px solid gray',
+                                borderRadius: '10px'
+                            }}>
+
+                           
 
 
                             <img
@@ -58,6 +65,7 @@ export const ProductGallery = ({ product }) => {
                                 }}
                                 onClick={() => setMainImageIndex(index)}
                             />
+                             </Box>
 
                         ))}
                     </Slider>

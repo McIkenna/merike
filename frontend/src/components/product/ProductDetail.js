@@ -28,7 +28,7 @@ export default function ProductDetail() {
       <MetaData title={product?.name} />
       {
         data && data.product ?
-          <Paper elevation={0} style={{ padding: '10px', marginTop: '20px' }}>
+          <Box style={{ padding: '10px', marginTop: '20px' }}>
             <Grid container spacing={2}>
               {/* Additional Product Images */}
               <Grid item xs={6} md={6} sm={6}>
@@ -64,7 +64,7 @@ export default function ProductDetail() {
                 </Alert>
           </Snackbar>
             </Box>
-          </Paper> :
+          </Box> :
           <Loader />}
    </Box>
   )

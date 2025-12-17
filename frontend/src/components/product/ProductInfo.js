@@ -1,38 +1,99 @@
-import { useEffect, useCallback } from 'react'
-import { Box, Typography } from '@mui/material'
-import { green, red } from '@mui/material/colors'
-import ReviewRating from '../../utils/ReviewRating'
-import { Button, IconButton } from '@mui/material'
-import { AddOutlined, RemoveOutlined } from '@mui/icons-material'
-import { setQtyPerItem, setTotalPrice, setPricePerItem, setTotalQuantity, setCartItems, setViewedProducts, setCartInspiredProducts} from '../../api/actions';
+import { useEffect, useCallback } from 'react';
+import { 
+  Box, 
+  Typography, 
+  Chip, 
+  Card, 
+  CardContent, 
+  Divider,
+  Stack,
+  Badge
+} from '@mui/material';
+import ReviewRating from '../../utils/ReviewRating';
+import { Button, IconButton } from '@mui/material';
+import { 
+  AddOutlined, 
+  RemoveOutlined, 
+  ShoppingCart,
+  LocalShipping,
+  Verified,
+  Inventory
+} from '@mui/icons-material';
+import { 
+  setQtyPerItem, 
+  setTotalPrice, 
+  setPricePerItem, 
+  setTotalQuantity, 
+  setCartItems, 
+  setViewedProducts, 
+  setCartInspiredProducts
+} from '../../api/actions';
 import { useDispatch, useSelector } from 'react-redux';
+import { styled } from '@mui/material/styles';
 
+const PriceBox = styled(Box)(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'baseline',
+  gap: theme.spacing(1),
+  padding: theme.spacing(2, 3),
+  backgroundColor: theme.palette.success.light,
+  borderRadius: theme.spacing(2),
+  marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(3),
+}));
 
+const QuantityControl = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+  padding: theme.spacing(2),
+  backgroundColor: theme.palette.background.default,
+  borderRadius: theme.spacing(2),
+  border: `2px solid ${theme.palette.divider}`,
+}));
+
+const InfoCard = styled(Card)(({ theme }) => ({
+  marginTop: theme.spacing(3),
+  borderRadius: theme.spacing(2),
+  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+}));
+
+const FeatureItem = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1.5),
+  padding: theme.spacing(1.5),
+  backgroundColor: theme.palette.background.default,
+  borderRadius: theme.spacing(1),
+}));
 
 export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) => {
   const dispatch = useDispatch();
   const { stateStore } = useSelector(state => state);
   const { qtyPerItem, totalPrice, totalQuantity, cartItems, viewedProducts, cartInspiredProducts } = stateStore;
+  
   const addItem = () => {
-    dispatch(setQtyPerItem(qtyPerItem + 1));
+    if (qtyPerItem < product.stock) {
+      dispatch(setQtyPerItem(qtyPerItem + 1));
+    }
   };
+  
   const removeItem = () => {
     if (qtyPerItem > 0) {
       dispatch(setQtyPerItem(qtyPerItem - 1));
+     
     }
-  }
+  };
 
   useEffect(() => {
-    // Check if the product is already in the viewed products
     if (product) {
       addViewedProduct(product);
-      // recommendations();
+      dispatch(setQtyPerItem(0));
     }
   }, [product]);
 
   const addViewedProduct = (product) => {
     let viewed = [...viewedProducts];
-    // Remove the product if it already exists
     viewed = viewed.filter((p) => p._id !== product._id);
     const newlyViewed = [product, ...viewed];
     const updatedViewed = newlyViewed.slice(0, 10);
@@ -40,13 +101,9 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
     localStorage.setItem("viewedProducts", JSON.stringify(updatedViewed));
   };
 
-
-
-
   const cartInspired = useCallback(() => {
     if (!product) return;
 
-    // Start from state first, fallback to localStorage
     let inspired = Array.isArray(cartInspiredProducts) ? [...cartInspiredProducts] : [];
     if ((!inspired || inspired.length === 0) && typeof window !== 'undefined') {
       try {
@@ -57,7 +114,6 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
       }
     }
 
-    // Build a minimal record for the product that was just added
     const entry = {
       _id: product._id,
       name: product.name,
@@ -66,13 +122,11 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
       addedAt: new Date().toISOString()
     };
 
-    // Keep unique entries by product id, preserve most-recent-first order
     if (!inspired.some(i => i._id === entry._id)) {
       inspired.unshift(entry);
       dispatch(setCartInspiredProducts(inspired));
       localStorage.setItem('cartInspiredProducts', JSON.stringify(inspired));
     }
-    // return inspired;
   }, [product, cartInspiredProducts, dispatch]);
 
   const addItemToCart = () => {
@@ -89,19 +143,20 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
     let updatedCartItems;
     let updatedCartPrice;
     let updatedCartQuantity;
+    
     if (existingItem) {
       updatedCartItems = cartItems.map(item =>
         item.productId === newItem.productId
           ? { ...item, quantity: item.quantity + newItem.quantity, total: item.total + newItem.total }
           : item
       );
-      updatedCartPrice = updatedCartItems.reduce((acc, item) => acc + item.total, 0)
-      updatedCartQuantity = updatedCartItems.reduce((acc, item) => acc + item.quantity, 0)
+      updatedCartPrice = updatedCartItems.reduce((acc, item) => acc + item.total, 0);
+      updatedCartQuantity = updatedCartItems.reduce((acc, item) => acc + item.quantity, 0);
       dispatch(setCartItems(updatedCartItems));
       dispatch(setTotalPrice(updatedCartPrice));
       dispatch(setTotalQuantity(updatedCartQuantity));
       setOpenSnackbar(true);
-      setSnackbarMessage(`increased ${newItem.name} quantity`);
+      setSnackbarMessage(`Increased ${newItem.name} quantity`);
     } else {
       updatedCartItems = [...cartItems, newItem];
       updatedCartPrice = totalPrice + newItem.total;
@@ -111,7 +166,6 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
       dispatch(setTotalQuantity(updatedCartQuantity));
       setOpenSnackbar(true);
       setSnackbarMessage(`${newItem.name} added to cart`);
-
     }
 
     localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
@@ -120,105 +174,259 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
     dispatch(setPricePerItem(0));
     dispatch(setQtyPerItem(0));
     cartInspired();
-    
   };
 
-  // console.log('totalPrice', totalPrice)
-  // console.log('totalQuantity', totalQuantity)
-  // console.log('cartItems', cartItems)
   return (
-    <Box padding={'20px 10px 20px 10px'}>
-      <Typography variant="h4" gutterBottom>
-        {product.name}
-      </Typography>
-      <Typography variant="subtitle2" gutterBottom>
-        Category: {product.category}
-      </Typography>
-      <hr />
-      <ReviewRating value={product.ratings} />
-      <hr />
-
-      <Typography variant="h6" gutterBottom color={green[800]} paddingTop='20px'>
-        Price: ${product.price?.toFixed(2)}
-      </Typography>
-      <Box
-        sx={{
-          mb: 4,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingTop: '20px'
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            pt: 1,
-            pb: 1,
-            pr: 3,
-            pl: 3,
-            // bgcolor: grey[100],
-            bgcolor:'background.default',
-            borderRadius: 2
+    <Box sx={{ p: { xs: 2, md: 3 } }}>
+      {/* Product Title and Category */}
+      <Box sx={{ mb: 3 }}>
+        <Typography 
+          variant="h4" 
+          sx={{ 
+            fontWeight: 700, 
+            mb: 2,
+            color: 'text.primary',
+            lineHeight: 1.3
           }}
         >
-          <Typography
-            variant="body1"
-            sx={{ fontWeight: "bold", fontSize: "17px" }}
-            color='text.secondary'
-          >
-            {qtyPerItem}
-          </Typography>
-        </Box>
-
-        <Box sx={{ display: 'flex' }}>
-          <IconButton variant="body1" size='large' sx={{ 
-            bgcolor: 'secondary.dark', 
-            color: 'text.light', marginRight: '10px',
-            '&:hover':{
-            bgcolor: 'secondary.main',
-            color: 'text.primary',
-          } 
-           }}
-            onClick={() => removeItem()}>
-            <RemoveOutlined size={2} />
-          </IconButton>
-          <IconButton variant="body1" size='large' sx={{ 
-            bgcolor: 'success.main', 
-            color: 'text.light',
-          '&:hover':{
-            bgcolor: 'success.light',
-            color: 'text.primary',
-          } }}
-            onClick={() => addItem()}>
-            <AddOutlined size={2} />
-          </IconButton>
-
-        </Box>
-        <Button variant="contained" sx={{
-          color: 'text.light',
-          bgcolor: 'primary.dark',
-          '&:hover':{
-            bgcolor: 'primary.main',
-            color: 'text.primary',
-          }
-
-        }}
-          onClick={() => addItemToCart()}
-          disabled={product.stock === 0 || qtyPerItem === 0}>
-          Add to Cart
-        </Button>
-      </Box>
-      <Box>
-        <Typography variant="subtitle2" color={product.stock > 0 ? green[800] : red[500]} >
-          {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+          {product.name}
         </Typography>
+        
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+          <Chip 
+            label={product.category} 
+            color="primary" 
+            variant="outlined"
+            size="medium"
+          />
+          {product.stock > 0 ? (
+            <Chip 
+              icon={<Verified />}
+              label="In Stock" 
+              color="success"
+              size="medium"
+            />
+          ) : (
+            <Chip 
+              label="Out of Stock" 
+              color="error"
+              size="medium"
+            />
+          )}
+        </Box>
       </Box>
-      <hr />
-      <Typography variant="body1" paragraph paddingTop={'20px'}>
-        {product.description}
-      </Typography>
-    </Box>
 
-  )
+      <Divider sx={{ my: 2 }} />
+
+      {/* Rating Section */}
+      <Box sx={{ my: 3 }}>
+        <ReviewRating value={product.ratings} />
+      </Box>
+
+      <Divider sx={{ my: 2 }} />
+
+      {/* Price Section */}
+      <PriceBox>
+        <Typography 
+          variant="h3" 
+          sx={{ 
+            fontWeight: 700,
+            color: 'success.dark'
+          }}
+        >
+          ${product.price?.toFixed(2)}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          per unit
+        </Typography>
+      </PriceBox>
+
+      {/* Quantity and Add to Cart Section */}
+      <Card 
+        elevation={0} 
+        sx={{ 
+          p: 3, 
+          bgcolor: 'background.paper',
+          borderRadius: 3,
+          border: '1px solid',
+          borderColor: 'divider',
+          mb: 3
+        }}
+      >
+        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+          Select Quantity
+        </Typography>
+        
+        <Stack spacing={3}>
+          <QuantityControl>
+            <IconButton 
+              onClick={removeItem}
+              disabled={qtyPerItem === 0}
+              sx={{ 
+                bgcolor: 'error.main',
+                color: 'white',
+                '&:hover': {
+                  bgcolor: 'error.dark',
+                },
+                '&:disabled': {
+                  bgcolor: 'action.disabledBackground',
+                }
+              }}
+            >
+              <RemoveOutlined />
+            </IconButton>
+
+            <Box 
+              sx={{ 
+                flex: 1,
+                textAlign: 'center',
+                px: 3
+              }}
+            >
+              <Typography 
+                variant="h4" 
+                sx={{ 
+                  fontWeight: 700,
+                  color: 'primary.main'
+                }}
+              >
+                {qtyPerItem}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {qtyPerItem === 1 ? 'item' : 'items'}
+              </Typography>
+            </Box>
+
+            <IconButton 
+              onClick={addItem}
+              disabled={qtyPerItem >= product.stock}
+              sx={{ 
+                bgcolor: 'success.main',
+                color: 'white',
+                '&:hover': {
+                  bgcolor: 'success.dark',
+                },
+                '&:disabled': {
+                  bgcolor: 'action.disabledBackground',
+                }
+              }}
+            >
+              <AddOutlined />
+            </IconButton>
+          </QuantityControl>
+
+          {qtyPerItem > 0 && (
+            <Box 
+              sx={{ 
+                p: 2, 
+                bgcolor: 'primary.light',
+                borderRadius: 2,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                Subtotal:
+              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: 700, color: 'primary.dark' }}>
+                ${(product.price * qtyPerItem).toFixed(2)}
+              </Typography>
+            </Box>
+          )}
+
+          <Button
+            variant="contained"
+            size="large"
+            fullWidth
+            startIcon={<ShoppingCart />}
+            onClick={addItemToCart}
+            disabled={product.stock === 0 || qtyPerItem === 0}
+            sx={{
+              py: 1.5,
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              textTransform: 'none',
+              borderRadius: 2,
+              boxShadow: '0 4px 12px rgba(4, 76, 171, 0.3)',
+              '&:hover': {
+                boxShadow: '0 6px 16px rgba(4, 76, 171, 0.4)',
+              },
+              '&:disabled': {
+                bgcolor: 'action.disabledBackground',
+                boxShadow: 'none',
+              }
+            }}
+          >
+            {product.stock === 0 ? 'Out of Stock' : qtyPerItem === 0 ? 'Select Quantity' : 'Add to Cart'}
+          </Button>
+        </Stack>
+      </Card>
+
+      {/* Features Section */}
+      <InfoCard>
+        <CardContent>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Product Features
+          </Typography>
+          <Stack spacing={1.5}>
+            <FeatureItem>
+              <LocalShipping color="primary" />
+              <Box>
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  Fast Shipping
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Delivery within 5-7 business days
+                </Typography>
+              </Box>
+            </FeatureItem>
+            
+            <FeatureItem>
+              <Verified color="success" />
+              <Box>
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  Authentic Product
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  100% genuine and verified
+                </Typography>
+              </Box>
+            </FeatureItem>
+            
+            <FeatureItem>
+              <Inventory color="info" />
+              <Box>
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  Stock Status
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {product.stock > 0 ? `${product.stock} units available` : 'Currently unavailable'}
+                </Typography>
+              </Box>
+            </FeatureItem>
+          </Stack>
+        </CardContent>
+      </InfoCard>
+
+      {/* Description Section */}
+      <InfoCard>
+        <CardContent>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Product Description
+          </Typography>
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              lineHeight: 1.8,
+              color: 'text.secondary',
+              whiteSpace: 'pre-line'
+            }}
+          >
+            {product.description}
+          </Typography>
+        </CardContent>
+      </InfoCard>
+    </Box>
+  );
 }
