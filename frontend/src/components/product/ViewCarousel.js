@@ -96,7 +96,6 @@ const PriceBox = styled(Box)(({ theme }) => ({
   alignItems: 'baseline',
   gap: theme.spacing(0.5),
   padding: theme.spacing(0.5, 1.5),
-  backgroundColor: theme.palette.success.light,
   borderRadius: theme.spacing(3),
   marginTop: theme.spacing(1),
 }));
@@ -325,16 +324,13 @@ const ViewCarousel = ({ allProducts, viewedProducts }) => {
                       </Box>
                     )}
 
-                    {/* Spacer */}
-                    <Box sx={{ flexGrow: 1 }} />
-
                     {/* Price */}
                     <PriceBox>
                       <Typography 
                         variant="h6" 
                         sx={{ 
                           fontWeight: 700,
-                          color: 'success.dark',
+                          color: 'text.primary',
                           lineHeight: 1,
                         }}
                       >
