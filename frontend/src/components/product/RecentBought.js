@@ -12,11 +12,14 @@ const RecentlyBought = ({ recentBoughtProducts, handleSelect }) => {
             <Card
                 sx={{
                     p: 2,
-                    boxShadow: 1,
                     borderRadius: 2,
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: 500,
+                    cursor: 'pointer',
+                    border: '2px solid',
+                    borderColor: 'background.paper',
+                    background: 'none'
                 }}
             >
 
@@ -25,24 +28,24 @@ const RecentlyBought = ({ recentBoughtProducts, handleSelect }) => {
                         <ListSubheader sx={{ background: 'none', fontSize: '1.4em', fontWeight: 'bold' }}>Recently Bought</ListSubheader>
                     </ImageListItem>
                     {recentBoughtProducts?.map((item) => (
-                        <Link href={`/product/${item?._id }`} sx={{ textDecoration: 'none', cursor: 'pointer'}} key={item?.id}>
-                        <ImageListItem key={item?.id}
-                            sx={{
-                                borderRadius: 2,
-                                overflow: 'hidden',
-                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                '&:hover': {
-                                    transform: 'translateY(-8px)',
-                                }
-                            }}>
-                            <img
-                                srcSet={`${item?.image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                src={`${item?.image}?w=164&h=164&fit=crop&auto=format`}
-                                alt={item?.name}
-                                loading="lazy"
-                            />
-                            <ImageListItemBar title={item?.name} subtitle={<span>price: ${item.price}</span>} />
-                        </ImageListItem>
+                        <Link href={`/product/${item?._id}`} sx={{ textDecoration: 'none', cursor: 'pointer' }} key={item?.id}>
+                            <ImageListItem key={item?.id}
+                                sx={{
+                                    borderRadius: 2,
+                                    overflow: 'hidden',
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    '&:hover': {
+                                        transform: 'translateY(-8px)',
+                                    }
+                                }}>
+                                <img
+                                    srcSet={`${item?.image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                    src={`${item?.image}?w=164&h=164&fit=crop&auto=format`}
+                                    alt={item?.name}
+                                    loading="lazy"
+                                />
+                                <ImageListItemBar title={item?.name} subtitle={<span>price: ${item.price}</span>} />
+                            </ImageListItem>
                         </Link>
                     ))}
                 </ImageList>

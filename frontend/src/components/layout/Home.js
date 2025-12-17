@@ -236,14 +236,15 @@ export default function Home() {
         </Box>
       </Box>
       
-      <Grid container spacing={2} justify="center">
+      <Grid container spacing={2} justify="center" paddingBottom={'20px'}>
         <Grid item direction="row" md={12} sm={12} xs={12} spacing={2}>
           <Products products={filteredProduct} />
         </Grid>
       </Grid>
-      <Grid container spacing={2} justify="center" paddingTop='40px'>
+      <Grid container spacing={2} justify="center" padding='80px 0' >
         <Grid item md={4} sm={4} xs={4}>
           {recommendations?.length > 0 && <RecommendedProduct recommendedProducts={recommendations} handleSelect={handleSelect}/>}
+             
         </Grid>
         <Grid item md={4} sm={4} xs={4}>
           {cartInspiredProducts.length > 0 && <CartInspired cartInspiredProducts={cartInspiredProducts.slice(0, 4)} handleSelect={handleSelect} />}

@@ -16,14 +16,15 @@ const CartInspired = ({ cartInspiredProducts, handleSelect }) => {
         <>
             <Card
             sx={{
-                    p: 2,
-                    boxShadow: 1,
-                    borderRadius: 2,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: 500,
-                    cursor: 'pointer',
-                    backgroundColor: 'background.paper'
+                   p: 2,
+          borderRadius: 2,
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 500,
+         cursor: 'pointer',
+         border: '2px solid',
+         borderColor: 'background.paper',
+         background: 'none',
                 }}
                 onClick={() => handleSelect('cart-inspired')}>
 
