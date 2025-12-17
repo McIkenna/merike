@@ -30,6 +30,7 @@ import {
 } from '../../api/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
+import { AddItemToCart } from '../cart/cartUtils/AddItemToCart';
 
 const PriceBox = styled(Box)(({ theme }) => ({
   display: 'inline-flex',
@@ -129,52 +130,57 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
     }
   }, [product, cartInspiredProducts, dispatch]);
 
-  const addItemToCart = () => {
-    const newItem = {
-      name: product.name,
-      productId: product._id,
-      image: product.images[0].url,
-      price: Number(product.price?.toFixed(2)),
-      quantity: Number(qtyPerItem),
-      total: Number(product.price?.toFixed(2) * qtyPerItem)
-    };
+  const handleAddToCart = async () => {
+    await AddItemToCart(product,qtyPerItem, cartItems, dispatch, setOpenSnackbar, setSnackbarMessage, totalPrice,  totalQuantity)
+    cartInspired()
+  }
 
-    const existingItem = cartItems.find(item => item.productId === newItem.productId);
-    let updatedCartItems;
-    let updatedCartPrice;
-    let updatedCartQuantity;
+  // const addItemToCart = () => {
+  //   const newItem = {
+  //     name: product.name,
+  //     productId: product._id,
+  //     image: product.images[0].url,
+  //     price: Number(product.price?.toFixed(2)),
+  //     quantity: Number(qtyPerItem),
+  //     total: Number(product.price?.toFixed(2) * qtyPerItem)
+  //   };
+
+  //   const existingItem = cartItems.find(item => item.productId === newItem.productId);
+  //   let updatedCartItems;
+  //   let updatedCartPrice;
+  //   let updatedCartQuantity;
     
-    if (existingItem) {
-      updatedCartItems = cartItems.map(item =>
-        item.productId === newItem.productId
-          ? { ...item, quantity: item.quantity + newItem.quantity, total: item.total + newItem.total }
-          : item
-      );
-      updatedCartPrice = updatedCartItems.reduce((acc, item) => acc + item.total, 0);
-      updatedCartQuantity = updatedCartItems.reduce((acc, item) => acc + item.quantity, 0);
-      dispatch(setCartItems(updatedCartItems));
-      dispatch(setTotalPrice(updatedCartPrice));
-      dispatch(setTotalQuantity(updatedCartQuantity));
-      setOpenSnackbar(true);
-      setSnackbarMessage(`Increased ${newItem.name} quantity`);
-    } else {
-      updatedCartItems = [...cartItems, newItem];
-      updatedCartPrice = totalPrice + newItem.total;
-      updatedCartQuantity = totalQuantity + qtyPerItem;
-      dispatch(setCartItems(updatedCartItems));
-      dispatch(setTotalPrice(updatedCartPrice));
-      dispatch(setTotalQuantity(updatedCartQuantity));
-      setOpenSnackbar(true);
-      setSnackbarMessage(`${newItem.name} added to cart`);
-    }
+  //   if (existingItem) {
+  //     updatedCartItems = cartItems.map(item =>
+  //       item.productId === newItem.productId
+  //         ? { ...item, quantity: item.quantity + newItem.quantity, total: item.total + newItem.total }
+  //         : item
+  //     );
+  //     updatedCartPrice = updatedCartItems.reduce((acc, item) => acc + item.total, 0);
+  //     updatedCartQuantity = updatedCartItems.reduce((acc, item) => acc + item.quantity, 0);
+  //     dispatch(setCartItems(updatedCartItems));
+  //     dispatch(setTotalPrice(updatedCartPrice));
+  //     dispatch(setTotalQuantity(updatedCartQuantity));
+  //     setOpenSnackbar(true);
+  //     setSnackbarMessage(`Increased ${newItem.name} quantity`);
+  //   } else {
+  //     updatedCartItems = [...cartItems, newItem];
+  //     updatedCartPrice = totalPrice + newItem.total;
+  //     updatedCartQuantity = totalQuantity + qtyPerItem;
+  //     dispatch(setCartItems(updatedCartItems));
+  //     dispatch(setTotalPrice(updatedCartPrice));
+  //     dispatch(setTotalQuantity(updatedCartQuantity));
+  //     setOpenSnackbar(true);
+  //     setSnackbarMessage(`${newItem.name} added to cart`);
+  //   }
 
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-    localStorage.setItem('totalPrice', JSON.stringify(updatedCartPrice));
-    localStorage.setItem('totalQuantity', JSON.stringify(updatedCartQuantity));
-    dispatch(setPricePerItem(0));
-    dispatch(setQtyPerItem(0));
-    cartInspired();
-  };
+  //   localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+  //   localStorage.setItem('totalPrice', JSON.stringify(updatedCartPrice));
+  //   localStorage.setItem('totalQuantity', JSON.stringify(updatedCartQuantity));
+  //   dispatch(setPricePerItem(0));
+  //   dispatch(setQtyPerItem(0));
+  //   cartInspired();
+  // };
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
@@ -340,7 +346,7 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
             size="large"
             fullWidth
             startIcon={<ShoppingCart />}
-            onClick={addItemToCart}
+            onClick={handleAddToCart}
             disabled={product.stock === 0 || qtyPerItem === 0}
             sx={{
               py: 1.5,

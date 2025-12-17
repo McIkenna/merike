@@ -10,7 +10,7 @@ import RecommendedProduct from '../product/RecommendedProduct';
 import CartInspired from '../product/CartInspired';
 import RecentBought from '../product/RecentBought';
 import ViewCarousel from '../product/ViewCarousel';
-import { Sort, SwapVert } from '@mui/icons-material';
+import { Sort, SwapVert, FavoriteBorderRounded } from '@mui/icons-material';
 import SortProd from '../../utils/SortProd';
 import CarouselBanner from '../../utils/CarouselBanner';
 export default function Home() {
@@ -194,8 +194,16 @@ export default function Home() {
     >
       <MetaData title={'Buy Best Products Online'} />
       <CarouselBanner carouselItems={carouselItems}/>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex'}}>
+        <Box sx={{justifyContent: 'flex-start', alignItems: 'center', mb: 2 }}>
+          <IconButton aria-describedby={id} onClick={ () => navigate('/favoritePage')} >
+            <FavoriteBorderRounded sx={{ fontSize: '1.5em' }} />
+          </IconButton>
+          <Typography variant='caption'>Favorites</Typography>
+        </Box>
         <Box>
+       
+        <Box sx={{ justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
           <IconButton aria-describedby={id} onClick={handlePopover} >
             <SwapVert sx={{ fontSize: '1.5em' }} />
           </IconButton>
@@ -225,6 +233,7 @@ export default function Home() {
             setSelectedSort={setSelectedSort}
           />
         </Popover>
+        </Box>
       </Box>
       
       <Grid container spacing={2} justify="center">

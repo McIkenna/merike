@@ -16,7 +16,8 @@ const initialState = {
     recommendedProducts: localStorage.getItem("recommendedProducts") ? JSON.parse(localStorage.getItem("recommendedProducts")) : [],
     productRecentlyBought: localStorage.getItem("productRecentlyBought") ? JSON.parse(localStorage.getItem("productRecentlyBought")) : [],
     carouselItems: [],
-    bannerItems: []
+    bannerItems: [],
+    favorites: localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')) : []
 
 }
 
@@ -119,6 +120,12 @@ const reducers = createSlice({
             return {
                ...state,
                 bannerItems: action.payload
+            }
+        },
+        setFavorites: (state, action) => {
+            return {
+                ...state,
+                favorites: action.payload
             }
         }
 

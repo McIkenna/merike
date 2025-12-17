@@ -12,7 +12,7 @@ import Loader from '../../utils/Loader';
 import MetaData from '../../utils/MetaData';
 import { ProductInfo } from './ProductInfo';
 import { ProductGallery } from './ProductGallery';
-import {Snackbar, Alert} from '@mui/material'
+import { CustomSnackbar } from '../../utils/CustomSnackbar';
 
 export default function ProductDetail() {
   const params = useParams();
@@ -49,24 +49,13 @@ export default function ProductDetail() {
 
               </Grid>
             </Grid>
+            <CustomSnackbar
+            openSnackbar={openSnackbar}
+            snackbarMessage={snackbarMessage}
+            setOpenSnackbar={setOpenSnackbar}
+            />
 
-            <Box>
-            <Snackbar
-            open={openSnackbar}
-            autoHideDuration={1000}
-            message={snackbarMessage}
-          />
-
-          <Snackbar open={openSnackbar} autoHideDuration={2000} onClose={() => setOpenSnackbar(false)}>
-                <Alert
-                  severity="success"
-                  variant="filled"
-                  sx={{ width: '100%' }}
-                >
-                  {snackbarMessage}
-                </Alert>
-          </Snackbar>
-            </Box>
+            
           </Box> :
           <Loader />}
    </Box>

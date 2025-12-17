@@ -17,6 +17,7 @@ setAllOrders,
 setProductRecentlyBought,
 setRecommendedProducts,
 setCarouselItems, 
-setBannerItems } = reducers.actions
+setBannerItems,
+setFavorites } = reducers.actions
 export const { setUser, setToken, logout } = authReducer.actions
 

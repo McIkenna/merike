@@ -32,6 +32,8 @@ import { useNavigate } from 'react-router-dom';
 import { useCheckoutOrderMutation } from '../../api/services/checkoutApi';
 import Checkout from '../checkout/Checkout';
 import { styled } from '@mui/material/styles';
+import { CartStateUpdate } from './cartUtils/CartStateUpdate';
+import { CustomSnackbar } from '../../utils/CustomSnackbar';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -88,6 +90,9 @@ export const Cart = () => {
   const { cartItems, totalQuantity, totalPrice } = stateStore;
   const { user } = auth;
   const [showSavings, setShowSavings] = useState(true);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [ snackbarMessage, setSnackbarMessage] = useState('')
+  const [severity, setSeverity] = useState('success')
   
   const [{ data }] = useCheckoutOrderMutation();
 
@@ -118,7 +123,10 @@ export const Cart = () => {
       return acc;
     }, []);
 
-    cartStateUpdate(newCartItems);
+    CartStateUpdate(newCartItems, dispatch);
+    setOpenSnackbar(true)
+    setSnackbarMessage(`${item?.name} quantity decreased`)
+    setSeverity("warning")
   };
 
   const increaseQuantity = (item) => {
@@ -133,24 +141,30 @@ export const Cart = () => {
       }
       return cartItem;
     });
-    cartStateUpdate(newCartItems);
+    CartStateUpdate(newCartItems, dispatch);
+    setOpenSnackbar(true)
+    setSnackbarMessage(`${item?.name} quantity increased`)
+    setSeverity("success")
   };
 
   const removeItemFromCart = (item) => {
     const newCartItems = cartItems.filter(cartItem => cartItem.productId !== item.productId);
-    cartStateUpdate(newCartItems);
+    CartStateUpdate(newCartItems, dispatch);
+    setOpenSnackbar(true)
+    setSnackbarMessage(`${item?.name} was removed from cart`)
+    setSeverity("warning")
   };
 
-  const cartStateUpdate = (newCartItems) => {
-    const totalQuantity = newCartItems.reduce((sum, cartItem) => sum + cartItem.quantity, 0);
-    const totalPrice = newCartItems.reduce((sum, cartItem) => sum + cartItem.total, 0);
-    localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-    localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
-    localStorage.setItem('totalQuantity', JSON.stringify(totalQuantity));
-    dispatch(setCartItems(newCartItems));
-    dispatch(setTotalQuantity(totalQuantity));
-    dispatch(setTotalPrice(totalPrice));
-  };
+  // const cartStateUpdate = (newCartItems) => {
+  //   const totalQuantity = newCartItems.reduce((sum, cartItem) => sum + cartItem.quantity, 0);
+  //   const totalPrice = newCartItems.reduce((sum, cartItem) => sum + cartItem.total, 0);
+  //   localStorage.setItem('cartItems', JSON.stringify(newCartItems));
+  //   localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
+  //   localStorage.setItem('totalQuantity', JSON.stringify(totalQuantity));
+  //   dispatch(setCartItems(newCartItems));
+  //   dispatch(setTotalQuantity(totalQuantity));
+  //   dispatch(setTotalPrice(totalPrice));
+  // };
 
   const truncatedCartItems = useMemo(() => {
     if (!cartItems || cartItems.length === 0) return null;
@@ -537,6 +551,12 @@ export const Cart = () => {
               </Typography>
             </Box>
           </SummaryCard>
+          <CustomSnackbar 
+          openSnackbar={openSnackbar}
+          snackbarMessage={snackbarMessage}
+          setOpenSnackbar={setOpenSnackbar}
+          severity={severity}
+          />
         </Grid>
       </Grid>
     </Container>

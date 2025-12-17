@@ -18,6 +18,7 @@ import { TermsOfService } from './components/profile/TermsOfService';
 import {FAQs} from './components/profile/FAQs';
 import { ContactUs } from './components/profile/ContactUs';
 import { PrivacyPolicy } from './components/profile/PrivatePolicy';
+import { FavoritePage } from './utils/FavoritePage';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
       <Route path='/faqs' Component={FAQs} exact />
       <Route path='/contactus' Component={ContactUs} exact />
        <Route path='/privacyPolicy' Component={PrivacyPolicy} exact />
+       <Route path='/favoritePage' Component={FavoritePage} exact />
       </Routes>
       </Box>
       <Footer/>
