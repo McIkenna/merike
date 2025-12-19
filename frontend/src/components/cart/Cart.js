@@ -34,6 +34,7 @@ import Checkout from '../checkout/Checkout';
 import { styled } from '@mui/material/styles';
 import { CartStateUpdate } from './cartUtils/CartStateUpdate';
 import { CustomSnackbar } from '../../utils/CustomSnackbar';
+import PromoCodeInput from '../promoCode/PromoCodeInput';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -87,13 +88,13 @@ export const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { stateStore, auth } = useSelector(state => state);
-  const { cartItems, totalQuantity, totalPrice } = stateStore;
+  const { cartItems, totalQuantity, totalPrice, discount, promoCode } = stateStore;
   const { user } = auth;
   const [showSavings, setShowSavings] = useState(true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [ snackbarMessage, setSnackbarMessage] = useState('')
+  const [snackbarMessage, setSnackbarMessage] = useState('')
   const [severity, setSeverity] = useState('success')
-  
+
   const [{ data }] = useCheckoutOrderMutation();
 
   const goToShopify = () => {
@@ -155,27 +156,19 @@ export const Cart = () => {
     setSeverity("warning")
   };
 
-  // const cartStateUpdate = (newCartItems) => {
-  //   const totalQuantity = newCartItems.reduce((sum, cartItem) => sum + cartItem.quantity, 0);
-  //   const totalPrice = newCartItems.reduce((sum, cartItem) => sum + cartItem.total, 0);
-  //   localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-  //   localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
-  //   localStorage.setItem('totalQuantity', JSON.stringify(totalQuantity));
-  //   dispatch(setCartItems(newCartItems));
-  //   dispatch(setTotalQuantity(totalQuantity));
-  //   dispatch(setTotalPrice(totalPrice));
-  // };
+  
 
-  const truncatedCartItems = useMemo(() => {
-    if (!cartItems || cartItems.length === 0) return null;
-    return cartItems.map(item => ({
-      ...item,
-      name: item.name.length > 10 ? item.name.slice(0, 10) : item.name
-    }));
-  }, [cartItems]);
+  // const truncatedCartItems = useMemo(() => {
+  //   if (!cartItems || cartItems.length === 0) return null;
+  //   return cartItems.map(item => ({
+  //     ...item,
+  //     name: item.name.length > 10 ? item.name.slice(0, 10) : item.name
+  //   }));
+  // }, [cartItems]);
 
-  const savings = 50; // This could be calculated based on discounts
-  const estimatedTotal = totalPrice - savings;
+  const estimatedTotal = totalPrice - discount;
+
+  console.log('cartItems ===>', cartItems)
 
   if (cartItems.length === 0) {
     return (
@@ -237,7 +230,7 @@ export const Cart = () => {
             </Typography>
           </Box>
         </Box>
-        
+
         {/* Feature Chips */}
         <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 2 }}>
           <FeatureChip
@@ -433,27 +426,30 @@ export const Cart = () => {
                   ${totalPrice.toFixed(2)}
                 </Typography>
               </Box>
-
-              <Collapse in={showSavings}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    mb: 1.5,
-                    p: 1.5,
-                    bgcolor: 'success.light',
-                    borderRadius: 1,
-                  }}
-                >
-                  <Typography variant="body1" sx={{ fontWeight: 600, color: 'success.dark' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  mb: 1.5,
+                  p: 1.5,
+                  bgcolor: 'success.contrastText',
+                  borderRadius: 1,
+                }}
+              >
+                <PromoCodeInput
+                  cartItems={cartItems}
+                  totalPrice={totalPrice}
+                  promoCode={promoCode}
+                  discount={discount}
+                  dispatch={dispatch}
+                />
+                {/* <Typography variant="body1" sx={{ fontWeight: 600, color: 'success.dark' }}>
                     Savings
                   </Typography>
                   <Typography variant="body1" sx={{ fontWeight: 700, color: 'success.dark' }}>
                     -${savings.toFixed(2)}
-                  </Typography>
-                </Box>
-              </Collapse>
-
+                  </Typography> */}
+              </Box>
               <Box
                 sx={{
                   display: 'flex',
@@ -529,7 +525,7 @@ export const Cart = () => {
                 Login to Checkout
               </Button>
             ) : (
-              <Checkout cartItems={truncatedCartItems} />
+              <Checkout cartItems={cartItems} discount={discount} promoCode={promoCode}/>
             )}
 
             {/* Security Badge */}
@@ -551,11 +547,11 @@ export const Cart = () => {
               </Typography>
             </Box>
           </SummaryCard>
-          <CustomSnackbar 
-          openSnackbar={openSnackbar}
-          snackbarMessage={snackbarMessage}
-          setOpenSnackbar={setOpenSnackbar}
-          severity={severity}
+          <CustomSnackbar
+            openSnackbar={openSnackbar}
+            snackbarMessage={snackbarMessage}
+            setOpenSnackbar={setOpenSnackbar}
+            severity={severity}
           />
         </Grid>
       </Grid>

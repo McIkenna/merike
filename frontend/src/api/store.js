@@ -9,6 +9,7 @@ import { checkoutApi } from './services/checkoutApi'
 import { orderApi } from './services/orderApi'
 import {carouselApi} from './services/carouselApi'
 import { bannerApi } from './services/bannerApi'
+import { promoCodeApi } from './services/promoCodeApi'
 
 const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ const store = configureStore({
     [orderApi.reducerPath] : orderApi.reducer,
     [carouselApi.reducerPath] : carouselApi.reducer,
     [bannerApi.reducerPath] : bannerApi.reducer,
+     [promoCodeApi.reducerPath] : promoCodeApi.reducer,
     stateStore: reducers.reducer,
     auth: authReducer.reducer
   },
@@ -30,7 +32,8 @@ const store = configureStore({
     checkoutApi.middleware, 
     orderApi.middleware, 
     carouselApi.middleware,
-    bannerApi.middleware),
+    bannerApi.middleware,
+  promoCodeApi.middleware),
         
 })
 setupListeners(store.dispatch);

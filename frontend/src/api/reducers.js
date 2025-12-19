@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { setProductRecentlyBought } from "./actions";
 const initialState = {
     products: {},
     categories: {},
@@ -17,7 +16,9 @@ const initialState = {
     productRecentlyBought: localStorage.getItem("productRecentlyBought") ? JSON.parse(localStorage.getItem("productRecentlyBought")) : [],
     carouselItems: [],
     bannerItems: [],
-    favorites: localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')) : []
+    favorites: localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites')) : [],
+    promoCode: null,
+    discount: 0
 
 }
 
@@ -127,7 +128,22 @@ const reducers = createSlice({
                 ...state,
                 favorites: action.payload
             }
+        },
+        setPromoCode: (state, action) => {
+            return {
+                ...state,
+                promoCode: action.payload.promoCode,
+                discount: action.payload.discount
+            }
+        },
+        removePromoCode: (state, action) => {
+            return {
+                ...state,
+                promoCode: null,
+                discount: 0
+            }
         }
+
 
         
     }

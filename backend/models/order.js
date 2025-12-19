@@ -46,10 +46,10 @@ const orderSchema = mongoose.Schema({
                 type: Number,
                 required: true
             },
-            // image: {
-            //     type: String,
-            //     required: true
-            // },
+            image: {
+                type: String,
+                required: true
+            },
             price: {
                 type: Number,
                 required: true
@@ -91,6 +91,12 @@ const orderSchema = mongoose.Schema({
         type: Number,
         required: true,
         default: 0.0
+    },
+    promoCode: {
+        type: String,
+    },
+    discount: {
+        type: Number,
     },
     orderStatus: {
         type: String,

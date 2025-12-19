@@ -1,7 +1,7 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 export const orderApi = createApi({
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://127.0.0.1:4000",
+        baseUrl: "http://127.0.0.1:4000/api/v1",
         prepareHeaders: (headers, { getState }) => {
                 const token = getState().auth.token;
                 if (token) {
@@ -15,15 +15,38 @@ export const orderApi = createApi({
     tagTypes: ["order"],
     endpoints: (build) => ({
         myOrders: build.query({
-            query: (reqBody) => ({
-                url: '/api/v1/orders/me',
+            query: (param) => ({
+                url: `/myOrders/${param}`,
                 method: 'GET',
-                body: reqBody
             }),
             providesTags: ['order']
+        }),
+        getSingleOrder: build.query({
+            query: (param) => ({
+                url: `/order/${param}`,
+                method: 'GET'
+            }),
+            providesTags: ['order']
+        }),
+        cancelOrder: build.mutation({
+             query: (reqBody) => ({
+                url: '/cancelOrder',
+                method: 'PUT',
+                body: reqBody
+            }),
+            providesTags: ['cancel-order']
+        }),
+        createPendingOrder: build.mutation({
+            query: (reqBody) => ({
+                url: '/create-pending-order',
+                method: 'POST',
+                body: reqBody
+            }),
+            providesTags: ['create-pending-order']
+
         })
     })
 
 })
 
-export const { useMyOrdersQuery } = orderApi;
+export const { useMyOrdersQuery, useCancelOrderMutation, useCreatePendingOrderMutation, useGetSingleOrderQuery } = orderApi;

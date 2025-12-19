@@ -17,7 +17,7 @@ import { setCategories, setProducts, setSelectedCategory, setPriceFilter, setPro
 import { useGetAllProductsQuery } from '../../api/services/productApi';
 import Banner from './Banner';
 import { setUser, setToken } from '../../api/actions';
-import { useMyOrdersQuery } from '../../api/services/orderApi';
+// import { useMyOrdersQuery } from '../../api/services/orderApi';
 import { Category } from '../category/Category'
 import { useGetAllBannerQuery } from '../../api/services/bannerApi';
 import ThemeToggleButton from '../../utils/ThemeToggleButton';
@@ -26,7 +26,10 @@ import userAvatar from '../../static/images/user.png'
 
 export default function Header() {
   // const pages = ['Products', 'Pricing', 'Blog'];
-  const settings = ['Profile', 'Dashboard'];
+  const settings = {
+    Profile: 'Profile', 
+    Dashboard: 'Dashboard', 
+    Order: 'My Order'};
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -43,22 +46,22 @@ export default function Header() {
   const { stateStore, auth } = useSelector((state) => state)
   const { user } = auth
   // console.log('auth', auth)
-  const { data: orderData, isSuccess: orderIsSuccess, isError: orderIsError } = useMyOrdersQuery()
+  // const { data: orderData, isSuccess: orderIsSuccess, isError: orderIsError } = useMyOrdersQuery()
   const { totalQuantity, selectedCategory, categories } = stateStore
   useEffect(() => {
     if (data !== undefined) {
       dispatch(setCategories(data))
     }
-    if (user?._id && orderIsSuccess) {
-      dispatch(setAllOrders(orderData?.orders))
-    }
+    // if (user?._id && orderIsSuccess) {
+    //   dispatch(setAllOrders(orderData?.orders))
+    // }
     if (carouselData !== undefined) {
       dispatch(setCarouselItems(carouselData?.carousels))
     }
     if (bannerData !== undefined) {
       dispatch(setBannerItems(bannerData?.adverts))
     }
-  }, [data, orderData, carouselData, bannerData])
+  }, [data, carouselData, bannerData])
 
   useEffect(() => {
     if (prodData !== undefined) {
@@ -224,8 +227,8 @@ export default function Header() {
                 }}
 
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={() => { handleCloseUserMenu() }}
+                {Object.entries(settings).map(([key, page]) => (
+                  <MenuItem key={key} onClick={() => { handleCloseUserMenu() }}
                     sx={{
 
                       '&:hover': {
@@ -233,7 +236,7 @@ export default function Header() {
                       }
                     }}
                   >
-                    <Link to={`/${setting.toLowerCase()}`}
+                    <Link to={`/${key.toLowerCase()}`}
 
                     >
                       <Typography textAlign="center"
@@ -241,7 +244,7 @@ export default function Header() {
                           color: 'text.primary',
 
                         }}
-                      >{setting}</Typography>
+                      >{page}</Typography>
                     </Link>
                   </MenuItem>
                 ))}
@@ -324,9 +327,9 @@ export default function Header() {
               <Divider />
               
               {/* Settings */}
-              {settings.map((setting) => (
-                <ListItem  key={setting} sx={{ px: 2, py: 2 }} onClick={() => { navigate(`/${setting.toLowerCase()}`); setMobileMenuOpen(false); }}>
-                  <Typography>{setting}</Typography>
+              {Object.entries(settings).map(([key, page]) => (
+                <ListItem  key={key} sx={{ px: 2, py: 2 }} onClick={() => { navigate(`/${key.toLowerCase()}`); setMobileMenuOpen(false); }}>
+                  <Typography>{page}</Typography>
                 </ListItem>
               ))}
             </List>

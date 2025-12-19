@@ -50,18 +50,20 @@ exports.newOrder = catchAsyncErrors(async (req) => {
 });
 
 exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
-    const order = await Order.findById(req.params.id).populate('user', 'firstName lastName email')
+    const order = await Order.findById(req.params.id).select('orderStatus paymentInfo totalPrice');
     if (!order) {
         return next(new ErrorHandler('No Order found with this ID', 404))
     }
     res.status(200).json({
         success: true,
-        order
-    })
+        orderStatus: order.orderStatus,
+        paymentStatus: order.paymentInfo.status,
+        totalPrice: order.totalPrice
+    });
 })
 
 exports.myOrders = catchAsyncErrors(async (req, res, next) => {
-    const orders = await Order.find({ user: req.user.id })
+    const orders = await Order.find({ user: req.params.id })
     if (!orders) {
         return next(new ErrorHandler('No Order found', 404))
     }
@@ -128,3 +130,26 @@ exports.deleteOrder = catchAsyncErrors(async (req, res, next) => {
     }
 
 })
+
+exports.cancelPendingOrder = catchAsyncErrors(async (req, res, next) => {
+    const { orderId } = req.params;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+        return next(new ErrorHandler('Order not found', 404));
+    }
+
+    if (order.orderStatus !== 'Pending') {
+        return next(new ErrorHandler('Only pending orders can be cancelled', 400));
+    }
+
+    order.orderStatus = 'Cancelled';
+    order.paymentInfo.status = 'Cancelled';
+    await order.save();
+
+    res.status(200).json({
+        success: true,
+        message: 'Order cancelled successfully'
+    });
+});

@@ -1,7 +1,14 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 export const checkoutApi = createApi({
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://127.0.0.1:4000"
+         baseUrl: "http://127.0.0.1:4000/api/v1",
+            prepareHeaders: (headers, { getState }) => {
+                const token = getState().auth.token;
+                if (token) {
+                    headers.set('Authorization', `Bearer ${token}`);
+                }
+                return headers;
+            },
     }),
 
     reducerPath: "checkout",
@@ -9,7 +16,7 @@ export const checkoutApi = createApi({
     endpoints: (build) => ({
         checkoutOrder: build.mutation({
             query: (reqBody) => ({
-                url: '/api/v1/create-checkout-session',
+                url: '/create-checkout-session',
                 method: 'POST',
                 body: reqBody
             }),

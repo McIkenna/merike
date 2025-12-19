@@ -3,29 +3,33 @@ import { Grid, Box, Button } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { UserInventory } from './UserInventory'
 import { useGetProductBySellerQuery } from '../../../api/services/productApi'
-import CarouselForm from './CarouselForm'
-import BannerForm from './BannerForm'
+import CarouselManagement from './CarouselManagement'
+import BannerManagement from './BannerManagement'
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { colors } from '../../../utils/Themes'
+import { colors } from '../../../utils/Themes';
+import PromoCodeForm from './PromoCodeForm'
 
 export const AdminDashboard = () => {
     const { stateStore, auth } = useSelector(state => state);
     const { user } = auth
-    const { categories } = stateStore
+    const { categories,bannerItems, carouselItems } = stateStore
     const { data, isFetching, refetch } = useGetProductBySellerQuery(user?._id)
    const userPage = {
     UserInventory: 'Inventory',
     CarouselManagement: 'Carousel Management',
     BannerManagement: 'Banner Management',
+    PromoManagement: 'Promo Management',
    }
     const [activePage, setActivePage] = useState('UserInventory')
       const changePage = (e) => {
         const { name } = e.target
+
+        console.log('name -->', name)
         setActivePage(name)
     }
 
-    // console.log('activePage -->', activePage)   
+    console.log('activePage -->', activePage)   
 
     const [toastState, setToastState] = useState({
             open: false,
@@ -57,19 +61,20 @@ export const AdminDashboard = () => {
                         }}>
                         {
                             Object.entries(userPage)?.map(([key, page]) =>
-                                <Button sx={{
+                                <Button 
+                                key={key}
+                            sx={{
                                     margin: '10px',
-                                    backgroundColor: activePage === key ? 'primary.dark': colors.neutral.gray,
-                                    color: activePage === key ? 'text.light' : colors.neutral.darkGray,
+                                    backgroundColor: activePage === key ? 'primary.dark': 'background.default',
+                                    color: activePage === key ? 'text.light' : 'text.primary',
                                     '&:hover': {
                                         backgroundColor: 'primary.main',
                                         color: 'text.black'
-                                    }
+                                    },
+                                    padding: '10px',
+                                    textAlign: 'center'
                                     
                                 }}
-                                    textAlign={'center'}
-                                    padding={'10px'}
-                                    borderRadius={'10px'}
                                     name={key}
                                     onClick={changePage}>
                                         {page}
@@ -90,11 +95,14 @@ export const AdminDashboard = () => {
                         <UserInventory setToastState={setToastState} toastState={toastState} categories={categories} user={user} data={data} isFetching={isFetching} refetch={refetch}/>
                     </Box>}
                     { activePage === 'CarouselManagement' && <Box>
-                        <CarouselForm setToastState={setToastState} toastState={toastState}/>
+                        <CarouselManagement setToastState={setToastState} toastState={toastState} carouselItems={carouselItems}/>
                     </Box>}
 
                     { activePage === 'BannerManagement' && <Box>
-                        <BannerForm setToastState={setToastState} toastState={toastState}/>
+                        <BannerManagement setToastState={setToastState} toastState={toastState} bannerItems={bannerItems}/>
+                    </Box>}
+                     { activePage === 'PromoManagement' && <Box>
+                        <PromoCodeForm setToastState={setToastState} toastState={toastState}/>
                     </Box>}
                 </Grid>
 

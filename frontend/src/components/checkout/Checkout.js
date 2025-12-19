@@ -1,26 +1,35 @@
 import { Button } from '@mui/material';
 import { useCheckoutOrderMutation } from '../../api/services/checkoutApi';
+import { useCreatePendingOrderMutation } from '../../api/services/orderApi';
 import { useSelector } from 'react-redux';
 
-const Checkout = ({ cartItems }) => {
+const Checkout = ({ cartItems, promoCode, discount }) => {
   const [checkoutOrder] = useCheckoutOrderMutation()
+  const [createPendingOrder, { isLoading: pendingOrderLoading }] = useCreatePendingOrderMutation();
   const { auth } = useSelector((state) => state)
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
+    const orderResponse = await createPendingOrder({
+      cartItems: cartItems,
+      userId: auth?.user,
+      promoCode: promoCode
+    }).unwrap()
 
     const reqBody = {
-      cartItems: cartItems,
-      userId: auth?.user
+      orderId: orderResponse.orderId,
+      userId: auth?.user,
+      successUrl: `${window.location.origin}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${window.location.origin}/cart`
     }
     checkoutOrder(reqBody).then((res) => {
       if (res.data.url) {
         window.location.href = res.data.url
       }
-      console.log('res -->', res)
+
+
     }).catch(err => {
       console.log(err)
     })
-
   }
   return (
     <div>
@@ -34,7 +43,7 @@ const Checkout = ({ cartItems }) => {
           bgcolor: 'success.main',
           fontSize: '1.2em',
           fontWeight: 'bold',
-          '&:hover':{
+          '&:hover': {
 
           }
         }}

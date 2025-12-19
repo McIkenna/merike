@@ -18,6 +18,8 @@ setProductRecentlyBought,
 setRecommendedProducts,
 setCarouselItems, 
 setBannerItems,
-setFavorites } = reducers.actions
+setFavorites,
+setPromoCode,
+removePromoCode } = reducers.actions
 export const { setUser, setToken, logout } = authReducer.actions
 

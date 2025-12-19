@@ -6,7 +6,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 export const productApi = createApi(
     {
         baseQuery: fetchBaseQuery({
-            baseUrl: "http://127.0.0.1:4000",
+            baseUrl: "http://127.0.0.1:4000/api/v1",
             prepareHeaders: (headers, { getState }) => {
                 const token = getState().auth.token;
                 if (token) {
@@ -38,7 +38,7 @@ export const productApi = createApi(
             // }),
             getAllProducts: build.query({
                 query: () => ({
-                    url: '/api/v1/allProducts',
+                    url: '/allProducts',
                     method: 'GET'
                 }),
                 providesTags: ['product']
@@ -47,7 +47,7 @@ export const productApi = createApi(
                 query: (params) => (
                     {
                         // headers: 'headers',
-                        url: `/api/v1/product/${params}`,
+                        url: `/product/${params}`,
                         method: 'GET'
                     }),
                 providesTags: ['product']
@@ -56,7 +56,7 @@ export const productApi = createApi(
                 query: (params) => (
                     {
                         // headers: 'headers',
-                        url: `/api/v1/admin/product/seller/${params}`,
+                        url: `/admin/product/seller/${params}`,
                         method: 'GET'
                     }),
                 providesTags: ['product']
@@ -64,7 +64,7 @@ export const productApi = createApi(
             createProduct: build.mutation({
                 query: (body) => (
                     {
-                        url: '/api/v1/admin/product/new',
+                        url: '/admin/product/new',
                         method: 'POST',
                         body: body
                     }
@@ -73,7 +73,7 @@ export const productApi = createApi(
             updateProduct: build.mutation({
                 query: (body) => (
                     {
-                        url: `/api/v1/admin/product/${body?._id}`,
+                        url: `/admin/product/${body?._id}`,
                         method: 'PUT',
                         body: body
                     }
@@ -82,7 +82,7 @@ export const productApi = createApi(
             deleteProduct: build.mutation({
                 query: (id) => (
                     {    
-                        url: `/api/v1/admin/product/${id}`,
+                        url: `/admin/product/${id}`,
                         method: 'DELETE'
                     }
                 )

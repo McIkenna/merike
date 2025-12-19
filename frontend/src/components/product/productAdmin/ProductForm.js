@@ -206,6 +206,18 @@ const ProductForm = (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                name="discount"
+                                variant="outlined"
+                                fullWidth
+                                label="Discount Offer"
+                                type="number"
+                                value={formData?.discount}
+                                onChange={handleChange}
+                                inputProps={{ maxLength: 100 }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
                                 name="description"
                                 variant="outlined"
                                 required

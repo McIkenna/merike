@@ -19,7 +19,7 @@ import {FAQs} from './components/profile/FAQs';
 import { ContactUs } from './components/profile/ContactUs';
 import { PrivacyPolicy } from './components/profile/PrivatePolicy';
 import { FavoritePage } from './utils/FavoritePage';
-
+import Order from './components/order/Order';
 function App() {
   return (
     <Router>
@@ -50,6 +50,7 @@ function App() {
       <Route path='/contactus' Component={ContactUs} exact />
        <Route path='/privacyPolicy' Component={PrivacyPolicy} exact />
        <Route path='/favoritePage' Component={FavoritePage} exact />
+       <Route path='/order' Component={Order} exact />
       </Routes>
       </Box>
       <Footer/>
