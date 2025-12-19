@@ -28,6 +28,13 @@ export const orderApi = createApi({
             }),
             providesTags: ['order']
         }),
+        allOrders: build.query({
+            query: () => ({
+                url: `/admin/orders`,
+                method: 'GET',
+            }),
+            providesTags: ['order']
+        }),
         cancelOrder: build.mutation({
              query: (reqBody) => ({
                 url: '/cancelOrder',
@@ -49,4 +56,4 @@ export const orderApi = createApi({
 
 })
 
-export const { useMyOrdersQuery, useCancelOrderMutation, useCreatePendingOrderMutation, useGetSingleOrderQuery } = orderApi;
+export const { useMyOrdersQuery, useCancelOrderMutation, useCreatePendingOrderMutation, useGetSingleOrderQuery, useAllOrdersQuery } = orderApi;

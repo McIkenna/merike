@@ -1,4 +1,4 @@
-import  { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
     Box,
     Typography,
@@ -8,11 +8,12 @@ import {
     Container,
     Modal
 } from '@mui/material';
-import { useGetActivePromoCodesQuery, useCreatePromoCodeMutation, useUpdatePromoCodeMutation, useGetAllPromoQuery, useDeletePromoCodeMutation } from '../../../api/services/promoCodeApi';
+import { useAllOrdersQuery } from '../../../api/services/orderApi'
 import { makeStyles } from '@material-ui/core/styles';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { AgGridReact } from "ag-grid-react";
+import { styled } from '@mui/material/styles';
 const useStyles = makeStyles((theme) => ({
     form: {
         marginTop: theme.spacing(3),
@@ -24,36 +25,31 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 120,
     },
 }));
-const PromoCodeForm = (props) => {
-    const { data, isLoading, refetch } = useGetAllPromoQuery();
-    const [activePage, setActivePage] = useState('AvailablePromoCode');
-    const [createPromoCode, { isError: isError, isSucess }] = useCreatePromoCodeMutation()
-    const [updatePromoCode, { isError: isErrorUpdate, isSucess: isSuccessProduct }] = useUpdatePromoCodeMutation()
-    const [deletePromoCode, { isError: isErrorDelete, isSuccess: isSuccessDelete }] = useDeletePromoCodeMutation()
+
+
+const HeaderBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(4),
+    paddingBottom: theme.spacing(2),
+    borderBottom: `2px solid ${theme.palette.divider}`,
+}));
+export const OrderManagement = (props) => {
+    const { toastState, setToastState } = props;
+    const [activePage, setActivePage] = useState('OrderPage');
+
+    const { data, isLoading: allOrderLoading, refetch } = useAllOrdersQuery();
+
     const [selectedRow, setSelectedRow] = useState(null)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { toastState, setToastState } = props;
     const gridRef = useRef(null);
     const classes = useStyles();
-
     const [formData, setFormData] = useState({});
-    const emptyState = {
-        code: "",
-        description: "",
-        discountType: "",
-        discountValue: 0,
-        minPurchaseAmount: 0,
-        validFrom: new Date(),
-        validUntil: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
-        usageLimit: null // Unlimited
-    }
-
 
     useEffect(() => {
-        if (activePage === 'UpdatePromoCodeForm' && selectedRow) {
+        if (activePage === 'UpdateOrderForm' && selectedRow) {
             setFormData(selectedRow)
-        } else {
-            setFormData(emptyState)
         }
     }, [activePage])
 
@@ -70,10 +66,10 @@ const PromoCodeForm = (props) => {
     }, [toastState.open, setToastState])
 
     const columnData = useMemo(() => {
-        if (!data?.promos || data?.promos?.length === 0) {
+        if (!data?.orders || data?.orders?.length === 0) {
             return []
         }
-        const headers = Object.keys(data?.promos[0]).map((header) => (
+        const headers = Object.keys(data?.orders[0]).map((header) => (
             {
 
                 headerName: header,
@@ -83,9 +79,9 @@ const PromoCodeForm = (props) => {
         )
         return headers
 
-    }, [data?.promos])
+    }, [data?.orders])
 
-    const rowData = useMemo(() => { return data?.promos ? data?.promos : [] }, [data?.promos])
+    const rowData = useMemo(() => { return data?.orders ? data?.orders : [] }, [data?.orders])
 
     const rowSelection = useMemo(() => {
         return {
@@ -93,6 +89,16 @@ const PromoCodeForm = (props) => {
         };
     }, []);
 
+    const handleEdit = (data) => {
+        setSelectedRow(data); // Set the selected row
+        setActivePage('UpdateOrderForm')
+    }
+    const deleteIntent = (data) => {
+        setSelectedRow(data);
+        setShowDeleteModal(true)
+    }
+
+   
 
 
     const CustomButtonComponent = (props) => {
@@ -117,7 +123,7 @@ const PromoCodeForm = (props) => {
                         }}
                         onClick={() => handleEdit(props.data)}
                     />
-                    <DeleteOutlineOutlinedIcon
+                    {/* <DeleteOutlineOutlinedIcon
                         style={{
                             color: 'secondary.main',
                             border: 'none',
@@ -126,54 +132,53 @@ const PromoCodeForm = (props) => {
                             borderRadius: '20px',
                             cursor: 'pointer'
                         }}
-                        onClick={() => deleteIntent(props.data)} />
+                        onClick={() => deleteIntent(props.data)} /> */}
                 </Box>
             )
 
         }
 
         else {
+            const formatObjectValue = (val) => {
+                if (val === null || val === undefined) return '';
+                if (typeof val === 'object') {
+                    const { address1, address2, city, state, postalCode, country, phoneNo } = val;
+                    if (address1 || address2 || city || state || postalCode || country || phoneNo) {
+                        const parts = [];
+                        if (address1) parts.push(address1);
+                        if (address2) parts.push(address2);
+                        const cityStatePostal = [city, state].filter(Boolean).join(', ');
+                        if (cityStatePostal) parts.push(cityStatePostal + (postalCode ? ` ${postalCode}` : ''));
+                        if (country) parts.push(country);
+                        if (phoneNo) parts.push(`Phone: ${phoneNo}`);
+                        return parts.join(' | ');
+                    }
+                    try {
+                        return JSON.stringify(val);
+                    } catch (e) {
+                        return String(val);
+                    }
+                }
+                return String(val);
+            };
+
+            const displayValue = formatObjectValue(value);
+
             return (
                 <Box sx={{
                     height: '100%',
                     alignContent: 'center'
                 }}>
                     <Typography variant='body1'>
-                        {value}
+                        {displayValue}
                     </Typography>
                 </Box>
-
             )
 
         }
     };
 
-    const handleDelete = () => {
-
-        deletePromoCode(selectedRow?._id).then((res) => {
-            if (res?.data?.success) {
-                setToastState({
-                    open: true,
-                    message: 'Banner Deleted Successfully',
-                    severity: 'success'
-                })
-            }
-            refetch();
-        }
-        ).catch((err) => {
-            setToastState({
-                open: true,
-                message: 'Banner Deletion Failed',
-                severity: 'error'
-            })
-        }
-        )
-        setActivePage('Banner')
-        setSelectedRow(null);
-        setShowDeleteModal(false)
-    }
-
-    const defaultColDef = {
+     const defaultColDef = {
         flex: 1,
         minWidth: 150,
         cellRenderer: CustomButtonComponent
@@ -184,17 +189,30 @@ const PromoCodeForm = (props) => {
         setSelectedRow(selectedNodes.length > 0 ? selectedNodes[0] : null);
 
     }, []);
+    // const handleDelete = () => {
 
-
-    const handleEdit = (data) => {
-        setSelectedRow(data); // Set the selected row
-        setActivePage('UpdatePromoCodeForm')
-    }
-    const deleteIntent = (data) => {
-        setSelectedRow(data);
-        setShowDeleteModal(true)
-    }
-
+    //     deletePromoCode(selectedRow?._id).then((res) => {
+    //         if (res?.data?.success) {
+    //             setToastState({
+    //                 open: true,
+    //                 message: 'Banner Deleted Successfully',
+    //                 severity: 'success'
+    //             })
+    //         }
+    //         refetch();
+    //     }
+    //     ).catch((err) => {
+    //         setToastState({
+    //             open: true,
+    //             message: 'Banner Deletion Failed',
+    //             severity: 'error'
+    //         })
+    //     }
+    //     )
+    //     setActivePage('Banner')
+    //     setSelectedRow(null);
+    //     setShowDeleteModal(false)
+    // }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -204,68 +222,38 @@ const PromoCodeForm = (props) => {
         }));
     };
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (activePage === 'UpdatePromoCodeForm') {
-            const updatedFormData = {
-                ...formData
-            };
-            updatePromoCode(updatedFormData).then(res => {
-                if (res.data.success) {
-                    setToastState({
-                        open: true,
-                        message: "Banner Updated successfully",
-                        severity: "success"
-                    })
-                    refetch()
-                    setActivePage('AvailablePromoCode')
-                    setFormData(emptyState)
-                } else {
-                    setToastState({
-                        open: true,
-                        message: "AvailablePromoCode Update failed",
-                        severity: "error"
-                    })
-                }
-            }).catch(err => {
-                setToastState({
-                    open: true,
-                    message: "AvailablePromoCode Update failed",
-                    severity: "error"
-                })
-            })
+        // if (activePage === 'UpdateOrderForm') {
+        //     const updatedFormData = {
+        //         ...formData
+        //     };
+        //     updateOrder(updatedFormData).then(res => {
+        //         if (res.data.success) {
+        //             setToastState({
+        //                 open: true,
+        //                 message: "Banner Updated successfully",
+        //                 severity: "success"
+        //             })
+        //             // refetch()
+        //             setActivePage('AvailablePromoCode')
+        //             setFormData({})
+        //         } else {
+        //             setToastState({
+        //                 open: true,
+        //                 message: "AvailablePromoCode Update failed",
+        //                 severity: "error"
+        //             })
+        //         }
+        //     }).catch(err => {
+        //         setToastState({
+        //             open: true,
+        //             message: "AvailablePromoCode Update failed",
+        //             severity: "error"
+        //         })
+        //     })
 
-        } else {
-            const convertedFormData = {
-                ...formData
-            };
-            createPromoCode(convertedFormData).then(res => {
-                if (res.data.success) {
-                    setToastState({
-                        open: true,
-                        message: "Promocode created successfully",
-                        severity: "success"
-                    })
-                    refetch()
-                    setActivePage('AvailablePromoCode')
-                    setFormData(emptyState)
-                } else {
-                    setToastState({
-                        open: true,
-                        message: "PromoCode creation failed",
-                        severity: "error"
-                    })
-                }
-            }).catch(err => {
-                setToastState({
-                    open: true,
-                    message: "promoCode creation failed",
-                    severity: "error"
-                })
-            })
-
-        }
+        // }
 
         setSelectedRow(null)
 
@@ -279,46 +267,30 @@ const PromoCodeForm = (props) => {
         const day = String(d.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
-
-    // console.log('data -->promocodes', data)
-
-
+    console.log('allOrders -->', data)
     return (
-        <Container component="main" maxWidth="xl">
+        <Container component="main" maxWidth="xl" sx={{py:4}}>
+            <HeaderBox>
+                            <Box>
+                                <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5 }}>
+                                    Order Management
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                    {data?.orders?.length || 0} order{data?.orders?.length !== 1 ? 's' : ''} total
+                                </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                <Typography variant="body1" color="text.secondary">
+                                    Total Value: Approx ${data?.totalAmount || 0} 
+                                </Typography>
 
-            <Grid container spacing={2} style={{ marginTop: '20px' }}>
-                <Grid item xs={12} sm={6}>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            color: activePage === 'AvailablePromoCode' ? 'text.primary' : 'text.light',
-                            bgcolor: activePage === 'AvailablePromoCode' ? 'primary.main' : 'primary.light'
-                        }}
-                        // 
-                        onClick={() => setActivePage('AvailablePromoCode')}
-                        fullWidth
-                    >
-                        Active PromoCodes
-                    </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            color: (activePage === 'AddPromoCodeForm' || activePage === 'UpdatePromoCodeForm') ? 'primary' : 'default'
-                        }}
+                            </Box>
+            </HeaderBox>
 
-                        onClick={() => {
-                            setActivePage('AddPromoCodeForm')
-                            setFormData(emptyState)
-                        }}
-                        fullWidth
-                    >
-                        {activePage === 'UpdatePromoCodeForm' ? 'Update PromoCode' : 'Add PromoCode'}
-                    </Button>
-                </Grid>
-            </Grid>
-            {activePage === 'AvailablePromoCode' && <Box>
+            <Box>
+
+           
+            {activePage === 'OrderPage' && <Box>
                 <div className="ag-theme-quartz" style={{ height: '80vh' }}>
                     <AgGridReact
                         ref={gridRef}
@@ -332,12 +304,13 @@ const PromoCodeForm = (props) => {
                 </div>
 
             </Box>}
+             </Box>
 
-            {(activePage === 'AddPromoCodeForm' || activePage === 'UpdatePromoCodeForm') &&
+            {activePage === 'UpdateOrderForm' &&
                 <Box>
                     <div className={classes.form}>
                         <Box sx={{ padding: '20px' }}><Typography component="h1" variant="h4">
-                            {(activePage === 'UpdatePromoCodeForm' && selectedRow) ? 'Update PromoCode Form' : 'PromoCode Form'}
+                            {(activePage === 'UpdateOrderForm' && selectedRow) ? 'Update PromoCode Form' : 'PromoCode Form'}
                         </Typography>
                         </Box>
 
@@ -475,7 +448,7 @@ const PromoCodeForm = (props) => {
 
             }
 
-            {showDeleteModal && <Box
+            {/* {showDeleteModal && <Box
             >
                 <Modal
                     open={showDeleteModal}
@@ -509,9 +482,7 @@ const PromoCodeForm = (props) => {
 
                     </Box>
                 </Modal>
-            </Box>}
+            </Box>} */}
         </Container>
-    );
-};
-
-export default PromoCodeForm;
+    )
+}

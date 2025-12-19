@@ -9,6 +9,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { colors } from '../../../utils/Themes';
 import PromoCodeForm from './PromoCodeForm'
+import { OrderManagement } from './OrderManagement'
 
 export const AdminDashboard = () => {
     const { stateStore, auth } = useSelector(state => state);
@@ -20,6 +21,7 @@ export const AdminDashboard = () => {
     CarouselManagement: 'Carousel Management',
     BannerManagement: 'Banner Management',
     PromoManagement: 'Promo Management',
+    OrderManagement: 'Order Management'
    }
     const [activePage, setActivePage] = useState('UserInventory')
       const changePage = (e) => {
@@ -103,6 +105,9 @@ export const AdminDashboard = () => {
                     </Box>}
                      { activePage === 'PromoManagement' && <Box>
                         <PromoCodeForm setToastState={setToastState} toastState={toastState}/>
+                    </Box>}
+                    { activePage === 'OrderManagement' && <Box>
+                        <OrderManagement setToastState={setToastState} toastState={toastState}/>
                     </Box>}
                 </Grid>
 
