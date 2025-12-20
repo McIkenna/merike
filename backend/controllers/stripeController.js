@@ -372,10 +372,14 @@ exports.stripeWebhook = catchAsyncErrors(async (request, response) => {
                     return response.status(404).send('Order not found');
                 }
 
+                console.log('order Info --->', order)
+
                 // Retrieve full session details including shipping
                 const session = await stripe.checkout.sessions.retrieve(data.id, {
                     expand: ['line_items', 'customer', 'payment_intent']
                 });
+
+                console.log('session Info --->', session)
 
                 // Update shipping information
                 if (session.shipping_details) {
