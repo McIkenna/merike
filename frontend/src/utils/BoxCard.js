@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Card,
@@ -136,7 +136,7 @@ export default function BoxCard(props) {
   const navigate = useNavigate();
   const { stateStore } = useSelector(state => state)
   const { favorites, qtyPerItem, totalPrice, totalQuantity, cartItems, viewedProducts, cartInspiredProducts } = stateStore;
-  const {product, setSnackbarMessage, setOpenSnackbar} =props
+  const { product, setSnackbarMessage, setOpenSnackbar , setSeverity} = props
 
   const {
     _id,
@@ -179,25 +179,27 @@ export default function BoxCard(props) {
     // Quick view functionality
   };
 
-   const handleAddToCart = async () => {
-    await AddItemToCart(
+  const handleAddToCart = async () => {
+    const success = await AddItemToCart(
       product,
-      1, 
-      cartItems, 
-      dispatch, 
-      setOpenSnackbar, 
-      setSnackbarMessage, 
-      totalPrice,  
-      totalQuantity)
+      1,
+      cartItems,
+      dispatch,
+      setOpenSnackbar,
+      setSnackbarMessage,
+      setSeverity,
+      totalPrice,
+      totalQuantity);
 
+    if (success) {
       setTimeout(() => {
         navigate("/cart")
       }, 1000);
-
       clearTimeout()
+    }
 
-      // navigate("/cart")
-      
+    // navigate("/cart")
+
   }
 
 

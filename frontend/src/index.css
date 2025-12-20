@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.grid-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ag-grid-container {
+  flex: 1 1 auto;
+  min-height: 0;   /* REQUIRED for Safari */
+  width: 100%;
+}

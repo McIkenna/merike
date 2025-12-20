@@ -51,9 +51,17 @@ export const orderApi = createApi({
             }),
             providesTags: ['create-pending-order']
 
-        })
+        }),
+        updateOrder: build.mutation({
+             query: (reqBody) => ({
+                url: `admin/update/${reqBody._id}`,
+                method: 'PUT',
+                body: reqBody
+            }),
+            providesTags: ['cancel-order']
+        }),
     })
 
 })
 
-export const { useMyOrdersQuery, useCancelOrderMutation, useCreatePendingOrderMutation, useGetSingleOrderQuery, useAllOrdersQuery } = orderApi;
+export const { useMyOrdersQuery, useCancelOrderMutation, useCreatePendingOrderMutation, useGetSingleOrderQuery, useAllOrdersQuery, useUpdateOrderMutation } = orderApi;

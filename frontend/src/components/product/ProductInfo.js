@@ -68,13 +68,13 @@ const FeatureItem = styled(Box)(({ theme }) => ({
   borderRadius: theme.spacing(1),
 }));
 
-export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) => {
+export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage, setSeverity }) => {
   const dispatch = useDispatch();
   const { stateStore } = useSelector(state => state);
   const { qtyPerItem, totalPrice, totalQuantity, cartItems, viewedProducts, cartInspiredProducts } = stateStore;
   
   const addItem = () => {
-    if (qtyPerItem < product.stock) {
+    if (qtyPerItem <= product.stock) {
       dispatch(setQtyPerItem(qtyPerItem + 1));
     }
   };
@@ -131,7 +131,7 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage }) =>
   }, [product, cartInspiredProducts, dispatch]);
 
   const handleAddToCart = async () => {
-    await AddItemToCart(product,qtyPerItem, cartItems, dispatch, setOpenSnackbar, setSnackbarMessage, totalPrice,  totalQuantity)
+    await AddItemToCart(product,qtyPerItem, cartItems, dispatch, setOpenSnackbar, setSnackbarMessage, setSeverity, totalPrice,  totalQuantity)
     cartInspired()
   }
 

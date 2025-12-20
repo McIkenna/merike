@@ -6,14 +6,27 @@ import {
     Button,
     TextField,
     Container,
-    Modal
+    Modal,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Divider,
+    IconButton,
+   
 } from '@mui/material';
-import { useAllOrdersQuery } from '../../../api/services/orderApi'
+import { useAllOrdersQuery, useUpdateOrderMutation } from '../../../api/services/orderApi'
 import { makeStyles } from '@material-ui/core/styles';
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import {
+    Close,
+    CancelOutlined,
+    Edit,
+    SaveOutlined} from '@mui/icons-material';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from "ag-grid-react";
 import { styled } from '@mui/material/styles';
+
 const useStyles = makeStyles((theme) => ({
     form: {
         marginTop: theme.spacing(3),
@@ -37,22 +50,16 @@ const HeaderBox = styled(Box)(({ theme }) => ({
 }));
 export const OrderManagement = (props) => {
     const { toastState, setToastState } = props;
-    const [activePage, setActivePage] = useState('OrderPage');
 
     const { data, isLoading: allOrderLoading, refetch } = useAllOrdersQuery();
+    const [updateOrder, {isLoading: isUpdating}] = useUpdateOrderMutation();
 
     const [selectedRow, setSelectedRow] = useState(null)
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    // const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showFormDialog, setShowFormDialog] = useState(false);
     const gridRef = useRef(null);
     const classes = useStyles();
     const [formData, setFormData] = useState({});
-
-    useEffect(() => {
-        if (activePage === 'UpdateOrderForm' && selectedRow) {
-            setFormData(selectedRow)
-        }
-    }, [activePage])
-
     useEffect(() => {
         const removeAlert = () => {
             setToastState({
@@ -89,14 +96,18 @@ export const OrderManagement = (props) => {
         };
     }, []);
 
-    const handleEdit = (data) => {
-        setSelectedRow(data); // Set the selected row
-        setActivePage('UpdateOrderForm')
-    }
-    const deleteIntent = (data) => {
-        setSelectedRow(data);
-        setShowDeleteModal(true)
-    }
+     const handleOpenEditDialog = (order) => {
+        setFormData(order);
+        setSelectedRow(order);
+        setShowFormDialog(true);
+    };
+    // const deleteIntent = (data) => {
+    //     setSelectedRow(data);
+    //     setShowDeleteModal(true)
+    // }
+
+    console.log('formaData', formData)
+    console.log('selectedRow -->', selectedRow)
 
    
 
@@ -112,17 +123,15 @@ export const OrderManagement = (props) => {
                     alignItems: 'center',
                     padding: '10px'
                 }}>
-                    <EditNoteOutlinedIcon
-                        style={{
+                   
+
+                    <Edit style={{
                             color: 'primary.main',
-                            border: 'none',
-                            backgroundColor: 'background.default',
                             cursor: 'pointer',
-                            padding: '5px',
                             borderRadius: '20px',
                         }}
-                        onClick={() => handleEdit(props.data)}
-                    />
+                        fontSize="medium"
+                        onClick={() =>handleOpenEditDialog(props.data)}/>
                     {/* <DeleteOutlineOutlinedIcon
                         style={{
                             color: 'secondary.main',
@@ -222,41 +231,33 @@ export const OrderManagement = (props) => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleCloseDialog = () => {
+        setShowFormDialog(false);
+        setFormData({});
+        setSelectedRow(null);
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // if (activePage === 'UpdateOrderForm') {
-        //     const updatedFormData = {
-        //         ...formData
-        //     };
-        //     updateOrder(updatedFormData).then(res => {
-        //         if (res.data.success) {
-        //             setToastState({
-        //                 open: true,
-        //                 message: "Banner Updated successfully",
-        //                 severity: "success"
-        //             })
-        //             // refetch()
-        //             setActivePage('AvailablePromoCode')
-        //             setFormData({})
-        //         } else {
-        //             setToastState({
-        //                 open: true,
-        //                 message: "AvailablePromoCode Update failed",
-        //                 severity: "error"
-        //             })
-        //         }
-        //     }).catch(err => {
-        //         setToastState({
-        //             open: true,
-        //             message: "AvailablePromoCode Update failed",
-        //             severity: "error"
-        //         })
-        //     })
 
-        // }
-
-        setSelectedRow(null)
-
+        try {
+                const result = await updateOrder(formData).unwrap();
+                if (result.success) {
+                    setToastState({
+                        open: true,
+                        message: "Order updated successfully",
+                        severity: "success"
+                    });
+                }
+            refetch();
+            handleCloseDialog();
+        } catch (error) {
+            setToastState({
+                open: true,
+                message: `Order 'update' failed`,
+                severity: "error"
+            });
+        }
     };
 
     const formatDateForInput = (date) => {
@@ -269,7 +270,7 @@ export const OrderManagement = (props) => {
     };
     console.log('allOrders -->', data)
     return (
-        <Container component="main" maxWidth="xl" sx={{py:4}}>
+        <Box>
             <HeaderBox>
                             <Box>
                                 <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5 }}>
@@ -290,8 +291,10 @@ export const OrderManagement = (props) => {
             <Box>
 
            
-            {activePage === 'OrderPage' && <Box>
-                <div className="ag-theme-quartz" style={{ height: '80vh' }}>
+           <Box>
+                {/* <div className="ag-theme-quartz" style={{ height: '80vh' }}> */}
+                <div className="grid-wrapper">
+                <div class="ag-theme-alpine ag-grid-container">
                     <AgGridReact
                         ref={gridRef}
                         rowData={rowData}
@@ -302,187 +305,119 @@ export const OrderManagement = (props) => {
                         onSelectionChanged={onSelectedRow}
                     />
                 </div>
+                </div>
 
-            </Box>}
+            </Box>
              </Box>
-
-            {activePage === 'UpdateOrderForm' &&
-                <Box>
-                    <div className={classes.form}>
-                        <Box sx={{ padding: '20px' }}><Typography component="h1" variant="h4">
-                            {(activePage === 'UpdateOrderForm' && selectedRow) ? 'Update PromoCode Form' : 'PromoCode Form'}
-                        </Typography>
-                        </Box>
-
-                        <form onSubmit={handleSubmit}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
+             {/* Form Dialog */}
+            <Dialog
+                open={showFormDialog}
+                onClose={handleCloseDialog}
+                maxWidth="sm"
+                fullWidth
+                PaperProps={{
+                    sx: {
+                        borderRadius: 2,
+                    },
+                }}
+            >
+                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                        Edit Order
+                    </Typography>
+                    <IconButton onClick={handleCloseDialog} size="small">
+                        <Close />
+                    </IconButton>
+                </DialogTitle>
+                <Divider />
+                <form onSubmit={handleSubmit}>
+                    <DialogContent sx={{ pt: 3 }}>
+                        <Grid container spacing={2}>
+                                {/* <Grid item xs={12}>
                                     <TextField
-                                        name="code"
+                                        name="shippingInfo"
                                         variant="outlined"
                                         required
                                         fullWidth
-                                        label="Code"
-                                        value={formData?.code}
+                                        label="Shipping Address"
+                                        value={formData?.shippingInfo}
                                         onChange={handleChange}
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
-                                        name="description"
+                                        name="paymentInfo"
                                         variant="outlined"
                                         required
                                         fullWidth
-                                        label="Description"
-                                        value={formData?.description}
+                                        label="Payment Info"
+                                        value={formData?.paymentInfo}
                                         onChange={handleChange}
                                         inputProps={{ maxLength: 100 }}
                                     />
-                                </Grid>
+                                </Grid> */}
                                 <Grid item xs={12}>
                                     <TextField
-                                        name="discountType"
+                                        name="orderStatus"
                                         variant="outlined"
                                         required
                                         fullWidth
-                                        label="Discount Type"
-                                        value={formData?.discountType}
-                                        onChange={handleChange}
-                                        inputProps={{ maxLength: 100 }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        name="discountValue"
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        type="number"
-                                        label="Discount Value"
-                                        value={formData?.discountValue}
-                                        onChange={handleChange}
-                                        inputProps={{ maxLength: 100 }}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <TextField
-                                        name="minPurchaseAmount"
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        type="number"
-                                        label="Minimum Purchase Order"
-                                        value={formData?.minPurchaseAmount}
+                                        label="Order Status"
+                                        value={formData?.orderStatus}
                                         onChange={handleChange}
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid>
 
+
                                 <Grid item xs={12}>
                                     <TextField
-                                        name="validFrom"
+                                        name="deliveredAt"
                                         variant="outlined"
                                         required
                                         fullWidth
                                         type="date"
-                                        label="Valid From"
-                                        value={formatDateForInput(formData?.validFrom)}
+                                        label="Delivery date"
+                                        value={formatDateForInput(formData?.deliveredAt)}
                                         onChange={handleChange}
                                         InputLabelProps={{
                                             shrink: true, // Keeps label above the field
                                         }}
-                                        inputProps={{
-                                            min: new Date().toISOString().split('T')[0], // Today's date as minimum
-                                        }}
+                                        // inputProps={{
+                                        //     min: new Date().toISOString().split('T')[0], // Today's date as minimum
+                                        // }}
                                     />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <TextField
-                                        name="validUntil"
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        type="date"
-                                        label="Valid Until"
-                                        value={formatDateForInput(formData?.validUntil)}
-                                        onChange={handleChange}
-                                        InputLabelProps={{
-                                            shrink: true, // Keeps label above the field
-                                        }}
-                                        inputProps={{
-                                            min: formData.validFrom || new Date().toISOString().split('T')[0], // Can't be before validFrom
-                                        }}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <TextField
-                                        name="usageLimit"
-                                        variant="outlined"
-                                        fullWidth
-                                        label="Usage Limit"
-                                        value={formData?.usageLimit}
-                                        onChange={handleChange}
-                                        inputProps={{ maxLength: 100 }}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        variant="contained"
-                                        color="primary"
-                                        className={classes.submit}
-                                    >
-                                        Submit
-                                    </Button>
                                 </Grid>
                             </Grid>
-                        </form>
-                    </div>
-                </Box>
+                        
+                    </DialogContent>
+                    <Divider />
+                    <DialogActions sx={{ p: 2, gap: 1 }}>
+                        <Button
+                            onClick={handleCloseDialog}
+                            variant="outlined"
+                            startIcon={<CancelOutlined />}
+                            sx={{ textTransform: 'none' }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            startIcon={<SaveOutlined />}
+                            disabled={isUpdating}
+                            sx={{ textTransform: 'none' }}
+                        >
+                            {isUpdating
+                                ? 'Saving...'
+                                : 'Update Order'}
+                        </Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
 
-            }
-
-            {/* {showDeleteModal && <Box
-            >
-                <Modal
-                    open={showDeleteModal}
-                    onClose={() => setShowDeleteModal(false)}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            // width: 400,
-                            bgcolor: 'background.paper',
-                            boxShadow: 24,
-                            p: 4,
-                            borderRadius: '10px'
-                        }}>
-                        <Typography variant='h5' sx={{ mt: 2 }}>Are you sure you want to delete this Banner Item?</Typography>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                marginTop: '20px'
-                            }}>
-
-                            <Button variant='outlined' color='primary' onClick={() => setShowDeleteModal(false)}>No</Button>
-                            <Button variant='outlined' color='error' onClick={() => handleDelete(selectedRow)}>Yes</Button>
-                        </Box>
-
-                    </Box>
-                </Modal>
-            </Box>} */}
-        </Container>
+            
+        </Box>
     )
 }

@@ -88,7 +88,7 @@ export const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { stateStore, auth } = useSelector(state => state);
-  const { cartItems, totalQuantity, totalPrice, discount, promoCode } = stateStore;
+  const { cartItems, totalQuantity, totalPrice, discount, promoCode, products } = stateStore;
   const { user } = auth;
   const [showSavings, setShowSavings] = useState(true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -125,27 +125,47 @@ export const Cart = () => {
     }, []);
 
     CartStateUpdate(newCartItems, dispatch);
-    setOpenSnackbar(true)
-    setSnackbarMessage(`${item?.name} quantity decreased`)
-    setSeverity("warning")
+    // setOpenSnackbar(true)
+    // setSnackbarMessage(`${item?.name} quantity decreased`)
+    // setSeverity("warning")
   };
 
+  const findProductStock = (item, updatedQuantity) => {
+    const foundProduct = products?.find(product => product?._id === item.productId);
+    if (updatedQuantity <= foundProduct?.stock) return true;
+    return false;
+  }
+
   const increaseQuantity = (item) => {
+    let shouldUpdate = false;
     const newCartItems = cartItems.map(cartItem => {
+
       if (cartItem.productId === item.productId) {
         const updatedQuantity = cartItem.quantity + 1;
-        return {
-          ...cartItem,
-          quantity: updatedQuantity,
-          total: updatedQuantity * cartItem.price
-        };
+        shouldUpdate = findProductStock(item, updatedQuantity)
+
+        if (shouldUpdate) {
+          return {
+            ...cartItem,
+            quantity: updatedQuantity,
+            total: updatedQuantity * cartItem.price
+          };
+        }
+
       }
       return cartItem;
     });
-    CartStateUpdate(newCartItems, dispatch);
-    setOpenSnackbar(true)
-    setSnackbarMessage(`${item?.name} quantity increased`)
-    setSeverity("success")
+    if (shouldUpdate) {
+      CartStateUpdate(newCartItems, dispatch);
+      // setOpenSnackbar(true)
+      // setSnackbarMessage(`${item?.name} quantity increased`)
+      // setSeverity("success")
+    }else{
+      setOpenSnackbar(true)
+      setSnackbarMessage(`Out of Stock for ${item?.name}`)
+      setSeverity("warning")
+    }
+
   };
 
   const removeItemFromCart = (item) => {
@@ -156,7 +176,7 @@ export const Cart = () => {
     setSeverity("warning")
   };
 
-  
+
 
   // const truncatedCartItems = useMemo(() => {
   //   if (!cartItems || cartItems.length === 0) return null;
@@ -525,7 +545,7 @@ export const Cart = () => {
                 Login to Checkout
               </Button>
             ) : (
-              <Checkout cartItems={cartItems} discount={discount} promoCode={promoCode}/>
+              <Checkout cartItems={cartItems} discount={discount} promoCode={promoCode} />
             )}
 
             {/* Security Badge */}

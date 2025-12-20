@@ -105,7 +105,8 @@ export const FavoritePage = () => {
   const navigate = useNavigate();
   const { stateStore } = useSelector(state => state);
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [severity, setSeverity] = useState('success')
 
   const { favorites, products, totalPrice, totalQuantity, cartItems } = stateStore;
   // Correctly map favorite IDs to their corresponding products
@@ -143,6 +144,7 @@ export const FavoritePage = () => {
         dispatch, 
         setOpenSnackbar, 
         setSnackbarMessage, 
+        setSeverity,
         totalPrice,  
         totalQuantity)
 
@@ -419,7 +421,8 @@ export const FavoritePage = () => {
       <CustomSnackbar
       openSnackbar={openSnackbar}
       snackbarMessage={snackbarMessage}
-      setOpenSnackbar={setOpenSnackbar} />
+      setOpenSnackbar={setOpenSnackbar}
+      setSeverity={setSeverity} />
     </Container>
   );
 }

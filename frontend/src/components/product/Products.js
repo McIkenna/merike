@@ -7,6 +7,7 @@ export const Products = ({ products }) => {
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
     const [ snackbarMessage, setSnackbarMessage] = useState('')
+    const [severity, setSeverity] = useState('success')
   useEffect(() => {
 
   }, [products])
@@ -22,6 +23,7 @@ export const Products = ({ products }) => {
                   product={product}
                   setSnackbarMessage={setSnackbarMessage}
                   setOpenSnackbar={setOpenSnackbar}
+                  setSeverity={setSeverity}
                 />
               </Grid>
             )
@@ -32,6 +34,7 @@ export const Products = ({ products }) => {
       openSnackbar={openSnackbar}
       snackbarMessage={snackbarMessage}
       setOpenSnackbar={setOpenSnackbar}
+      severity={severity}
       />
       
       {/* <ProdGrid /> */}

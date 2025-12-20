@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Snackbar, Alert } from '@mui/material'
 
-export const CustomSnackbar = ({openSnackbar, snackbarMessage, setOpenSnackbar, severity="success" }) => {
+export const CustomSnackbar = ({openSnackbar, snackbarMessage, setOpenSnackbar, severity }) => {
   return (
     <Box>
             <Snackbar

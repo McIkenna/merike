@@ -19,6 +19,7 @@ export default function ProductDetail() {
   const { data, error, isLoading, isSuccess } = useGetSingleProductQuery(params.id);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [ snackbarMessage, setSnackbarMessage] = useState('')
+  const [severity, setSeverity] = useState('success')
   const product = data?.product;
 
 
@@ -45,7 +46,8 @@ export default function ProductDetail() {
               <Grid item xs={12} md={6} sm={6}>
                 <ProductInfo product={product} 
                 setOpenSnackbar={setOpenSnackbar}
-                setSnackbarMessage={setSnackbarMessage}/>
+                setSnackbarMessage={setSnackbarMessage}
+                setSeverity={setSeverity}/>
 
               </Grid>
             </Grid>
@@ -53,6 +55,7 @@ export default function ProductDetail() {
             openSnackbar={openSnackbar}
             snackbarMessage={snackbarMessage}
             setOpenSnackbar={setOpenSnackbar}
+            severity={severity}
             />
 
             
