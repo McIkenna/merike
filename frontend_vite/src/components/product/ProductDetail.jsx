@@ -11,6 +11,7 @@ import MetaData from '../../utils/MetaData.jsx';
 import { ProductInfo } from './ProductInfo.jsx';
 import { ProductGallery } from './ProductGallery.jsx';
 import { CustomSnackbar } from '../../utils/CustomSnackbar.jsx';
+import ModernLoader from '../../utils/ModernLoader.jsx';
 
 export default function ProductDetail() {
   const params = useParams();
@@ -58,7 +59,7 @@ export default function ProductDetail() {
 
             
           </Box> :
-          <Loader />}
+          <ModernLoader variant='grid' count={2} />}
    </Box>
   )
 }

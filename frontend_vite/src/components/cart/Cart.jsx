@@ -35,6 +35,7 @@ import { CartStateUpdate } from './cartUtils/CartStateUpdate';
 import { CustomSnackbar } from '../../utils/CustomSnackbar';
 import PromoCodeInput from '../promoCode/PromoCodeInput';
 import { Divider } from '../../utils/Divider';
+import ModernLoader from '../../utils/ModernLoader';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -238,6 +239,7 @@ export const Cart = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Header */}
+  <Box>
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           <ShoppingCartOutlined sx={{ fontSize: 40, color: 'primary.main' }} />
@@ -575,6 +577,7 @@ export const Cart = () => {
           />
         </Grid>
       </Grid>
+      </Box>
     </Container>
   );
 }

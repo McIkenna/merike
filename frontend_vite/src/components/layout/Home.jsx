@@ -12,6 +12,7 @@ import ViewCarousel from '../product/ViewCarousel.jsx';
 import { Sort, SwapVert, FavoriteBorderRounded } from '@mui/icons-material';
 import SortProd from '../../utils/SortProd.jsx';
 import CarouselBanner from '../../utils/CarouselBanner.jsx';
+import ModernLoader from '../../utils/ModernLoader.jsx';
 export default function Home() {
 
   const dispatch = useDispatch()
@@ -30,8 +31,8 @@ export default function Home() {
     setAnchorEl(null);
   };
 
-  const { products, selectedCategory, priceFilter, viewedProducts, cartInspiredProducts, allOrders, 
-    carouselItems 
+  const { products, selectedCategory, priceFilter, viewedProducts, cartInspiredProducts, allOrders,
+    carouselItems
   } = stateStore
 
   // console.log('allOrders in home -->', allOrders)
@@ -51,28 +52,28 @@ export default function Home() {
     const recent = ordersSorted
       .flatMap(order => order?.orderItem ?? [])
       .map(item => {
-      const pid = item?.product
-        ? (typeof item.product === 'object' ? (item.product._id ?? item.product.id) : item.product)
-        : (item?.productId ?? item?._id ?? item?.id);
+        const pid = item?.product
+          ? (typeof item.product === 'object' ? (item.product._id ?? item.product.id) : item.product)
+          : (item?.productId ?? item?._id ?? item?.id);
 
-      const found = products?.find(p => p._id === pid || p.id === pid);
+        const found = products?.find(p => p._id === pid || p.id === pid);
 
-      const image = found?.images?.[0]?.url ?? null;
-      const orderId = item?._id;
+        const image = found?.images?.[0]?.url ?? null;
+        const orderId = item?._id;
 
-      return { ...item, orderId: orderId, image, _id:pid };
+        return { ...item, orderId: orderId, image, _id: pid };
       })
       .reduce((acc, item) => {
-      if (!acc.seen.has(item._id)) {
-        acc.seen.add(item._id);
-        acc.result.push(item);
-      }
-      return acc;
+        if (!acc.seen.has(item._id)) {
+          acc.seen.add(item._id);
+          acc.result.push(item);
+        }
+        return acc;
       }, { seen: new Set(), result: [] })
       .result;
 
-      dispatch(setProductRecentlyBought(recent));
-      localStorage.setItem('productRecentlyBought', JSON.stringify(recent));
+    dispatch(setProductRecentlyBought(recent));
+    localStorage.setItem('productRecentlyBought', JSON.stringify(recent));
 
     return recent;
 
@@ -117,7 +118,7 @@ export default function Home() {
     localStorage.setItem('recommendedProducts', JSON.stringify(similarProducts));
     const sameCategory = similarProducts?.slice(0, 8);
     return sameCategory;
-   
+
   }, [viewedProducts, products, dispatch]);
 
 
@@ -147,19 +148,19 @@ export default function Home() {
         product.price >= priceFilter[0] && product.price <= priceFilter[1]
       );
     }
-      switch (selectedSort) {
-        case 'price-low-high':
-          return [...filteredProducts].sort((a, b) => a?.price - b?.price);
-        case 'price-high-low':
-          return [...filteredProducts].sort((a, b) => b?.price - a?.price);
-        case 'newest':
-          return [...filteredProducts].sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt));
-        case 'discount':
-          return [...filteredProducts].sort((a, b) => (b?.discount || 0) - (a?.discount || 0));
-        default:
-          return filteredProducts; // bestselling
-      }
-    
+    switch (selectedSort) {
+      case 'price-low-high':
+        return [...filteredProducts].sort((a, b) => a?.price - b?.price);
+      case 'price-high-low':
+        return [...filteredProducts].sort((a, b) => b?.price - a?.price);
+      case 'newest':
+        return [...filteredProducts].sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt));
+      case 'discount':
+        return [...filteredProducts].sort((a, b) => (b?.discount || 0) - (a?.discount || 0));
+      default:
+        return filteredProducts; // bestselling
+    }
+
   }, [products, keyword, selectedCategory, priceFilter, selectedSort]);
 
 
@@ -168,89 +169,97 @@ export default function Home() {
 
 
   const handleSelect = (selectType) => {
-      switch (selectType) {
-        case 'recommended':
-          navigate('/recommended');
-          break;
-        case 'cart-inspired':
-          navigate('/cart-inspired');
-          break;
-        case 'recently-bought':
-          navigate('/recently-bought');
-          break;
-        default:
-          break;
-      }
+    switch (selectType) {
+      case 'recommended':
+        navigate('/recommended');
+        break;
+      case 'cart-inspired':
+        navigate('/cart-inspired');
+        break;
+      case 'recently-bought':
+        navigate('/recently-bought');
+        break;
+      default:
+        break;
     }
+  }
 
 
   return (
     <Box
     >
-      <MetaData title={'Buy Best Products Online'} />
-      <CarouselBanner carouselItems={carouselItems}/>
-      <Box sx={{ display: 'flex'}}>
-        <Box sx={{justifyContent: 'flex-start', alignItems: 'center', mb: 2 }}>
-          <IconButton aria-describedby={id} onClick={ () => navigate('/favoritePage')} >
-            <FavoriteBorderRounded sx={{ fontSize: '1.5em' }} />
-          </IconButton>
-          <Typography variant='caption'>Favorites</Typography>
-        </Box>
+      <Box>
+        <MetaData title={'Buy Best Products Online'} />
         <Box>
-       
-        <Box sx={{ justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
-          <IconButton aria-describedby={id} onClick={handlePopover} >
-            <SwapVert sx={{ fontSize: '1.5em' }} />
-          </IconButton>
-          <Typography variant='caption'>Sort Products</Typography>
-        </Box>
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClosePopover}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        >
-          <SortProd
-            onSortChange={(sortOption) => {
-              console.log('Selected sort option:', sortOption);
-              // Implement sorting logic here based on sortOption
-              // handleClosePopover();
-            }}
-            valueText={valueText}
-            handlePriceChange={handlePriceChange}
-            marks={marks}
-            priceFilter={priceFilter}
-            selectedSort={selectedSort}
-            setSelectedSort={setSelectedSort}
-          />
-        </Popover>
+          {!carouselItems.length ? <Box>
+                      <ModernLoader variant={'list'} count={1} />
+                  </Box>:
+              <CarouselBanner carouselItems={carouselItems} />}
+          {filteredProduct?.length && <Box sx={{ display: 'flex' }}>
+            <Box sx={{ justifyContent: 'flex-start', alignItems: 'center', mb: 2 }}>
+              <IconButton aria-describedby={id} onClick={() => navigate('/favoritePage')} >
+                <FavoriteBorderRounded sx={{ fontSize: '1.5em' }} />
+              </IconButton>
+              <Typography variant='caption'>Favorites</Typography>
+            </Box>
+            <Box>
+
+              <Box sx={{ justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
+                <IconButton aria-describedby={id} onClick={handlePopover} >
+                  <SwapVert sx={{ fontSize: '1.5em' }} />
+                </IconButton>
+                <Typography variant='caption'>Sort Products</Typography>
+              </Box>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClosePopover}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+              >
+                <SortProd
+                  onSortChange={(sortOption) => {
+                    console.log('Selected sort option:', sortOption);
+                    // Implement sorting logic here based on sortOption
+                    // handleClosePopover();
+                  }}
+                  valueText={valueText}
+                  handlePriceChange={handlePriceChange}
+                  marks={marks}
+                  priceFilter={priceFilter}
+                  selectedSort={selectedSort}
+                  setSelectedSort={setSelectedSort}
+                />
+              </Popover>
+            </Box>
+          </Box>}
+
+          <Grid container spacing={2} justify="center" paddingBottom={'20px'}>
+            <Grid item direction="row" md={12} sm={12} xs={12} spacing={2}>
+              <Products products={filteredProduct} />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2} justify="center" padding='80px 0' >
+            <Grid item md={4} sm={4} xs={4}>
+              {recommendations?.length > 0 && <RecommendedProduct recommendedProducts={recommendations} handleSelect={handleSelect} />}
+
+            </Grid>
+            <Grid item md={4} sm={4} xs={4}>
+              {cartInspiredProducts.length > 0 && <CartInspired cartInspiredProducts={cartInspiredProducts.slice(0, 4)} handleSelect={handleSelect} />}
+            </Grid>
+            <Grid item md={4} sm={4} xs={4}>
+              {getRecentlyBoughtProducts?.length > 0 && 
+              <RecentBought recentBoughtProducts={getRecentlyBoughtProducts.slice(0, 4)} handleSelect={handleSelect} />}
+            </Grid>
+            {/* <LastViewed allProducts={localproducts} viewedProducts={viewedProducts} /> */}
+
+          </Grid>
+         { !viewedProducts.length ? <ModernLoader variant={'list'}/> :<ViewCarousel allProducts={filteredProduct} viewedProducts={viewedProducts} />}
         </Box>
       </Box>
-      
-      <Grid container spacing={2} justify="center" paddingBottom={'20px'}>
-        <Grid item direction="row" md={12} sm={12} xs={12} spacing={2}>
-          <Products products={filteredProduct} />
-        </Grid>
-      </Grid>
-      <Grid container spacing={2} justify="center" padding='80px 0' >
-        <Grid item md={4} sm={4} xs={4}>
-          {recommendations?.length > 0 && <RecommendedProduct recommendedProducts={recommendations} handleSelect={handleSelect}/>}
-             
-        </Grid>
-        <Grid item md={4} sm={4} xs={4}>
-          {cartInspiredProducts.length > 0 && <CartInspired cartInspiredProducts={cartInspiredProducts.slice(0, 4)} handleSelect={handleSelect} />}
-        </Grid>
-        <Grid item md={4} sm={4} xs={4}>
-          {getRecentlyBoughtProducts?.length > 0 && <RecentBought recentBoughtProducts={getRecentlyBoughtProducts.slice(0, 4)} handleSelect={handleSelect}/>}
-        </Grid>
-        {/* <LastViewed allProducts={localproducts} viewedProducts={viewedProducts} /> */}
-
-      </Grid>
-      <ViewCarousel allProducts={filteredProduct} viewedProducts={viewedProducts} />
     </Box>
   )
 }

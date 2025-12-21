@@ -5,6 +5,7 @@ import { ArrowBack, ArrowForward, Pause, PlayArrow } from '@mui/icons-material';
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import ModernLoader from './ModernLoader';
 const CarouselItem = ({ item }) => (
     <Paper
         sx={{
@@ -36,125 +37,123 @@ const CarouselItem = ({ item }) => (
     </Paper>
 );
 
-const CarouselBanner = ({carouselItems}) => {
-    // const [activeStep, setActiveStep] = useState(0);
+const CarouselBanner = ({ carouselItems }) => {
     const [isPaused, setIsPaused] = useState(false);
-    // const numItems = carouselItems.length;
-    // const autoPlayRef = useRef(null);
     let sliderRef = useRef(null);
 
     useEffect(() => {
         if (isPaused) {
             sliderRef.current.slickPause()
         } else {
-            
+
             sliderRef.current.slickPlay()
         }
     }, [isPaused]);
 
     const handleNext = () => {
-        
+
         sliderRef.current.slickNext();
     };
 
     const handlePrevious = () => {
-         sliderRef.current.slickPrev();
+        sliderRef.current.slickPrev();
     };
 
     const handlePause = () => {
         setIsPaused(!isPaused);
-        
+
     };
 
-    console.log('isPaused -->', isPaused)
-
+    
     return (
-        <Box sx={{ position: 'relative', width: '100%' }}>
-            {/* Carousel */}
-            <Box sx={{ maxWidth: '100vw', margin: 'auto', marginTop: '0' }}>
-                <Slider
-                    // index={activeStep}
-                    ref={sliderRef}
-                    autoplay={true}
-                    // navButtonsAlwaysInvisible
-                    dots={true}
-                    infinite={true}
-                    speed={500}
-                    slidesToShow={1}
-                    slidesToScroll={1}
-                    autoplaySpeed={2000}
-                    cssEase={"linear"}
-                >
-                    {carouselItems.map((item, index) => (
-                        <CarouselItem key={index} item={item} />
-                     
-                    ))}
-                </Slider>
-            </Box>
+        <Box>
+            <Box sx={{ position: 'relative', width: '100%' }}>
+                {/* Carousel */}
+                <Box sx={{ maxWidth: '100vw', margin: 'auto', marginTop: '0' }}>
+                    <Slider
+                        // index={activeStep}
+                        ref={sliderRef}
+                        autoplay={true}
+                        // navButtonsAlwaysInvisible
+                        dots={true}
+                        infinite={true}
+                        speed={500}
+                        slidesToShow={1}
+                        slidesToScroll={1}
+                        autoplaySpeed={2000}
+                        cssEase={"linear"}
+                    >
+                        {carouselItems.map((item, index) => (
+                            <CarouselItem key={index} item={item} />
 
-            {/* Control Buttons - Always on top */}
-            <Box
-                sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    right: { xs: '10px', sm: '20px', md: '40px' },
-                    transform: 'translateY(-50%)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: { xs: '8px', sm: '10px' },
-                    zIndex: 1000,
-                    pointerEvents: 'auto'
-                }}
-            >
-                <IconButton 
-                    onClick={handlePrevious} 
+                        ))}
+                    </Slider>
+                </Box>
+
+                {/* Control Buttons - Always on top */}
+                <Box
                     sx={{
-                        backgroundColor: 'primary.dark', 
-                        color: 'neutral.white',
-                        width: { xs: '36px', sm: '42px', md: '48px' },
-                        height: { xs: '36px', sm: '42px', md: '48px' },
-                        '&:hover': {
-                            backgroundColor: 'primary.light',
-                            color: 'neutral.gray'
-                        },
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                        position: 'absolute',
+                        top: '50%',
+                        right: { xs: '10px', sm: '20px', md: '40px' },
+                        transform: 'translateY(-50%)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: { xs: '8px', sm: '10px' },
+                        zIndex: 1000,
+                        pointerEvents: 'auto'
                     }}
                 >
-                    <ArrowBack sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />
-                </IconButton>
-                <IconButton 
-                    onClick={handlePause} 
-                    sx={{
-                        backgroundColor: 'success.main', 
-                        color: 'neutral.dark',
-                        width: { xs: '36px', sm: '42px', md: '48px' },
-                        height: { xs: '36px', sm: '42px', md: '48px' },
-                        '&:hover': {
-                            backgroundColor: 'success.light',
-                            color: 'neutral.gray'
-                        },
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-                    }}
-                >
-                    {isPaused ? <PlayArrow sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} /> : <Pause sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />}
-                </IconButton>
-                <IconButton 
-                    onClick={handleNext} 
-                    sx={{
-                        backgroundColor: 'secondary.dark', 
-                        color: 'neutral.white',
-                        width: { xs: '36px', sm: '42px', md: '48px' },
-                        height: { xs: '36px', sm: '42px', md: '48px' },
-                        '&:hover': {
-                            backgroundColor: 'secondary.light',
-                            color: 'neutral.gray'
-                        },
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
-                    }}
-                >
-                    <ArrowForward sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />
-                </IconButton>
+                    <IconButton
+                        onClick={handlePrevious}
+                        sx={{
+                            backgroundColor: 'primary.dark',
+                            color: 'neutral.white',
+                            width: { xs: '36px', sm: '42px', md: '48px' },
+                            height: { xs: '36px', sm: '42px', md: '48px' },
+                            '&:hover': {
+                                backgroundColor: 'primary.light',
+                                color: 'neutral.gray'
+                            },
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                        }}
+                    >
+                        <ArrowBack sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />
+                    </IconButton>
+                    <IconButton
+                        onClick={handlePause}
+                        sx={{
+                            backgroundColor: 'success.main',
+                            color: 'neutral.dark',
+                            width: { xs: '36px', sm: '42px', md: '48px' },
+                            height: { xs: '36px', sm: '42px', md: '48px' },
+                            '&:hover': {
+                                backgroundColor: 'success.light',
+                                color: 'neutral.gray'
+                            },
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                        }}
+                    >
+                        {isPaused ? <PlayArrow sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} /> : <Pause sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />}
+                    </IconButton>
+                    <IconButton
+                        onClick={handleNext}
+                        sx={{
+                            backgroundColor: 'secondary.dark',
+                            color: 'neutral.white',
+                            width: { xs: '36px', sm: '42px', md: '48px' },
+                            height: { xs: '36px', sm: '42px', md: '48px' },
+                            '&:hover': {
+                                backgroundColor: 'secondary.light',
+                                color: 'neutral.gray'
+                            },
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                        }}
+                    >
+                        <ArrowForward sx={{ fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' } }} />
+                    </IconButton>
+                </Box>
             </Box>
         </Box>
     );

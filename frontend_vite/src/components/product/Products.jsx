@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { Box, Grid } from '@mui/material'
 import Loader from '../../utils/Loader'
 import BoxCard from '../../utils/BoxCard.jsx'
-import { CustomSnackbar } from '../../utils/CustomSnackbar'
+import { CustomSnackbar } from '../../utils/CustomSnackbar';
+import ModernLoader from '../../utils/ModernLoader.jsx';
 export const Products = ({ products }) => {
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [ snackbarMessage, setSnackbarMessage] = useState('')
-    const [severity, setSeverity] = useState('success')
-  useEffect(() => {
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [severity, setSeverity] = useState('success')
+  // useEffect(() => {
 
-  }, [products])
+  // }, [products])
   return (
     <Box>
 
-      <Grid container spacing={2}>
-        {
-          !products?.length ? <Loader /> :
+      {!products?.length ?
+        <ModernLoader variant='grid' count={12}/> :
+        <Grid container spacing={2}>
+          {
             products?.map(product =>
-              <Grid item size={{md: 2, sm:3 , xs:6 }}>
+              <Grid item size={{ md: 2, sm: 3, xs: 6 }}>
                 <BoxCard
                   product={product}
                   setSnackbarMessage={setSnackbarMessage}
@@ -27,16 +29,16 @@ export const Products = ({ products }) => {
                 />
               </Grid>
             )
-        }
-      </Grid>
+          }
+        </Grid>}
 
-      <CustomSnackbar 
-      openSnackbar={openSnackbar}
-      snackbarMessage={snackbarMessage}
-      setOpenSnackbar={setOpenSnackbar}
-      severity={severity}
+      <CustomSnackbar
+        openSnackbar={openSnackbar}
+        snackbarMessage={snackbarMessage}
+        setOpenSnackbar={setOpenSnackbar}
+        severity={severity}
       />
-      
+
       {/* <ProdGrid /> */}
     </Box>
   )
