@@ -2,7 +2,7 @@ const ErrorHandler = require('../utils/ErrorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const ApiFeatures = require('../utils/ApiFeatures');
 const dotenv = require('dotenv');
-dotenv.config({ path: 'backend/config/config.env' });
+dotenv.config({ path: 'config/config.env' });
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_KEY)
 const Order = require('../models/order');

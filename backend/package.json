@@ -4,9 +4,9 @@
   "description": "ecommerce website for merike llc",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "set NODE_ENV=DEVELOPMENT & nodemon backend/server.js",
-    "prod": "set NODE_ENV=PRODUCTION & nodemon backend/server.js"
+    "start": "node server.js",
+    "dev": "set NODE_ENV=DEVELOPMENT & nodemon server.js",
+    "prod": "set NODE_ENV=PRODUCTION & nodemon server.js"
   },
   "author": "Ikenna",
   "license": "ISC",
