@@ -1,4 +1,4 @@
-import  { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
     Box,
     Typography,
@@ -9,11 +9,13 @@ import {
     Modal
 } from '@mui/material';
 import { useCreatePromoCodeMutation, useUpdatePromoCodeMutation, useGetAllPromoQuery, useDeletePromoCodeMutation } from '../../../api/services/promoCodeApi';
-import { makeStyles } from '@mui/styles';
+// import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { AgGridReact } from "ag-grid-react";
-const useStyles = makeStyles((theme) => ({
+
+const useStyles = styled((theme) => ({
     form: {
         marginTop: theme.spacing(3),
     },
@@ -38,34 +40,59 @@ const PromoCodeForm = (props) => {
     const classes = useStyles();
 
     // eslint-disable-next-line no-restricted-syntax
-    const timestamp = new Date()
+    // const timestamp = new Date()
 
-    
-    const emptyState = {
-        code: "",
-        description: "",
-        discountType: "",
-        discountValue: 0,
-        minPurchaseAmount: 0,
-        validFrom: new Date(),
-        validUntil: new Date(timestamp + 90 * 24 * 60 * 60 * 1000), // 90 days
-        usageLimit: null // Unlimited
-    }
+    // const emptyState = useMemo(() => {
+
+    //     const emptyState = {
+    //         code: '',
+    //         description: '',
+    //         discountType: '',
+    //         discountValue: 0,
+    //         minPurchaseAmount: 0,
+    //         validFrom: new Date(),
+    //         validUntil: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
+    //         usageLimit: null // Unlimited
+    //     }
+    //     const setData = () => {
+    //         if (activePage === 'UpdatePromoCodeForm' && selectedRow) {
+    //             setFormData(selectedRow)
+    //         } else {
+    //             setFormData(emptyState)
+    //         }
+
+    //     }
+    //     setData()
+
+    // }, [activePage, selectedRow, emptyState])
+
+
 
 
     useEffect(() => {
-        const setData = () =>{
-            if (activePage === 'UpdatePromoCodeForm' && selectedRow) {
-            setFormData(selectedRow)
-        } else {
-            setFormData(emptyState)
+        const emptyState = {
+            code: '',
+            description: '',
+            discountType: '',
+            discountValue: 0,
+            minPurchaseAmount: 0,
+            validFrom: new Date(),
+            validUntil: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
+            usageLimit: null // Unlimited
         }
+        const setData = () => {
+            if (activePage === 'UpdatePromoCodeForm' && selectedRow) {
+                setFormData(selectedRow)
+            } else {
+                setFormData(emptyState)
+            }
 
         }
         setData()
-    }, [activePage, selectedRow, emptyState])
 
-    
+    }, [activePage, selectedRow])
+
+
 
     useEffect(() => {
         const removeAlert = () => {
@@ -230,7 +257,7 @@ const PromoCodeForm = (props) => {
                     })
                     refetch()
                     setActivePage('AvailablePromoCode')
-                    setFormData(emptyState)
+                    // setFormData(emptyState)
                 } else {
                     setToastState({
                         open: true,
@@ -259,7 +286,7 @@ const PromoCodeForm = (props) => {
                     })
                     refetch()
                     setActivePage('AvailablePromoCode')
-                    setFormData(emptyState)
+                    // setFormData(emptyState)
                 } else {
                     setToastState({
                         open: true,
@@ -297,7 +324,7 @@ const PromoCodeForm = (props) => {
         <Container component="main" maxWidth="xl">
 
             <Grid container spacing={2} style={{ marginTop: '20px' }}>
-                <Grid item size={{xs:12, sm:6}}>
+                <Grid item size={{ xs: 12, sm: 6 }}>
                     <Button
                         variant="contained"
                         sx={{
@@ -311,7 +338,7 @@ const PromoCodeForm = (props) => {
                         Active PromoCodes
                     </Button>
                 </Grid>
-                <Grid item size={{xs:12, sm:6}}>
+                <Grid item size={{ xs: 12, sm: 6 }}>
                     <Button
                         variant="contained"
                         sx={{
@@ -320,7 +347,7 @@ const PromoCodeForm = (props) => {
 
                         onClick={() => {
                             setActivePage('AddPromoCodeForm')
-                            setFormData(emptyState)
+                            // setFormData(emptyState)
                         }}
                         fullWidth
                     >
@@ -353,7 +380,7 @@ const PromoCodeForm = (props) => {
 
                         <form onSubmit={handleSubmit}>
                             <Grid container spacing={2}>
-                                <Grid item size={{xs:12}}>
+                                <Grid item size={{ xs: 12 }}>
                                     <TextField
                                         name="code"
                                         variant="outlined"
@@ -365,7 +392,7 @@ const PromoCodeForm = (props) => {
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid>
-                                <Grid item size={{xs:12}}>
+                                <Grid item size={{ xs: 12 }}>
                                     <TextField
                                         name="description"
                                         variant="outlined"
@@ -377,7 +404,7 @@ const PromoCodeForm = (props) => {
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid>
-                                <Grid item size={{xs:12}}>
+                                <Grid item size={{ xs: 12 }}>
                                     <TextField
                                         name="discountType"
                                         variant="outlined"
@@ -389,7 +416,7 @@ const PromoCodeForm = (props) => {
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid>
-                                <Grid item size={{xs:12}}>
+                                <Grid item size={{ xs: 12 }}>
                                     <TextField
                                         name="discountValue"
                                         variant="outlined"
@@ -403,7 +430,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{xs:12}}>
+                                <Grid item size={{ xs: 12 }}>
                                     <TextField
                                         name="minPurchaseAmount"
                                         variant="outlined"
@@ -417,7 +444,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{xs:12}}>
+                                <Grid item size={{ xs: 12 }}>
                                     <TextField
                                         name="validFrom"
                                         variant="outlined"
@@ -436,7 +463,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{xs:12}}>
+                                <Grid item size={{ xs: 12 }}>
                                     <TextField
                                         name="validUntil"
                                         variant="outlined"
@@ -455,7 +482,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{xs:12}}>
+                                <Grid item size={{ xs: 12 }}>
                                     <TextField
                                         name="usageLimit"
                                         variant="outlined"
@@ -467,7 +494,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{xs:12}}>
+                                <Grid item size={{ xs: 12 }}>
                                     <Button
                                         type="submit"
                                         fullWidth

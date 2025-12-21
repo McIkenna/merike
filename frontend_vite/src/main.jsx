@@ -10,7 +10,7 @@ import {
 } from 'ag-grid-community';
 
 
-import { ThemeToggleProvider } from './utils/ThemeToggleProvider.jsx';
+import { ThemeToggleProvider } from './utils/ThemeToggleProvider.jsx'
 ModuleRegistry.registerModules([AllCommunityModule]);
 createRoot(document.getElementById('root')).render(
   <ThemeToggleProvider>

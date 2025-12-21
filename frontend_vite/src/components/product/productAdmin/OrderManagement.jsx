@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    Divider,
+    // Divider,
     IconButton,
    
 } from '@mui/material';
@@ -25,6 +25,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from "ag-grid-react";
 import { styled } from '@mui/material/styles';
+import { Divider } from '../../../utils/Divider';
 
 
 

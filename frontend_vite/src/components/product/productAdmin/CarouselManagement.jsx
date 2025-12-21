@@ -23,9 +23,9 @@ import {
     Snackbar,
     Tooltip,
     Avatar,
-    Stack,
-    Divider
+    Stack
 } from '@mui/material';
+import { Divider } from '../../../utils/Divider';
 import { styled } from '@mui/material/styles';
 import {
     Add,

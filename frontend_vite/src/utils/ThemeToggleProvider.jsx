@@ -1,4 +1,4 @@
-import React, { createContext, useState, useMemo, useContext, useEffect } from 'react';
+import React, { createContext, useState, useMemo,  useEffect, useContext } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from './Themes.jsx';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -6,8 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 // Create context
 const ThemeToggleContext = createContext();
 
-// Custom hook to use the theme context
-export const useThemeToggle = () => {
+export const UseThemeToggle = () => {
   const context = useContext(ThemeToggleContext);
   if (!context) {
     throw new Error('useThemeToggle must be used within ThemeToggleProvider');

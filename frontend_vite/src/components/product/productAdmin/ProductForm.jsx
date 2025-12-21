@@ -4,12 +4,13 @@ import {
     IconButton
 
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+// import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import { AddCircleOutline, RemoveCircleOutline } from '@mui/icons-material'
 import { useCreateProductMutation, useUpdateProductMutation } from '../../../api/services/productApi';
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = styled((theme) => ({
     form: {
         marginTop: theme.spacing(3),
     },
@@ -173,15 +174,15 @@ const ProductForm = (props) => {
     return (
         <Container component="main" maxWidth="md">
 
-            <div className={classes.form}>
+            <div >
                 <Box sx={{ padding: '20px' }}><Typography component="h1" variant="h4">
                     {(activePage === 'UpdateProductForm' && selectedRow) ? 'Update Product Form' : 'Product Form'}
                 </Typography>
                 </Box>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className={classes.form}>
                     <Grid container spacing={2}>
-                        <Grid item size={{sx:12}}>
+                        <Grid item size={{sx:12, md:12, xl:12}}>
                             <TextField
                                 name="name"
                                 variant="outlined"
@@ -193,7 +194,7 @@ const ProductForm = (props) => {
                                 inputProps={{ maxLength: 100 }}
                             />
                         </Grid>
-                        <Grid item size={{sx:12}}>
+                        <Grid item size={{sx:12, md:12, xl:12}}>
                             <TextField
                                 name="price"
                                 variant="outlined"
@@ -206,7 +207,7 @@ const ProductForm = (props) => {
                                 inputProps={{ maxLength: 100 }}
                             />
                         </Grid>
-                        <Grid item size={{sx:12}}>
+                        <Grid item size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="discount"
                                 variant="outlined"
@@ -218,7 +219,7 @@ const ProductForm = (props) => {
                                 inputProps={{ maxLength: 100 }}
                             />
                         </Grid>
-                        <Grid item size={{sx:12}}>
+                        <Grid item size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="description"
                                 variant="outlined"
@@ -230,7 +231,7 @@ const ProductForm = (props) => {
                                 inputProps={{ maxLength: 500 }}
                             />
                         </Grid>
-                        <Grid item size={{sx:12}}>
+                        <Grid item size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="ratings"
                                 variant="outlined"
@@ -241,7 +242,7 @@ const ProductForm = (props) => {
                                 aria-readonly
                             />
                         </Grid>
-                        <Grid item size={{sx:12}}>
+                        <Grid item size={{sx:6, md:6, xl:6}}>
                             <FormControl variant="outlined" fullWidth required>
                                 <InputLabel id="category-label">Category</InputLabel>
                                 <Select
@@ -261,7 +262,7 @@ const ProductForm = (props) => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item size={{sx:12}}>
+                        <Grid item size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="seller"
                                 variant="outlined"
@@ -272,7 +273,7 @@ const ProductForm = (props) => {
                                 aria-readonly
                             />
                         </Grid>
-                        <Grid item size={{sx:12}}>
+                        <Grid item size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="stock"
                                 variant="outlined"
@@ -331,7 +332,7 @@ const ProductForm = (props) => {
                     onChange={(e) => handleImageChange(index, e)}
                   />
                 </Grid> */}
-                                <Grid item size={{xs:8}}>
+                                <Grid item size={{sx:9, md:9, xl:9}}>
                                     <TextField
                                         name="url"
                                         variant="outlined"
@@ -342,14 +343,14 @@ const ProductForm = (props) => {
                                         onChange={(e) => handleImageChange(index, e)}
                                     />
                                 </Grid>
-                                <Grid item size={{xs:2}}>
+                                <Grid item size={{sx:3, md:3, xl:3}}>
                                     <IconButton onClick={() => removeImageField(index)}>
                                         <RemoveCircleOutline />
                                     </IconButton>
                                 </Grid>
                             </React.Fragment>
                         ))}
-                        <Grid item size={{sx:12}}>
+                        <Grid item size={{sx:12, md:12, xl:12}}>
                             <Button
                                 variant="contained"
                                 color="primary"
