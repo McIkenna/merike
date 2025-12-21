@@ -189,8 +189,6 @@ export const Cart = () => {
 
   const estimatedTotal = totalPrice - discount;
 
-  console.log('cartItems ===>', cartItems)
-
   if (cartItems.length === 0) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>

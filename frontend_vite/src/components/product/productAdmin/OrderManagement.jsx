@@ -26,6 +26,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from "ag-grid-react";
 import { styled } from '@mui/material/styles';
 import { Divider } from '../../../utils/Divider';
+import ModernLoader from '../../../utils/ModernLoader';
 
 
 
@@ -259,6 +260,10 @@ export const OrderManagement = (props) => {
     console.log('allOrders -->', data)
     return (
         <Box>
+
+            {
+                !data?.orders?.length ? <ModernLoader variant='list' /> :
+        <Box>
             <HeaderBox>
                             <Box>
                                 <Typography variant="h3" sx={{ fontWeight: 700, mb: 0.5 }}>
@@ -406,6 +411,8 @@ export const OrderManagement = (props) => {
             </Dialog>
 
             
+        </Box>
+         }
         </Box>
     )
 }

@@ -3,10 +3,11 @@ import { Box, Typography, Button, Stack, TextField, Modal } from '@mui/material'
 import { AgGridReact } from "ag-grid-react";
 import {  useDeleteProductMutation } from '../../../api/services/productApi';
 import ProductForm from './ProductForm';
-import Loader from '../../../utils/Loader';
+// import Loader from '../../../utils/Loader';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { colors } from '../../../utils/Themes';
+import ModernLoader from '../../../utils/ModernLoader';
 
 export const UserInventory = (props) => {
     const { categories, user, data, isFetching, refetch, toastState, setToastState } = props
@@ -235,9 +236,9 @@ export const UserInventory = (props) => {
     return (
         <Box>
             
-            {(!data?.product || isFetching || deleteIsLoading) ? <Box>
+            {(!data?.product.length || isFetching || deleteIsLoading) ? <Box>
                 <div style={{ height: '80vh' }}>
-                    <Loader />
+                    <ModernLoader variant='list' count={12} />
                 </div>
             </Box>
                 :

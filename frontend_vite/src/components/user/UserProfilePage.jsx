@@ -1,58 +1,184 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Container, Grid, Paper, Typography, Avatar, Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-
 const UserProfilePage = () => {
+  const { user } = useSelector(state => state.auth);
+  const navigate = useNavigate();
 
-    const { user } = useSelector(state => state.auth);
-    const navigate = useNavigate();
+  useEffect(() => {
+    if (!user?._id) {
+      navigate('/login');
+    }
+  }, [user?._id, navigate]);
 
-    useEffect(() => {
-        if (!user?._id) {
-            navigate('/login');
-        }
-    }, [user?._id]);
   return (
-    <Container >
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper style={{ padding: '20px', display:'flex', justifyContent:'space-between'}}>
-            <Avatar
-              alt="User Name"
-              src="/path/to/avatar.jpg"
-            />
-            <Typography variant="h5" >
-              {user?.firstName} {user?.lastName}
-            </Typography>
-            <Typography variant="body1" >
-              {user?.email}
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper style={{ padding: '20px', display:'flex', justifyContent:'space-between', flexDirection: 'column'}} >
-            <Typography variant="h6">Personal Information</Typography>
-            <Box mt={2} style={{ padding: '20px', justifyContent:'space-evenly',}} >
-              <Typography variant="body1" sx={{p: '10px'}}><strong>First Name:</strong> {user?.firstName}</Typography>
-              <Typography variant="body1" sx={{p: '10px'}}><strong>Last Name:</strong> {user?.lastName}</Typography>
-              <Typography variant="body1" sx={{p: '10px'}}><strong>Email:</strong> {user?.email}</Typography>
-              <Typography variant="body1" sx={{p: '10px'}}><strong>Phone Number:</strong> ********</Typography>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#f8fafc', py: 4 }}>
+      <Container maxWidth="lg">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          {/* Header Section */}
+          <Paper 
+            elevation={0}
+            sx={{ 
+              p: 4,
+              borderRadius: 3,
+              border: '1px solid',
+              borderColor: 'divider',
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 3
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Avatar
+                alt={`${user?.firstName} ${user?.lastName}`}
+                src="/path/to/avatar.jpg"
+                sx={{ 
+                  width: 80, 
+                  height: 80,
+                  border: '4px solid',
+                  borderColor: 'grey.100'
+                }}
+              />
+              <Box>
+                <Typography variant="h5" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  {user?.firstName} {user?.lastName}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
+                  {user?.email}
+                </Typography>
+              </Box>
             </Box>
           </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper >
-            <Typography variant="h6">Account Settings</Typography>
-            <Box mt={2}>
-              <Typography variant="body1"><strong>Username:</strong> {user?.email}</Typography>
-              <Typography variant="body1"><strong>Password:</strong> ********</Typography>
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Container>
+
+          {/* Grid Layout */}
+          <Grid container spacing={3}>
+            {/* Personal Information */}
+            <Grid item xs={12} md={6}>
+              <Paper 
+                elevation={0}
+                sx={{ 
+                  p: 3,
+                  borderRadius: 3,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  height: '100%'
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+                  Personal Information
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    py: 1.5,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider'
+                  }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      First Name
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {user?.firstName}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    py: 1.5,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider'
+                  }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      Last Name
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {user?.lastName}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    py: 1.5,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider'
+                  }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      Email
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {user?.email}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    py: 1.5
+                  }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      Phone Number
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      ********
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
+
+            {/* Account Settings */}
+            <Grid item xs={12} md={6}>
+              <Paper 
+                elevation={0}
+                sx={{ 
+                  p: 3,
+                  borderRadius: 3,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  height: '100%'
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+                  Account Settings
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    py: 1.5,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider'
+                  }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      Username
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {user?.email}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    py: 1.5
+                  }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                      Password
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      ********
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

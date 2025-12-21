@@ -5,7 +5,7 @@ import {
     Box,
     Typography,
     Avatar,
-    Divider,
+   
     Chip,
     Grid,
     Stack,
@@ -30,6 +30,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useMyOrdersQuery } from '../../api/services/orderApi';
 import { styled } from '@mui/material/styles';
+import { Divider } from '../../utils/Divider';
 
 // Styled Components
 const StyledCard = styled(Card)(({ theme }) => ({

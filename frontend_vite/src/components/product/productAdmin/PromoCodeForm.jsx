@@ -14,6 +14,7 @@ import { styled } from '@mui/material/styles';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { AgGridReact } from "ag-grid-react";
+import ModernLoader from '../../../utils/ModernLoader';
 
 const useStyles = styled((theme) => ({
     form: {
@@ -322,6 +323,11 @@ const PromoCodeForm = (props) => {
 
     return (
         <Container component="main" maxWidth="xl">
+            {
+                !data?.promos?.length ? <ModernLoader variant='list' count={3} /> :
+                
+                
+                <Box>
 
             <Grid container spacing={2} style={{ marginTop: '20px' }}>
                 <Grid item size={{ xs: 12, sm: 6 }}>
@@ -546,6 +552,8 @@ const PromoCodeForm = (props) => {
 
                     </Box>
                 </Modal>
+                
+            </Box>}
             </Box>}
         </Container>
     );
