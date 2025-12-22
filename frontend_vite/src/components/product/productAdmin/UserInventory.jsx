@@ -241,10 +241,11 @@ export const UserInventory = (props) => {
     return (
         <Box>
 
-            {(!data?.product.length || isFetching || deleteIsLoading) ? <Box>
-                <div style={{ height: '80vh' }}>
+            {
+            (!data?.product.length || isFetching || deleteIsLoading) ? <Box>
+                <Box style={{ height: '80vh', overflow:'hidden' }}>
                     <ModernLoader variant='list' count={12} />
-                </div>
+                </Box>
             </Box>
                 :
                 <Box>
