@@ -8,6 +8,9 @@
     "dev": "set NODE_ENV=DEVELOPMENT & nodemon server.js",
     "prod": "set NODE_ENV=PRODUCTION & nodemon server.js"
   },
+  "engines": {
+       "node": ">=18.0.0"
+     },
   "author": "Ikenna",
   "license": "ISC",
   "dependencies": {
