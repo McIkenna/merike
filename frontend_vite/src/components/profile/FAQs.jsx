@@ -287,7 +287,7 @@ export const FAQs = () => {
                         Browse by Category
                     </Typography>
                     <Grid container spacing={2} sx={{mb: 4 }}>
-                        <Grid item size={{ xs:6, sm:4, md:2}}>
+                        <Grid size={{ xs:6, sm:4, md:2}}>
                             <StyledCard 
                                 elevation={selectedCategory === 'all' ? 6 : 2}
                                 onClick={() => setSelectedCategory('all')}
@@ -306,7 +306,7 @@ export const FAQs = () => {
                             </StyledCard>
                         </Grid>
                         {categories.map((category) => (
-                            <Grid item size={{ xs:6, sm:4, md:2}} key={category.id}>
+                            <Grid size={{ xs:6, sm:4, md:2}} key={category.id}>
                                 <StyledCard 
                                     elevation={selectedCategory === category.id ? 6 : 2}
                                     onClick={() => setSelectedCategory(category.id)}

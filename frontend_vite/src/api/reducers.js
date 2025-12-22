@@ -9,7 +9,7 @@ const initialState = {
     totalPrice: localStorage.getItem('totalPrice') ? JSON.parse(localStorage.getItem('totalPrice')) : 0,
     totalQuantity: localStorage.getItem('totalQuantity') ? JSON.parse(localStorage.getItem('totalQuantity')) : 0,
     cartItems: localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [],
-    allOrders: [],
+    myOrders: [],
     viewedProducts: localStorage.getItem("viewedProducts") ? JSON.parse(localStorage.getItem("viewedProducts")) : [],
     cartInspiredProducts: localStorage.getItem("cartInspiredProducts") ? JSON.parse(localStorage.getItem("cartInspiredProducts")) : [],
     recommendedProducts: localStorage.getItem("recommendedProducts") ? JSON.parse(localStorage.getItem("recommendedProducts")) : [],
@@ -81,10 +81,10 @@ const reducers = createSlice({
             }
             
         },
-        setAllOrders: (state, action) => {
+        setMyOrders: (state, action) => {
             return {
                ...state,
-                allOrders: action.payload,
+                myOrders: action.payload,
             }
         },
         setViewedProducts: (state, action) => {
@@ -136,7 +136,7 @@ const reducers = createSlice({
                 discount: action.payload.discount
             }
         },
-        removePromoCode: (state, action) => {
+        removePromoCode: (state) => {
             return {
                 ...state,
                 promoCode: null,

@@ -94,7 +94,7 @@ export const AboutUs = () => {
 
                 {/* Main Content Sections */}
                 <Grid container spacing={4} sx={{ mb: 6 }}>
-                    <Grid item size={{xs:12}}>
+                    <Grid size={{xs:12}}>
                         <SectionCard elevation={2}>
                             <CardContent>
                                 <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>
@@ -107,7 +107,7 @@ export const AboutUs = () => {
                         </SectionCard>
                     </Grid>
 
-                    <Grid item size={{xs:12}}>
+                    <Grid size={{xs:12}}>
                         <SectionCard elevation={2}>
                             <CardContent>
                                 <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>
@@ -120,7 +120,7 @@ export const AboutUs = () => {
                         </SectionCard>
                     </Grid>
 
-                    <Grid item size={{xs:12}}>
+                    <Grid size={{xs:12}}>
                         <SectionCard elevation={2}>
                             <CardContent>
                                 <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>
@@ -141,7 +141,7 @@ export const AboutUs = () => {
                     </Typography>
                     <Grid container spacing={3}>
                         {features.map((feature, index) => (
-                            <Grid item size={{xs:12, sm:6, md:3 }} key={index}>
+                            <Grid size={{xs:12, sm:6, md:3 }} key={index}>
                                 <StyledCard elevation={3}>
                                     <CardContent sx={{ textAlign: 'center', p: 3 }}>
                                         <IconWrapper sx={{ mx: 'auto' }}>

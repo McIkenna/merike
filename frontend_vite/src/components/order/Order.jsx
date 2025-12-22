@@ -259,7 +259,7 @@ const OrderCard = ({ order }) => {
 
                             {/* Price Breakdown */}
                             <Grid container spacing={3}>
-                                <Grid item xs={12} md={order?.shippingInfo?.address1 !== 'Pending' ? 6 : 12}>
+                                <Grid xs={12} md={order?.shippingInfo?.address1 !== 'Pending' ? 6 : 12}>
                                     <SummaryBox>
                                         <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 2 }}>
                                             Order Summary
@@ -322,7 +322,7 @@ const OrderCard = ({ order }) => {
 
                                 {/* Shipping Information */}
                                 {order?.shippingInfo?.address1 !== 'Pending' && (
-                                    <Grid item xs={12} md={6}>
+                                    <Grid xs={12} md={6}>
                                         <SummaryBox>
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                                                 <LocationOn color="primary" fontSize="small" />
@@ -385,17 +385,18 @@ const OrderCard = ({ order }) => {
 
 // Main Component
 const Order = () => {
-    const { auth } = useSelector(state => state);
-    const { user } = auth;
-    const { data: orderData, isLoading } = useMyOrdersQuery(user?._id);
+    const stateStore  = useSelector(state => state.stateStore);
+    const { myOrders } = stateStore;
+    // const { data: orderData, isLoading } = useMyOrdersQuery(user?._id);
+    console.log('myOrders -->', myOrders)
 
     const orders = useMemo(() => {
-        if (!orderData?.orders || orderData.orders.length === 0) return [];
-        return orderData.orders;
-    }, [orderData]);
+        if (!myOrders || myOrders.length === 0) return [];
+        return myOrders;
+    }, [myOrders]);
 
     // Empty State
-    if (!isLoading && orders.length === 0) {
+    if (orders.length === 0) {
         return (
             <Container maxWidth="lg" sx={{ py: 8 }}>
                 <Box
@@ -454,16 +455,16 @@ const Order = () => {
             </Box>
 
             {/* Loading State */}
-            {isLoading && (
+            {/* {isLoading && (
                 <Box sx={{ textAlign: 'center', py: 8 }}>
                     <Typography variant="body1" color="text.secondary">
                         Loading your orders...
                     </Typography>
                 </Box>
-            )}
+            )} */}
 
             {/* Orders List */}
-            {!isLoading && orders.map((order, index) => (
+            {orders && orders?.map((order, index) => (
                 <OrderCard key={order._id || index} order={order} />
             ))}
         </Container>

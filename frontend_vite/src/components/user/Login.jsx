@@ -139,7 +139,7 @@ export default function Login() {
       <Grid container sx={{ flex: 1 }}>
         {/* Left Side - Image/Branding */}
         {mediaAboveMd && (
-          <Grid item  sx={{ display: { xs: 'none', md: 'block' }}} size={{md:6}}>
+          <Grid  sx={{ display: { xs: 'none', md: 'block' }}} size={{md:6}}>
             <ImageContainer>
               <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center', p: 4 }}>
                 <Typography
@@ -190,7 +190,6 @@ export default function Login() {
 
         {/* Right Side - Login Form */}
         <Grid
-          item
           size={{
             xs:12,
           md:6}}

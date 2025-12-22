@@ -219,7 +219,7 @@ const BannerManagement = (props) => {
     const renderGridView = () => (
         <Grid container spacing={3}>
             {bannerItems?.map((banner) => (
-                <Grid item size={{ xs:12, sm:6, md:4}} key={banner._id}>
+                <Grid  size={{ xs:12, sm:6, md:4}} key={banner._id}>
                     <StyledCard elevation={0}>
                         <CardMedia
                             component="img"
@@ -510,7 +510,7 @@ const BannerManagement = (props) => {
                 <form onSubmit={handleSubmit}>
                     <DialogContent sx={{ pt: 3 }}>
                         <Grid container spacing={3}>
-                            <Grid item size={{xs:12}}>
+                            <Grid  size={{xs:12}}>
                                 <StyledTextField
                                     name="name"
                                     label="Banner Name"
@@ -523,7 +523,7 @@ const BannerManagement = (props) => {
                                     placeholder="Enter banner name"
                                 />
                             </Grid>
-                            <Grid item size={{xs:12}}>
+                            <Grid  size={{xs:12}}>
                                 <StyledTextField
                                     name="description"
                                     label="Description"
@@ -538,7 +538,7 @@ const BannerManagement = (props) => {
                                     placeholder="Enter banner description"
                                 />
                             </Grid>
-                            <Grid item size={{xs:12}}>
+                            <Grid size={{xs:12}}>
                                 <StyledTextField
                                     name="url"
                                     label="Image URL"
@@ -551,7 +551,7 @@ const BannerManagement = (props) => {
                                 />
                             </Grid>
                             {formData?.image?.url && (
-                                <Grid item size={{xs:12}}>
+                                <Grid size={{xs:12}}>
                                     <Box
                                         sx={{
                                             width: '100%',

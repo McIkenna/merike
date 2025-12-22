@@ -21,8 +21,6 @@ import {
     CancelOutlined,
     Edit,
     SaveOutlined} from '@mui/icons-material';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact } from "ag-grid-react";
 import { styled } from '@mui/material/styles';
 import { Divider } from '../../../utils/Divider';
@@ -95,8 +93,8 @@ export const OrderManagement = (props) => {
     //     setShowDeleteModal(true)
     // }
 
-    console.log('formaData', formData)
-    console.log('selectedRow -->', selectedRow)
+    // console.log('formaData', formData)
+    // console.log('selectedRow -->', selectedRow)
 
    
 
@@ -257,7 +255,7 @@ export const OrderManagement = (props) => {
         const day = String(d.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
-    console.log('allOrders -->', data)
+    // console.log('myOrders -->', data)
     return (
         <Box>
 
@@ -287,7 +285,7 @@ export const OrderManagement = (props) => {
            <Box>
                 {/* <div className="ag-theme-quartz" style={{ height: '80vh' }}> */}
                 <div className="grid-wrapper">
-                <div class="ag-theme-alpine ag-grid-container">
+                <div className="ag-theme-alpine ag-grid-container">
                     <AgGridReact
                         ref={gridRef}
                         rowData={rowData}
@@ -326,7 +324,7 @@ export const OrderManagement = (props) => {
                 <form onSubmit={handleSubmit}>
                     <DialogContent sx={{ pt: 3 }}>
                         <Grid container spacing={2}>
-                                {/* <Grid item size={{xs:12}}>
+                                {/* <Grid size={{xs:12}}>
                                     <TextField
                                         name="shippingInfo"
                                         variant="outlined"
@@ -338,7 +336,7 @@ export const OrderManagement = (props) => {
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid>
-                                <Grid item size={{xs:12}}>
+                                <Grid size={{xs:12}}>
                                     <TextField
                                         name="paymentInfo"
                                         variant="outlined"
@@ -350,7 +348,7 @@ export const OrderManagement = (props) => {
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid> */}
-                                <Grid item size={{xs:12}}>
+                                <Grid size={{xs:12}}>
                                     <TextField
                                         name="orderStatus"
                                         variant="outlined"
@@ -364,7 +362,7 @@ export const OrderManagement = (props) => {
                                 </Grid>
 
 
-                                <Grid item size={{xs:12}}>
+                                <Grid size={{xs:12}}>
                                     <TextField
                                         name="deliveredAt"
                                         variant="outlined"

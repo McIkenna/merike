@@ -182,7 +182,7 @@ const ProductForm = (props) => {
 
                 <form onSubmit={handleSubmit} className={classes.form}>
                     <Grid container spacing={2}>
-                        <Grid item size={{sx:12, md:12, xl:12}}>
+                        <Grid size={{sx:12, md:12, xl:12}}>
                             <TextField
                                 name="name"
                                 variant="outlined"
@@ -194,7 +194,7 @@ const ProductForm = (props) => {
                                 inputProps={{ maxLength: 100 }}
                             />
                         </Grid>
-                        <Grid item size={{sx:12, md:12, xl:12}}>
+                        <Grid size={{sx:12, md:12, xl:12}}>
                             <TextField
                                 name="price"
                                 variant="outlined"
@@ -207,7 +207,7 @@ const ProductForm = (props) => {
                                 inputProps={{ maxLength: 100 }}
                             />
                         </Grid>
-                        <Grid item size={{sx:6, md:6, xl:6}}>
+                        <Grid size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="discount"
                                 variant="outlined"
@@ -219,7 +219,7 @@ const ProductForm = (props) => {
                                 inputProps={{ maxLength: 100 }}
                             />
                         </Grid>
-                        <Grid item size={{sx:6, md:6, xl:6}}>
+                        <Grid size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="description"
                                 variant="outlined"
@@ -231,7 +231,7 @@ const ProductForm = (props) => {
                                 inputProps={{ maxLength: 500 }}
                             />
                         </Grid>
-                        <Grid item size={{sx:6, md:6, xl:6}}>
+                        <Grid size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="ratings"
                                 variant="outlined"
@@ -242,7 +242,7 @@ const ProductForm = (props) => {
                                 aria-readonly
                             />
                         </Grid>
-                        <Grid item size={{sx:6, md:6, xl:6}}>
+                        <Grid size={{sx:6, md:6, xl:6}}>
                             <FormControl variant="outlined" fullWidth required>
                                 <InputLabel id="category-label">Category</InputLabel>
                                 <Select
@@ -262,7 +262,7 @@ const ProductForm = (props) => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item size={{sx:6, md:6, xl:6}}>
+                        <Grid size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="seller"
                                 variant="outlined"
@@ -273,7 +273,7 @@ const ProductForm = (props) => {
                                 aria-readonly
                             />
                         </Grid>
-                        <Grid item size={{sx:6, md:6, xl:6}}>
+                        <Grid size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="stock"
                                 variant="outlined"
@@ -285,7 +285,7 @@ const ProductForm = (props) => {
                                 onChange={handleChange}
                             />
                         </Grid>
-                        {/* <Grid item size={{sx:12}}>
+                        {/* <Grid size={{sx:12}}>
               <TextField
                 name="numOfReviews"
                 variant="outlined"
@@ -296,7 +296,7 @@ const ProductForm = (props) => {
                 onChange={handleChange}
               />
             </Grid> */}
-                        {/* <Grid item size={{sx:12}} >
+                        {/* <Grid size={{sx:12}} >
               <TextField
                 name="user"
                 variant="outlined"
@@ -308,7 +308,7 @@ const ProductForm = (props) => {
                
               />
             </Grid> */}
-                        {/* <Grid item size={{sx:12}}>
+                        {/* <Grid size={{sx:12}}>
               <TextField
                 name="createdAt"
                 variant="outlined"
@@ -321,7 +321,7 @@ const ProductForm = (props) => {
             </Grid> */}
                         {formData?.images?.map((image, index) => (
                             <React.Fragment key={index}>
-                                {/* <Grid item xs={5}>
+                                {/* <Grid xs={5}>
                   <TextField
                     name="public_id"
                     variant="outlined"
@@ -332,7 +332,7 @@ const ProductForm = (props) => {
                     onChange={(e) => handleImageChange(index, e)}
                   />
                 </Grid> */}
-                                <Grid item size={{sx:9, md:9, xl:9}}>
+                                <Grid size={{sx:9, md:9, xl:9}}>
                                     <TextField
                                         name="url"
                                         variant="outlined"
@@ -343,14 +343,14 @@ const ProductForm = (props) => {
                                         onChange={(e) => handleImageChange(index, e)}
                                     />
                                 </Grid>
-                                <Grid item size={{sx:3, md:3, xl:3}}>
+                                <Grid size={{sx:3, md:3, xl:3}}>
                                     <IconButton onClick={() => removeImageField(index)}>
                                         <RemoveCircleOutline />
                                     </IconButton>
                                 </Grid>
                             </React.Fragment>
                         ))}
-                        <Grid item size={{sx:12, md:12, xl:12}}>
+                        <Grid size={{sx:12, md:12, xl:12}}>
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -360,7 +360,7 @@ const ProductForm = (props) => {
                                 Add Image
                             </Button>
                         </Grid>
-                        <Grid item size={{sx:12}}>
+                        <Grid size={{sx:12}}>
                             <Button
                                 type="submit"
                                 fullWidth

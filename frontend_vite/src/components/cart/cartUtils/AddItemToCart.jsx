@@ -1,5 +1,4 @@
 import { setCartItems, setTotalPrice, setTotalQuantity, setPricePerItem, setQtyPerItem } from "../../../api/actions";
-import { useState } from "react";
 
 export const AddItemToCart = (
   product,
@@ -8,9 +7,7 @@ export const AddItemToCart = (
   dispatch,
   setOpenSnackbar,
   setSnackbarMessage,
-  setSeverity,
-  totalPrice,
-  totalQuantity
+  setSeverity
 ) => {
   return new Promise((resolve) => {
     const price = Number(product.price);

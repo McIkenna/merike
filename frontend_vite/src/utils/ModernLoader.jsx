@@ -151,7 +151,7 @@ export const ProductGridSkeleton = ({ count = 8 }) => {
       
       <Grid container spacing={2} justify="center" paddingBottom={'20px'}>
         {Array.from({ length: count }).map((_, index) => (
-          <Grid item size={{md: 2, sm:3 , xs:6  }}key={index}>
+          <Grid size={{md: 2, sm:3 , xs:6  }}key={index}>
             <Card 
               elevation={0}
               sx={{ 

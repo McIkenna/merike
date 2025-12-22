@@ -13,7 +13,7 @@ export const {
     setPriceFilter,
     setViewedProducts,
 setCartInspiredProducts,
-setAllOrders,
+setMyOrders,
 setProductRecentlyBought,
 setRecommendedProducts,
 setCarouselItems, 

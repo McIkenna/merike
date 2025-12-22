@@ -31,7 +31,7 @@ export default function ProductDetail() {
           <Box style={{ padding: '10px', marginTop: '20px' }}>
             <Grid container spacing={2}>
               {/* Additional Product Images */}
-              <Grid item size={{ xs:12, md:6, sm:6}}>
+              <Grid size={{ xs:12, md:6, sm:6}}>
                 <Box >
                   <ProductGallery product={product} />
 

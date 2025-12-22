@@ -57,7 +57,7 @@ const UserProfilePage = () => {
           {/* Grid Layout */}
           <Grid container spacing={3}>
             {/* Personal Information */}
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <Paper 
                 elevation={0}
                 sx={{ 
@@ -131,7 +131,7 @@ const UserProfilePage = () => {
             </Grid>
 
             {/* Account Settings */}
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <Paper 
                 elevation={0}
                 sx={{ 

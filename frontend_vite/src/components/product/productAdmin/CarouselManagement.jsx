@@ -224,7 +224,7 @@ const CarouselManagement = (props) => {
     const renderGridView = () => (
         <Grid container spacing={3}>
             {carouselItems?.map((carousel) => (
-                <Grid item size={{xs:12, sm:6, md:4}} key={carousel._id}>
+                <Grid  size={{xs:12, sm:6, md:4}} key={carousel._id}>
                     <StyledCard elevation={0}>
                         <CardMedia
                             component="img"
@@ -514,7 +514,7 @@ const CarouselManagement = (props) => {
                 <form onSubmit={handleSubmit}>
                     <DialogContent sx={{ pt: 3 }}>
                         <Grid container spacing={3}>
-                            <Grid item size={{xs:12}}>
+                            <Grid  size={{xs:12}}>
                                 <StyledTextField
                                     name="name"
                                     label="Carousel Name"
@@ -527,7 +527,7 @@ const CarouselManagement = (props) => {
                                     placeholder="Enter carousel name"
                                 />
                             </Grid>
-                            <Grid item size={{xs:12}}>
+                            <Grid  size={{xs:12}}>
                                 <StyledTextField
                                     name="description"
                                     label="Description"
@@ -542,7 +542,7 @@ const CarouselManagement = (props) => {
                                     placeholder="Enter carousel description"
                                 />
                             </Grid>
-                            <Grid item size={{xs:12}}>
+                            <Grid  size={{xs:12}}>
                                 <StyledTextField
                                     name="url"
                                     label="Image URL"
@@ -555,7 +555,7 @@ const CarouselManagement = (props) => {
                                 />
                             </Grid>
                             {formData?.image?.url && (
-                                <Grid item size={{xs:12}}>
+                                <Grid  size={{xs:12}}>
                                     <Box
                                         sx={{
                                             width: '100%',

@@ -11,7 +11,8 @@ import PromoCodeForm from './PromoCodeForm'
 import { OrderManagement } from './OrderManagement'
 
 export const AdminDashboard = () => {
-    const { stateStore, auth } = useSelector(state => state);
+    const auth = useSelector(state => state.auth);
+    const stateStore = useSelector(state => state.stateStore);
     const { user } = auth
     const { categories,bannerItems, carouselItems } = stateStore
     const { data, isFetching, refetch } = useGetProductBySellerQuery(user?._id)
@@ -26,11 +27,9 @@ export const AdminDashboard = () => {
       const changePage = (e) => {
         const { name } = e.target
 
-        console.log('name -->', name)
         setActivePage(name)
     }
 
-    console.log('activePage -->', activePage)   
 
     const [toastState, setToastState] = useState({
             open: false,
@@ -51,7 +50,7 @@ export const AdminDashboard = () => {
                             </Snackbar>
                         </Box>
             <Grid container spacing={2}>
-                <Grid item size={{sm:2, md:2, xl:2}}>
+                <Grid size={{sm:2, md:2, xl:2}}>
                     <Box
                         sx={{
                             backgroundColor: 'background.paper',
@@ -91,7 +90,7 @@ export const AdminDashboard = () => {
 
 
                 </Grid>
-                <Grid item size={{sm:10, md:10, xl:10}}>
+                <Grid size={{sm:10, md:10, xl:10}}>
                    { activePage === 'UserInventory' && <Box>
                         <UserInventory setToastState={setToastState} toastState={toastState} categories={categories} user={user} data={data} isFetching={isFetching} refetch={refetch}/>
                     </Box>}

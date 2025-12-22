@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux';
 import {  useLocation } from 'react-router-dom';
 export const SelectHome = () => {
 
-    const { stateStore } = useSelector((state) => state)
-    const {recommendedProducts, cartInspiredProducts, productRecentlyBought} = stateStore
+    const stateStore  = useSelector((state) => state.stateStore)
+    const {recommendedProducts, cartInspiredProducts, productRecentlyBought, favorites, totalPrice, totalQuantity, cartItems} = stateStore
     // const [title, setTitle] = useState('');
     const location = useLocation();
 
@@ -52,14 +52,20 @@ export const SelectHome = () => {
       <Grid container spacing={3}>
         {productsToShow?.product?.map((product) => (
           <Grid 
-            item 
-            xs={12}      // 1 column on extra small screens
-            sm={6}       // 2 columns on small screens
-            md={4}       // 3 columns on medium screens
-            lg={2.4}     // 5 columns on large screens (12/5 = 2.4)
+            size={{ xs:12,     // 1 column on extra small screens
+            sm:6,      // 2 columns on small screens
+            md:4,       // 3 columns on medium screens
+            lg:2.4 }}
+                // 5 columns on large screens (12/5 = 2.4)
             key={product._id}
           >
-            <BoxCard product={product} />
+            <BoxCard 
+            product={product}
+            favorites={favorites} 
+            totalPrice={totalPrice}
+            totalQuantity={totalQuantity} 
+            cartItems={cartItems}
+            />
           </Grid>
         ))}
       </Grid>

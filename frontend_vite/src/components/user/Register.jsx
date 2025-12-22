@@ -263,7 +263,7 @@ export default function Register() {
       <Grid container sx={{ maxWidth: 1200, width: '100%', position: 'relative', zIndex: 1 }}>
         {/* Left Side - Branding */}
         {mediaAboveMd && (
-          <Grid item size={{md:5}} sx={{ display: 'flex', alignItems: 'center', pr: 4 }}>
+          <Grid size={{md:5}} sx={{ display: 'flex', alignItems: 'center', pr: 4 }}>
             <Box sx={{ color: 'white' }}>
               <Typography variant="h3" sx={{ fontWeight: 700, mb: 2 }}>
                 Join Merikemart Today
@@ -304,7 +304,7 @@ export default function Register() {
         )}
 
         {/* Right Side - Registration Form */}
-        <Grid item size={{xs:12, md:7}}>
+        <Grid size={{xs:12, md:7}}>
           <StyledPaper elevation={8}>
             {/* Mobile Header */}
             {!mediaAboveMd && (
@@ -344,7 +344,7 @@ export default function Register() {
 
             <Box component="form" onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-                <Grid item size={{xs:12, sm:6}}>
+                <Grid size={{xs:12, sm:6}}>
                   <StyledTextField
                     fullWidth
                     name="firstName"
@@ -363,7 +363,7 @@ export default function Register() {
                     }}
                   />
                 </Grid>
-                <Grid item size={{xs:12, sm:6}}>
+                <Grid size={{xs:12, sm:6}}>
                   <StyledTextField
                     fullWidth
                     name="lastName"
@@ -382,7 +382,7 @@ export default function Register() {
                     }}
                   />
                 </Grid>
-                <Grid item size={{xs:12}}>
+                <Grid size={{xs:12}}>
                   <StyledTextField
                     fullWidth
                     name="email"
@@ -402,7 +402,7 @@ export default function Register() {
                     }}
                   />
                 </Grid>
-                <Grid item size={{xs:12}}>
+                <Grid size={{xs:12}}>
                   <StyledTextField
                     fullWidth
                     name="password"
@@ -433,7 +433,7 @@ export default function Register() {
                   />
                   {userData.password && <PasswordStrengthBar password={userData.password} />}
                 </Grid>
-                <Grid item size={{xs:12}}>
+                <Grid size={{xs:12}}>
                   <StyledTextField
                     fullWidth
                     name="confirmPassword"

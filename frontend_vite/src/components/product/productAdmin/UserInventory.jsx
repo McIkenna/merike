@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Box, Typography, Button, Stack, TextField, Modal } from '@mui/material'
 import { AgGridReact } from "ag-grid-react";
-import {  useDeleteProductMutation } from '../../../api/services/productApi';
+import { useDeleteProductMutation } from '../../../api/services/productApi';
 import ProductForm from './ProductForm';
 // import Loader from '../../../utils/Loader';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
@@ -17,9 +17,9 @@ export const UserInventory = (props) => {
 
     const [selectedRow, setSelectedRow] = useState(null)
     // const userPage = ['Listing', 'ProductForm', 'UpdateProductForm']
-    const [deleteProduct, { isLoading: deleteIsLoading}] = useDeleteProductMutation()
+    const [deleteProduct, { isLoading: deleteIsLoading }] = useDeleteProductMutation()
     const [activePage, setActivePage] = useState('Listing')
-   
+
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const changePage = (e) => {
         const { name } = e.target
@@ -37,9 +37,9 @@ export const UserInventory = (props) => {
 
 
     const handleDelete = () => {
-        
+
         deleteProduct(selectedRow?._id).then((res) => {
-            if(res.statusCode === 200){
+            if (res.statusCode === 200) {
                 setToastState({
                     open: true,
                     message: 'Product Deleted Successfully',
@@ -57,11 +57,11 @@ export const UserInventory = (props) => {
         }
         ).catch((err) => {
             console.log('err -->', err)
-                setToastState({
-                    open: true,
-                    message: 'Product Deletion Failed',
-                    severity: 'error'
-                })
+            setToastState({
+                open: true,
+                message: 'Product Deletion Failed',
+                severity: 'error'
+            })
         }
         )
         setActivePage('Listing')
@@ -118,8 +118,8 @@ export const UserInventory = (props) => {
                             padding: '5px',
                             borderRadius: '20px',
                             cursor: 'pointer'
-                        }} 
-                        onClick={() => deleteIntent(props.data)}/>
+                        }}
+                        onClick={() => deleteIntent(props.data)} />
                 </Box>
             )
 
@@ -150,7 +150,8 @@ export const UserInventory = (props) => {
             {
 
                 headerName: header,
-                field: header,
+                field: header
+
 
 
 
@@ -167,7 +168,11 @@ export const UserInventory = (props) => {
     const defaultColDef = {
         flex: 1,
         minWidth: 150,
-        cellRenderer: CustomButtonComponent
+        cellRenderer: CustomButtonComponent,
+        valueFormatter: (params) =>
+            typeof params.value === 'object'
+                ? JSON.stringify(params.value)
+                : params.value
     };
 
     const rowSelection = useMemo(() => {
@@ -235,7 +240,7 @@ export const UserInventory = (props) => {
 
     return (
         <Box>
-            
+
             {(!data?.product.length || isFetching || deleteIsLoading) ? <Box>
                 <div style={{ height: '80vh' }}>
                     <ModernLoader variant='list' count={12} />
@@ -249,46 +254,46 @@ export const UserInventory = (props) => {
                         justifyContent: 'space-between'
                     }}>
                         <Stack spacing={2} direction="row">
-                            <Button 
-                            name='ProductForm' 
-                            disabled={activePage === 'ProductForm'} 
-                            variant="outlined" 
-                            onClick={(e) => changePageAndClear(e)}
-                            sx={{
-                                borderColor: colors.primaryBlue.main,
-                                color: colors.primaryBlue.main,
-                                '&:hover': {
-                                    backgroundColor: colors.primaryBlue.light,
-                                    color: colors.neutral.black
-                                }
+                            <Button
+                                name='ProductForm'
+                                disabled={activePage === 'ProductForm'}
+                                variant="outlined"
+                                onClick={(e) => changePageAndClear(e)}
+                                sx={{
+                                    borderColor: colors.primaryBlue.main,
+                                    color: colors.primaryBlue.main,
+                                    '&:hover': {
+                                        backgroundColor: colors.primaryBlue.light,
+                                        color: colors.neutral.black
+                                    }
 
-                            }}>Add Listing</Button>
-                            <Button 
-                            name='UpdateProductForm'
-                             disabled={!selectedRow || activePage === 'UpdateProductForm'} 
-                             variant="outlined" 
-                             onClick={changePage}
-                             sx={{
-                                borderColor: colors.primaryGreen.dark,
-                                color: colors.primaryGreen.dark,
-                                '&:hover': {
-                                    backgroundColor: colors.primaryGreen.main,
-                                    color: colors.neutral.black
-                                }
-                            }}
-                             >Edit Listing</Button>
+                                }}>Add Listing</Button>
+                            <Button
+                                name='UpdateProductForm'
+                                disabled={!selectedRow || activePage === 'UpdateProductForm'}
+                                variant="outlined"
+                                onClick={changePage}
+                                sx={{
+                                    borderColor: colors.primaryGreen.dark,
+                                    color: colors.primaryGreen.dark,
+                                    '&:hover': {
+                                        backgroundColor: colors.primaryGreen.main,
+                                        color: colors.neutral.black
+                                    }
+                                }}
+                            >Edit Listing</Button>
                             {/* <Button disabled={!selectedRow} variant="outlined">Update Listing</Button> */}
-                            <Button 
-                            disabled={!selectedRow} variant="outlined" 
-                             sx={{
-                                borderColor: colors.primaryRed.main,
-                                color: colors.primaryRed.main,
-                                '&:hover': {
-                                    backgroundColor: colors.primaryRed.light,
-                                    color: colors.neutral.black
-                                }
-                            }}
-                            onClick={() =>setShowDeleteModal(true)}>Delete Listing</Button>
+                            <Button
+                                disabled={!selectedRow} variant="outlined"
+                                sx={{
+                                    borderColor: colors.primaryRed.main,
+                                    color: colors.primaryRed.main,
+                                    '&:hover': {
+                                        backgroundColor: colors.primaryRed.light,
+                                        color: colors.neutral.black
+                                    }
+                                }}
+                                onClick={() => setShowDeleteModal(true)}>Delete Listing</Button>
                         </Stack>
                         {activePage === 'Listing' ? <Box>
                             <TextField
@@ -300,22 +305,22 @@ export const UserInventory = (props) => {
                                 onChange={onFilterTextBoxChanged} />
                         </Box>
                             :
-                            <Button 
-                            name='Listing' variant="outlined" 
-                            sx={{
-                                borderColor: colors.primaryGreen.dark,
-                                color: colors.primaryGreen.dark,
-                                '&:hover': {
-                                    backgroundColor: colors.primaryGreen.light,
-                                    color: colors.neutral.black
-                                }
-                            }}
-                             onClick={(e) => changePageAndClear(e)}>Back to listing</Button>
+                            <Button
+                                name='Listing' variant="outlined"
+                                sx={{
+                                    borderColor: colors.primaryGreen.dark,
+                                    color: colors.primaryGreen.dark,
+                                    '&:hover': {
+                                        backgroundColor: colors.primaryGreen.light,
+                                        color: colors.neutral.black
+                                    }
+                                }}
+                                onClick={(e) => changePageAndClear(e)}>Back to listing</Button>
                         }
 
                     </Box>
                     {activePage === 'Listing' && <Box>
-                        <div className="ag-theme-quartz" style={{ height: '80vh' }}>
+                        <div style={{ height: '80vh' }}>
                             <AgGridReact
                                 ref={gridRef}
                                 rowData={rowData}
@@ -350,44 +355,44 @@ export const UserInventory = (props) => {
                     <UpdateProductForm categories={categories} user={user} />
                 </Box>}
             </Box> */}
-             {showDeleteModal && <Box
-               >
-                <Modal
-                    open={showDeleteModal}
-                    onClose={() => setShowDeleteModal(false)}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box
-                    sx = {{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        // width: 400,
-                        bgcolor: 'background.paper',
-                        boxShadow: 24,
-                        p: 4,
-                        borderRadius: '10px'
-                      }}>
-                        <Typography variant='h5' sx={{ mt: 2 }}>Are you sure you want to delete this product?</Typography>
-                        <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            marginTop: '20px'
-                        }}>
-                        
-                        <Button variant='outlined' color='error' onClick={() => setShowDeleteModal(false)}>No</Button>
-                        <Button variant='outlined' color='primary' onClick={() => handleDelete(selectedRow)}>Yes</Button>
-                        </Box>
-                  
-                    </Box>
-                </Modal>
-            </Box>}
+                    {showDeleteModal && <Box
+                    >
+                        <Modal
+                            open={showDeleteModal}
+                            onClose={() => setShowDeleteModal(false)}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    // width: 400,
+                                    bgcolor: 'background.paper',
+                                    boxShadow: 24,
+                                    p: 4,
+                                    borderRadius: '10px'
+                                }}>
+                                <Typography variant='h5' sx={{ mt: 2 }}>Are you sure you want to delete this product?</Typography>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        marginTop: '20px'
+                                    }}>
+
+                                    <Button variant='outlined' color='error' onClick={() => setShowDeleteModal(false)}>No</Button>
+                                    <Button variant='outlined' color='primary' onClick={() => handleDelete(selectedRow)}>Yes</Button>
+                                </Box>
+
+                            </Box>
+                        </Modal>
+                    </Box>}
                 </Box>
             }
-           
+
         </Box>
     )
 }

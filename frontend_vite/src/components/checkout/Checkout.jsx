@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 const Checkout = ({ cartItems, promoCode }) => {
   const [checkoutOrder] = useCheckoutOrderMutation()
   const [createPendingOrder] = useCreatePendingOrderMutation();
-  const { auth } = useSelector((state) => state)
+  const  auth  = useSelector((state) => state.auth)
 
   const handleCheckout = async () => {
     const orderResponse = await createPendingOrder({

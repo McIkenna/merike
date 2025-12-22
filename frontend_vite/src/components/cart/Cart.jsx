@@ -36,6 +36,7 @@ import { CustomSnackbar } from '../../utils/CustomSnackbar';
 import PromoCodeInput from '../promoCode/PromoCodeInput';
 import { Divider } from '../../utils/Divider';
 import ModernLoader from '../../utils/ModernLoader';
+import { AddViewedProduct } from './cartUtils/AddViewedProduct';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -88,10 +89,10 @@ const FeatureChip = styled(Chip)(({ theme }) => ({
 export const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { stateStore, auth } = useSelector(state => state);
-  const { cartItems, totalQuantity, totalPrice, discount, promoCode, products } = stateStore;
+  const  auth  = useSelector(state => state.auth);
+  const stateStore = useSelector(state => state.stateStore);
+  const { cartItems, totalQuantity, totalPrice, discount, promoCode, products, viewedProducts } = stateStore;
   const { user } = auth;
-  const [showSavings, setShowSavings] = useState(true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [severity, setSeverity] = useState('success')
@@ -279,14 +280,14 @@ export const Cart = () => {
 
       <Grid container spacing={3}>
         {/* Cart Items */}
-        <Grid item size={{xs:12, md:8}}>
+        <Grid size={{xs:12, md:8}}>
           <Box>
             {cartItems.map((item, ) => (
               <StyledCard key={item.productId} elevation={0}>
                 <CardContent>
                   <Grid container spacing={2} alignItems="center">
                     {/* Product Image */}
-                    <Grid item size={{ xs:3, sm:2}}>
+                    <Grid size={{ xs:3, sm:2}}>
                       <Box
                         sx={{
                           width: '100%',
@@ -312,7 +313,7 @@ export const Cart = () => {
                     </Grid>
 
                     {/* Product Info */}
-                    <Grid item size={{xs:9, sm:5}}>
+                    <Grid size={{xs:9, sm:5}}>
                       <Typography
                         variant="h6"
                         sx={{
@@ -347,7 +348,7 @@ export const Cart = () => {
                     </Grid>
 
                     {/* Quantity Controls */}
-                    <Grid item size={{xs:12, sm:5}}>
+                    <Grid size={{xs:12, sm:5}}>
                       <Box
                         sx={{
                           display: 'flex',
@@ -427,7 +428,7 @@ export const Cart = () => {
         </Grid>
 
         {/* Order Summary */}
-        <Grid item size={{xs: 12, md: 4}}>
+        <Grid size={{xs: 12, md: 4}}>
           <SummaryCard elevation={3}>
             <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
               Order Summary

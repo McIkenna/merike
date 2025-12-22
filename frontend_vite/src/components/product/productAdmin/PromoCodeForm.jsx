@@ -330,7 +330,7 @@ const PromoCodeForm = (props) => {
                 <Box>
 
             <Grid container spacing={2} style={{ marginTop: '20px' }}>
-                <Grid item size={{ xs: 12, sm: 6 }}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <Button
                         variant="contained"
                         sx={{
@@ -344,7 +344,7 @@ const PromoCodeForm = (props) => {
                         Active PromoCodes
                     </Button>
                 </Grid>
-                <Grid item size={{ xs: 12, sm: 6 }}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <Button
                         variant="contained"
                         sx={{
@@ -386,7 +386,7 @@ const PromoCodeForm = (props) => {
 
                         <form onSubmit={handleSubmit}>
                             <Grid container spacing={2}>
-                                <Grid item size={{ xs: 12 }}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         name="code"
                                         variant="outlined"
@@ -398,7 +398,7 @@ const PromoCodeForm = (props) => {
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid>
-                                <Grid item size={{ xs: 12 }}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         name="description"
                                         variant="outlined"
@@ -410,7 +410,7 @@ const PromoCodeForm = (props) => {
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid>
-                                <Grid item size={{ xs: 12 }}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         name="discountType"
                                         variant="outlined"
@@ -422,7 +422,7 @@ const PromoCodeForm = (props) => {
                                         inputProps={{ maxLength: 100 }}
                                     />
                                 </Grid>
-                                <Grid item size={{ xs: 12 }}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         name="discountValue"
                                         variant="outlined"
@@ -436,7 +436,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{ xs: 12 }}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         name="minPurchaseAmount"
                                         variant="outlined"
@@ -450,7 +450,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{ xs: 12 }}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         name="validFrom"
                                         variant="outlined"
@@ -469,7 +469,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{ xs: 12 }}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         name="validUntil"
                                         variant="outlined"
@@ -488,7 +488,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{ xs: 12 }}>
+                                <Grid size={{ xs: 12 }}>
                                     <TextField
                                         name="usageLimit"
                                         variant="outlined"
@@ -500,7 +500,7 @@ const PromoCodeForm = (props) => {
                                     />
                                 </Grid>
 
-                                <Grid item size={{ xs: 12 }}>
+                                <Grid size={{ xs: 12 }}>
                                     <Button
                                         type="submit"
                                         fullWidth

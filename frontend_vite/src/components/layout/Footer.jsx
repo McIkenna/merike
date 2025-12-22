@@ -74,10 +74,10 @@ export default function Footer() {
         mt: "auto"
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid container spacing={4}>
           {/* Brand Section */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{xs: 12, md:4}}>
             <Typography
               variant="h5"
               fontWeight="bold"
@@ -119,7 +119,7 @@ export default function Footer() {
 
           {/* Links Sections */}
           {footerSections.map((section) => (
-            <Grid item xs={6} sm={4} md={2} key={section.title}>
+            <Grid size={{xs:6, sm:4, md:2}} key={section.title}>
               <Typography
                 variant="subtitle1"
                 fontWeight="600"
@@ -144,7 +144,7 @@ export default function Footer() {
           ))}
 
           {/* Newsletter Section */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs:12, md:4}}>
             <Typography
               variant="subtitle1"
               fontWeight="600"

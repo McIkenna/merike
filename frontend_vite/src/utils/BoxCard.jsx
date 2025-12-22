@@ -16,9 +16,10 @@ import {
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { setFavorites } from '../api/actions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AddItemToCart } from '../components/cart/cartUtils/AddItemToCart';
 import { useNavigate } from 'react-router-dom';
+import { CartInspiredProduct } from '../components/cart/cartUtils/CartInspiredProduct';
 const StyledCard = styled(Card)(({ theme }) => ({
   position: 'relative',
   height: '100%',
@@ -132,9 +133,7 @@ export default function BoxCard(props) {
   // const [isFavorite, setIsFavorite] = React.useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { stateStore } = useSelector(state => state)
-  const { favorites, totalPrice, totalQuantity, cartItems } = stateStore;
-  const { product, setSnackbarMessage, setOpenSnackbar , setSeverity} = props
+  const { product, favorites, totalPrice, totalQuantity, cartItems, setSnackbarMessage, setOpenSnackbar , setSeverity, cartInspiredProducts} = props
 
   const {
     _id,
@@ -189,6 +188,7 @@ export default function BoxCard(props) {
       totalQuantity);
 
     if (success) {
+      CartInspiredProduct(product, cartInspiredProducts, dispatch)
       setTimeout(() => {
         navigate("/cart")
       }, 1000);

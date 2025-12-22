@@ -25,7 +25,7 @@ const AvailablePromoCodes = ({ onSelectCode }) => {
       </Typography>
       <Grid container spacing={2}>
         {data.promoCodes.map((promo) => (
-          <Grid item xs={12} sm={6} md={4} key={promo._id}>
+          <Grid xs={12} sm={6} md={4} key={promo._id}>
             <Card elevation={2}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>

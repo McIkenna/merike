@@ -3,7 +3,7 @@ import { Grid, Box, Slider, Typography, Popover, Icon, IconButton } from '@mui/m
 import MetaData from '../../utils/MetaData';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { setPriceFilter, setRecommendedProducts, setProductRecentlyBought } from '../../api/actions';
+import { setPriceFilter, setProductRecentlyBought, setRecommendedProducts } from '../../api/actions';
 import { Products } from '../product/Products.jsx';
 import RecommendedProduct from '../product/RecommendedProduct.jsx';
 import CartInspired from '../product/CartInspired.jsx';
@@ -20,7 +20,7 @@ export default function Home() {
   const navigate = useNavigate()
   const [keyword, setKeyword] = useState('')
   const keyparam = new URLSearchParams(location.search)
-  const { stateStore } = useSelector((state) => state)
+  const stateStore  = useSelector((state) => state.stateStore)
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedSort, setSelectedSort] = useState('Bestselling');
   const handlePopover = (event) => {
@@ -31,20 +31,22 @@ export default function Home() {
     setAnchorEl(null);
   };
 
-  const { products, selectedCategory, priceFilter, viewedProducts, cartInspiredProducts, allOrders,
-    carouselItems
+  const { products, selectedCategory, priceFilter, viewedProducts, cartInspiredProducts, myOrders,
+    carouselItems, favorites, totalPrice, totalQuantity, cartItems
   } = stateStore
 
-  // console.log('allOrders in home -->', allOrders)
+  // console.log('myOrders in home -->', myOrders)
   const handlePriceChange = (event, newValue) => {
     dispatch(setPriceFilter(newValue));
   };
 
+  // console.log('myOrders', myOrders)
   const getRecentlyBoughtProducts = useMemo(() => {
-    if (!allOrders || allOrders.length === 0) return [];
+    if (!myOrders || myOrders.length === 0) return [];
+
 
     // Sort orders by paidAt (newest first). Fallback to createdAt or epoch 0.
-    const ordersSorted = [...allOrders].sort((a, b) => {
+    const ordersSorted = [...myOrders].sort((a, b) => {
       const ta = new Date(a?.paidAt ?? a?.createdAt ?? 0).getTime();
       const tb = new Date(b?.paidAt ?? b?.createdAt ?? 0).getTime();
       return tb - ta;
@@ -72,12 +74,13 @@ export default function Home() {
       }, { seen: new Set(), result: [] })
       .result;
 
-    dispatch(setProductRecentlyBought(recent));
-    localStorage.setItem('productRecentlyBought', JSON.stringify(recent));
+    
 
     return recent;
 
-  }, [allOrders, products, dispatch]);
+  }, [myOrders, products, dispatch]);
+
+  // console.log('getRecentlyBoughtProducts -->', getRecentlyBoughtProducts)
 
 
   const valueText = (value) => {
@@ -114,12 +117,12 @@ export default function Home() {
     const similarProducts = products?.filter(
       (p) => p?.category === lastViewed?.category && p?._id !== lastViewed?._id
     );
-    dispatch(setRecommendedProducts(similarProducts));
-    localStorage.setItem('recommendedProducts', JSON.stringify(similarProducts));
-    const sameCategory = similarProducts?.slice(0, 8);
-    return sameCategory;
+    // dispatch(setRecommendedProducts(similarProducts));
+    
+    // const sameCategory = similarProducts?.slice(0, 8);
+    return similarProducts;
 
-  }, [viewedProducts, products, dispatch]);
+  }, [viewedProducts, products]);
 
 
   const filteredProduct = useMemo(() => {
@@ -171,12 +174,16 @@ export default function Home() {
   const handleSelect = (selectType) => {
     switch (selectType) {
       case 'recommended':
+        localStorage.setItem('recommendedProducts', JSON.stringify(recommendations));
+        dispatch(setRecommendedProducts(recommendations));
         navigate('/recommended');
         break;
       case 'cart-inspired':
         navigate('/cart-inspired');
         break;
       case 'recently-bought':
+        dispatch(setProductRecentlyBought(getRecentlyBoughtProducts));
+        localStorage.setItem('productRecentlyBought', JSON.stringify(getRecentlyBoughtProducts));
         navigate('/recently-bought');
         break;
       default:
@@ -221,10 +228,10 @@ export default function Home() {
                 }}
               >
                 <SortProd
-                  onSortChange={(sortOption) => {
-                    console.log('Selected sort option:', sortOption);
+                  onSortChange={() => {
+                    // console.log('Selected sort option:', sortOption);
                     // Implement sorting logic here based on sortOption
-                    // handleClosePopover();
+                    handleClosePopover();
                   }}
                   valueText={valueText}
                   handlePriceChange={handlePriceChange}
@@ -238,21 +245,29 @@ export default function Home() {
           </Box>}
 
           <Grid container spacing={2} justify="center" paddingBottom={'20px'}>
-            <Grid item direction="row" md={12} sm={12} xs={12} spacing={2}>
-              <Products products={filteredProduct} />
+            <Grid direction="row" size={{md:12, sm:12, xs:12}} spacing={2}>
+              <Products 
+              products={filteredProduct} 
+              favorites={favorites} 
+              totalPrice={totalPrice}
+              totalQuantity={totalQuantity}
+              cartItems={cartItems}
+              cartInspiredProducts={cartInspiredProducts}
+
+              />
             </Grid>
           </Grid>
           <Grid container spacing={2} justify="center" padding='80px 0' >
-            <Grid item md={4} sm={4} xs={4}>
+            <Grid size={{md:4, sm:4, xs:4}}>
               {recommendations?.length > 0 && <RecommendedProduct recommendedProducts={recommendations} handleSelect={handleSelect} />}
 
             </Grid>
-            <Grid item md={4} sm={4} xs={4}>
-              {cartInspiredProducts.length > 0 && <CartInspired cartInspiredProducts={cartInspiredProducts.slice(0, 4)} handleSelect={handleSelect} />}
+            <Grid size={{md:4, sm:4, xs:4}}>
+              {cartInspiredProducts.length > 0 && <CartInspired cartInspiredProducts={cartInspiredProducts} handleSelect={handleSelect} />}
             </Grid>
-            <Grid item md={4} sm={4} xs={4}>
+            <Grid size={{md:4, sm:4, xs:4}}>
               {getRecentlyBoughtProducts?.length > 0 && 
-              <RecentBought recentBoughtProducts={getRecentlyBoughtProducts.slice(0, 4)} handleSelect={handleSelect} />}
+              <RecentBought recentBoughtProducts={getRecentlyBoughtProducts} handleSelect={handleSelect} />}
             </Grid>
             {/* <LastViewed allProducts={localproducts} viewedProducts={viewedProducts} /> */}
 

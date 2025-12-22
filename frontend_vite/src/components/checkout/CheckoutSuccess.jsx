@@ -9,8 +9,7 @@ import {
     LinearProgress,
     Fade,
     Zoom,
-    Chip,
-    Divider
+    Chip
 } from '@mui/material';
 import {
     CheckCircle,
@@ -24,6 +23,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { setCartItems, setTotalPrice, setTotalQuantity, removePromoCode } from '../../api/actions';
 import { useDispatch } from 'react-redux';
 import { styled, keyframes } from '@mui/material/styles';
+import { Divider } from '../../utils/Divider';
 
 // Animations
 const checkAnimation = keyframes`
@@ -265,7 +265,7 @@ const CheckoutSuccess = () => {
                             </Typography>
                         )}
 
-                        <Divider sx={{ my: 3 }} />
+                        <Divider />
 
                         {/* Features */}
                         <Stack spacing={2} sx={{ mb: 4, textAlign: 'left' }}>
@@ -332,7 +332,7 @@ const CheckoutSuccess = () => {
                             </Button>
                         </Stack>
 
-                        <Divider sx={{ my: 3 }} />
+                        <Divider />
 
                         {/* Countdown */}
                         <Box

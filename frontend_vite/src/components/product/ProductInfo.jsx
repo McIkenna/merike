@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { 
   Box, 
   Typography, 
@@ -21,12 +21,12 @@ import {
 } from '@mui/icons-material';
 import { 
   setQtyPerItem, 
-  setViewedProducts, 
-  setCartInspiredProducts
 } from '../../api/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { AddItemToCart } from '../cart/cartUtils/AddItemToCart';
+import { AddViewedProduct } from '../cart/cartUtils/AddViewedProduct';
+import { CartInspiredProduct } from '../cart/cartUtils/CartInspiredProduct';
 
 const PriceBox = styled(Box)(({ theme }) => ({
   display: 'inline-flex',
@@ -66,7 +66,7 @@ const FeatureItem = styled(Box)(({ theme }) => ({
 
 export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage, setSeverity }) => {
   const dispatch = useDispatch();
-  const { stateStore } = useSelector(state => state);
+  const stateStore  = useSelector(state => state.stateStore);
   const { qtyPerItem, totalPrice, totalQuantity, cartItems, viewedProducts, cartInspiredProducts } = stateStore;
   
   const addItem = () => {
@@ -82,55 +82,55 @@ export const ProductInfo = ({ product, setOpenSnackbar, setSnackbarMessage, setS
     }
   };
 
-  const addViewedProduct = (product) => {
-    let viewed = [...viewedProducts];
-    viewed = viewed.filter((p) => p._id !== product._id);
-    const newlyViewed = [product, ...viewed];
-    const updatedViewed = newlyViewed.slice(0, 10);
-    dispatch(setViewedProducts(updatedViewed));
-    localStorage.setItem("viewedProducts", JSON.stringify(updatedViewed));
-  };
+  // const addViewedProduct = (product) => {
+  //   let viewed = [...viewedProducts];
+  //   viewed = viewed.filter((p) => p._id !== product._id);
+  //   const newlyViewed = [product, ...viewed];
+  //   const updatedViewed = newlyViewed.slice(0, 10);
+  //   dispatch(setViewedProducts(updatedViewed));
+  //   localStorage.setItem("viewedProducts", JSON.stringify(updatedViewed));
+  // };
 
   useEffect(() => {
     if (product) {
-      addViewedProduct(product);
+      AddViewedProduct(product, viewedProducts, dispatch);
       dispatch(setQtyPerItem(0));
     }
   }, [product]);
 
   
 
-  const cartInspired = useCallback(() => {
-    if (!product) return;
+  // const cartInspired = useCallback(() => {
+  //   if (!product) return;
 
-    let inspired = Array.isArray(cartInspiredProducts) ? [...cartInspiredProducts] : [];
-    if ((!inspired || inspired.length === 0) && typeof window !== 'undefined') {
-      try {
-        const stored = JSON.parse(localStorage.getItem('cartInspiredProducts') || '[]');
-        if (Array.isArray(stored)) inspired = stored;
-      } catch {
-        inspired = [];
-      }
-    }
+  //   let inspired = Array.isArray(cartInspiredProducts) ? [...cartInspiredProducts] : [];
+  //   if ((!inspired || inspired.length === 0) && typeof window !== 'undefined') {
+  //     try {
+  //       const stored = JSON.parse(localStorage.getItem('cartInspiredProducts') || '[]');
+  //       if (Array.isArray(stored)) inspired = stored;
+  //     } catch {
+  //       inspired = [];
+  //     }
+  //   }
 
-    const entry = {
-      _id: product._id,
-      name: product.name,
-      image: product.images?.[0]?.url || '',
-      price: Number(product.price?.toFixed(2)),
-      addedAt: new Date().toISOString()
-    };
+  //   const entry = {
+  //     _id: product._id,
+  //     name: product.name,
+  //     image: product.images?.[0]?.url || '',
+  //     price: Number(product.price?.toFixed(2)),
+  //     addedAt: new Date().toISOString()
+  //   };
 
-    if (!inspired.some(i => i._id === entry._id)) {
-      inspired.unshift(entry);
-      dispatch(setCartInspiredProducts(inspired));
-      localStorage.setItem('cartInspiredProducts', JSON.stringify(inspired));
-    }
-  }, [product, cartInspiredProducts, dispatch]);
+  //   if (!inspired.some(i => i._id === entry._id)) {
+  //     inspired.unshift(entry);
+  //     dispatch(setCartInspiredProducts(inspired));
+  //     localStorage.setItem('cartInspiredProducts', JSON.stringify(inspired));
+  //   }
+  // }, [product, cartInspiredProducts, dispatch]);
 
   const handleAddToCart = async () => {
     await AddItemToCart(product,qtyPerItem, cartItems, dispatch, setOpenSnackbar, setSnackbarMessage, setSeverity, totalPrice,  totalQuantity)
-    cartInspired()
+    CartInspiredProduct(product, cartInspiredProducts, dispatch)
   }
 
   // const addItemToCart = () => {

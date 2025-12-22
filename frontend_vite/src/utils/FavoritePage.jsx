@@ -253,7 +253,7 @@ export const FavoritePage = () => {
       {/* Product Grid */}
       <Grid container spacing={3}>
         {favoriteProducts.map((product) => (
-          <Grid item size={{xs:12, sm:6, md:4, lg:3 }}key={product._id}>
+          <Grid size={{xs:12, sm:6, md:4, lg:3 }}key={product._id}>
             <StyledCard elevation={0}>
               {/* Image Container */}
               <ImageContainer>

@@ -228,7 +228,7 @@ export const ContactUs = () => {
                 {/* Contact Methods */}
                 <Grid container spacing={3} sx={{ mb: 6 }}>
                     {contactMethods.map((method, index) => (
-                        <Grid item size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                             <ContactCard elevation={3}>
                                 <CardContent sx={{ textAlign: 'center', p: 3 }}>
                                     <IconWrapper sx={{ bgcolor: method.color }}>
@@ -255,7 +255,7 @@ export const ContactUs = () => {
                 {/* Contact Form and Info Section */}
                 <Grid container spacing={4}>
                     {/* Contact Form */}
-                    <Grid item size={{ xs: 12, md: 7 }}>
+                    <Grid size={{ xs: 12, md: 7 }}>
                         <Paper elevation={3} sx={{ p: 4 }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
                                 <QuestionAnswer color="primary" />
@@ -266,7 +266,7 @@ export const ContactUs = () => {
 
                             <Box component="form" onSubmit={handleSubmit}>
                                 <Grid container spacing={2}>
-                                    <Grid item size={{ xs: 12, md: 6 }}>
+                                    <Grid size={{ xs: 12, md: 6 }}>
                                         <StyledTextField
                                             fullWidth
                                             label="Full Name"
@@ -278,7 +278,7 @@ export const ContactUs = () => {
                                             required
                                         />
                                     </Grid>
-                                    <Grid item size={{ xs: 12, md: 6 }}>
+                                    <Grid size={{ xs: 12, md: 6 }}>
                                         <StyledTextField
                                             fullWidth
                                             label="Email Address"
@@ -291,7 +291,7 @@ export const ContactUs = () => {
                                             required
                                         />
                                     </Grid>
-                                    <Grid item size={{ xs: 12, md: 6 }}>
+                                    <Grid size={{ xs: 12, md: 6 }}>
                                         <StyledTextField
                                             fullWidth
                                             label="Phone Number (Optional)"
@@ -302,7 +302,7 @@ export const ContactUs = () => {
                                             helperText={errors.phone}
                                         />
                                     </Grid>
-                                    <Grid item size={{ xs: 12, md: 6 }}>
+                                    <Grid size={{ xs: 12, md: 6 }}>
                                         <FormControl fullWidth error={!!errors.category} required>
                                             <InputLabel>Category</InputLabel>
                                             <Select
@@ -324,7 +324,7 @@ export const ContactUs = () => {
                                             )}
                                         </FormControl>
                                     </Grid>
-                                    <Grid item size={{ xs: 12 }}>
+                                    <Grid size={{ xs: 12 }}>
                                         <StyledTextField
                                             fullWidth
                                             label="Subject"
@@ -333,7 +333,7 @@ export const ContactUs = () => {
                                             onChange={handleChange}
                                         />
                                     </Grid>
-                                    <Grid item size={{ xs: 12 }}>
+                                    <Grid size={{ xs: 12 }}>
                                         <StyledTextField
                                             fullWidth
                                             label="Message"
@@ -347,7 +347,7 @@ export const ContactUs = () => {
                                             required
                                         />
                                     </Grid>
-                                    <Grid item size={{ xs: 12 }}>
+                                    <Grid size={{ xs: 12 }}>
                                         <Button
                                             type="submit"
                                             variant="contained"
@@ -370,7 +370,7 @@ export const ContactUs = () => {
                     </Grid>
 
                     {/* Additional Info */}
-                    <Grid item size={{ xs: 12, md: 5 }}>
+                    <Grid size={{ xs: 12, md: 5 }}>
                         <Paper elevation={3} sx={{ p: 4, mb: 3 }}>
                             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>
                                 Business Hours
@@ -429,7 +429,7 @@ export const ContactUs = () => {
                         Other Ways to Reach Us
                     </Typography>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} md={6}>
+                        <Grid xs={12} md={6}>
                             <Box sx={{ textAlign: 'center' }}>
                                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: 'primary.main' }}>
                                     General Inquiries
@@ -439,7 +439,7 @@ export const ContactUs = () => {
                                 </Typography>
                             </Box>
                         </Grid>
-                        <Grid item xs={12} md={6}>
+                        <Grid xs={12} md={6}>
                             <Box sx={{ textAlign: 'center' }}>
                                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: 'primary.main' }}>
                                     Social Media Platforms

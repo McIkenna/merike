@@ -43,7 +43,7 @@ export const ProductGallery = ({ product }) => {
         >
             <Grid container spacing={2}>
                 {/* Thumbnails */}
-                <Grid item size={{xs:3}}>
+                <Grid size={{xs:3}}>
                     <Box
                         sx={{
                             maxHeight: '100vh',
@@ -88,7 +88,7 @@ export const ProductGallery = ({ product }) => {
                 </Grid>
 
                 {/* Main Image */}
-                <Grid item size={{xs:9}}>
+                <Grid size={{xs:9}}>
                     <Box
                         sx={{
                             position: 'relative',

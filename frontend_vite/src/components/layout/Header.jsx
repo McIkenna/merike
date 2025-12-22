@@ -5,6 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import ShoppingCart from '../../utils/ShoppingCart';
 import merikeLogo from '../../static/images/Merike logo only color.png'
+import merikeLogo2 from '../../static/images/Merkie_star.png'
 import { useGetAllCategoryQuery } from '../../api/services/categoryApi';
 import { useGetAllCarouselQuery } from '../../api/services/carouselApi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,8 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { setCategories, setProducts, setSelectedCategory, setPriceFilter, setCarouselItems, setBannerItems } from '../../api/actions';
 import { useGetAllProductsQuery } from '../../api/services/productApi';
 import Banner from './Banner';
-import { setUser, setToken } from '../../api/actions';
-// import { useMyOrdersQuery } from '../../api/services/orderApi';
+import { setUser, setToken, setMyOrders } from '../../api/actions';
+import { useMyOrdersQuery } from '../../api/services/orderApi';
 import { Category } from '../category/Category'
 import { useGetAllBannerQuery } from '../../api/services/bannerApi';
 import ThemeToggleButton from '../../utils/ThemeToggleButton.jsx';
@@ -41,25 +42,27 @@ export default function Header() {
 
   const [pageReloaded, setPageReloaded] = useState(false)
   const [logoutUser] = useLogoutUserMutation()
-  const { stateStore, auth } = useSelector((state) => state)
+  const  auth = useSelector((state) => state.auth)
+  const stateStore = useSelector((state) => state.stateStore)
   const { user } = auth
   // console.log('auth', auth)
-  // const { data: orderData, isSuccess: orderIsSuccess, isError: orderIsError } = useMyOrdersQuery()
-  const { totalQuantity, selectedCategory, categories } = stateStore
+  // const { data: orderData, isSuccess: orderIsSuccess} = useMyOrdersQuery()
+  const { data: orderData, isSuccess: orderIsSuccess } = useMyOrdersQuery(user?._id);
+  const { totalQuantity, selectedCategory, categories, bannerItems } = stateStore
   useEffect(() => {
     if (data !== undefined) {
       dispatch(setCategories(data))
     }
-    // if (user?._id && orderIsSuccess) {
-    //   dispatch(setAllOrders(orderData?.orders))
-    // }
+    if (user?._id && orderIsSuccess) {
+      dispatch(setMyOrders(orderData?.orders))
+    }
     if (carouselData !== undefined) {
       dispatch(setCarouselItems(carouselData?.carousels))
     }
     if (bannerData !== undefined) {
       dispatch(setBannerItems(bannerData?.adverts))
     }
-  }, [data, carouselData, bannerData])
+  }, [data, carouselData, bannerData, orderData])
 
   useEffect(() => {
     if (prodData !== undefined) {
@@ -69,7 +72,6 @@ export default function Header() {
 
  
   const handleOpenUserMenu = (event) => {
-    console.log('event', event)
     setAnchorElUser(event.currentTarget);
   };
 
@@ -127,14 +129,20 @@ export default function Header() {
                 <MenuIcon />
               </IconButton>
             </Box>
-            <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1, paddingRight: "10px", cursor: 'pointer'}}
+            <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1, padding: "5px", cursor: 'pointer'}}
               onClick={() => { reloadPage() }}>
 
-              <img src={merikeLogo} style={{ width: '100px' }} />
+              <img src={merikeLogo} style={{ width: '80px' }} />
+
+            </Box>
+            <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1, padding: "5px", cursor: 'pointer'}}
+              onClick={() => { reloadPage() }}>
+
+              <img src={merikeLogo2} style={{ width: '200px' }} />
 
             </Box>
 
-            <Box style={{ textDecoration: 'none' }}>
+            {/* <Box style={{ textDecoration: 'none' }}>
               <Typography
                 variant="h6"
                 noWrap
@@ -152,7 +160,7 @@ export default function Header() {
               >
                 Merikemart
               </Typography>
-            </Box>
+            </Box> */}
 
             
 
@@ -324,7 +332,7 @@ export default function Header() {
             </List>
           </Box>
         </Drawer>
-      <Banner />
+      <Banner bannerItems={bannerItems}/>
     </>
   )
 }
