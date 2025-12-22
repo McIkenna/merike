@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-dotenv.config({ path: 'backend/config/config.env' });
+dotenv.config();
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_KEY)
 class StripeCouponManager {
