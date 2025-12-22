@@ -1,7 +1,8 @@
 const app = require('./app');
 const connectDatabase = require('./config/database');
 const dotenv = require('dotenv');
-
+// Setting up config
+dotenv.config();
 // Handling Uncaught Exceptions
 process.on('uncaughtException', err => {
     console.error(`Error: ${err.message}`);
@@ -9,8 +10,7 @@ process.on('uncaughtException', err => {
     process.exit(1);
 });
 
-// Setting up config
-dotenv.config({ path: 'backend/config/config.env' });
+
 
 // Connecting to database
 connectDatabase();
