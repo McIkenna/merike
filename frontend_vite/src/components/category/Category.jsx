@@ -57,7 +57,7 @@ export const Category = ({
                 textUnderlineOffset: '6px',
                 transition: 'all 0.2s ease',
                 '&:hover': {
-                  color: 'background.paper'
+                  color: 'text.secondary'
                 }
               }}
             >

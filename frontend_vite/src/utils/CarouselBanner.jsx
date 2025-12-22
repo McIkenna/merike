@@ -67,7 +67,7 @@ const CarouselBanner = ({ carouselItems }) => {
     
     return (
         <Box>
-            <Box sx={{ position: 'relative', width: '100%' }}>
+            <Box sx={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
                 {/* Carousel */}
                 <Box sx={{ maxWidth: '100vw', margin: 'auto', marginTop: '0' }}>
                     <Slider

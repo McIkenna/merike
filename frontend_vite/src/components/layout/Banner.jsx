@@ -44,19 +44,21 @@ const Banner = (props) => {
   return (
     <Box>
       <Collapse in={true}>
-        <Box sx={{ position: 'relative', width: '100%' }}>
+        <Box sx={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
 
           <Slider
             // index={activeStep}
             autoplay={true}
-            // navButtonsAlwaysInvisible={false}
             dots={false}
             infinite={true}
             speed={5000}
             slidesToShow={1}
             slidesToScroll={1}
             autoplaySpeed={10000}
-            cssEase={"linear"}>
+            cssEase={"linear"}
+            nextArrow={<div style={{display: 'none'}} />}
+            prevArrow={<div style={{display: 'none'}} />}
+            >
             {bannerItems?.map((currentItem) => (<Paper
               elevation={0}
               sx={{
