@@ -9,7 +9,7 @@
     "prod": "set NODE_ENV=PRODUCTION & nodemon server.js"
   },
   "engines": {
-       "node": ">=18.0.0"
+       "node": ">=24.11.1"
      },
   "author": "Ikenna",
   "license": "ISC",
