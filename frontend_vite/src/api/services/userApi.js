@@ -1,7 +1,7 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 export const userApi = createApi({
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://127.0.0.1:4000"
+        baseUrl: import.meta.env.VITE_API_URL,
     }),
 
     reducerPath: "user",
@@ -12,7 +12,7 @@ export const userApi = createApi({
                 // const { currentPage, keyword } = reqParams
             return {
                 // headers: 'headers',
-                url: '/api/v1/register',
+                url: '/register',
                 method: 'POST',
                 body: reqBody
             }
@@ -25,7 +25,7 @@ export const userApi = createApi({
                 // const { currentPage, keyword } = reqParams
             return {
                 // headers: 'headers',
-                url: '/api/v1/login',
+                url: '/login',
                 method: 'POST',
                 body: reqBody
             }
@@ -34,7 +34,7 @@ export const userApi = createApi({
         }),
         logoutUser: build.mutation({
             query: () => ({
-                url: `/api/v1/logout`,
+                url: `/logout`,
                 method: 'POST'
             }),
             invalidatesTags: ['logOut']
@@ -43,7 +43,7 @@ export const userApi = createApi({
             query: (params) => (
                 {
                 // headers: 'headers',
-                url: `/api/v1/product/${params}`,
+                url: `/product/${params}`,
                 method: 'GET'
             }),
             providesTags: ['product']

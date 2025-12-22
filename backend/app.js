@@ -9,8 +9,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
 app.use(cookieParser());
 dotenv.config();
-
-console.log('process.env.CLIENT_URL', process.env.CLIENT_URL)
 app.use(cors({
      origin: process.env.CLIENT_URL || 'http://localhost:5173/',
      credentials: true
