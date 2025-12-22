@@ -21,6 +21,7 @@ import { setToken, setUser } from '../../api/actions';
 import { Visibility, VisibilityOff, Email, Lock, Login as LoginIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import shoppingImg from '../../static/images/shopping.jpg'
+import { CustomSnackbar } from '../../utils/CustomSnackbar';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -84,24 +85,42 @@ export default function Login() {
     email: "",
     password: "",
   };
-  
+
   const [state, setState] = useState(emptyState);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [severity, setSeverity] = useState('success')
   const dispatch = useDispatch();
   const [loginUser, { isLoading }] = useLoginUserMutation();
   const navigate = useNavigate();
-  const { auth } = useSelector(state => state);
+  const auth = useSelector(state => state.auth);
   const { user, token } = auth;
-
-  useEffect(() => {
-    if (user?._id && token) {
+  const resetSnackMessage = () => {
+    setTimeout(() => {
+      setOpenSnackbar(false)
+      setSnackbarMessage('')
+      setSeverity('');
       navigate('/');
       const empty = () => {
         setState(emptyState)
         setError('')
       };
       empty();
+    }, [3000])
+  }
+
+
+  useEffect(() => {
+    const loginMessage = () => {
+      setOpenSnackbar(true)
+      setSnackbarMessage('You are logged in')
+      setSeverity('info')
+    }
+    if (user?._id && token) {
+      loginMessage();
+      resetSnackMessage();
     }
   }, [user?._id, token, navigate]);
 
@@ -134,12 +153,15 @@ export default function Login() {
     setShowPassword(!showPassword);
   };
 
+
+
+
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', bgcolor: 'background.default' }}>
       <Grid container sx={{ flex: 1 }}>
         {/* Left Side - Image/Branding */}
         {mediaAboveMd && (
-          <Grid  sx={{ display: { xs: 'none', md: 'block' }}} size={{md:6}}>
+          <Grid sx={{ display: { xs: 'none', md: 'block' } }} size={{ md: 6 }}>
             <ImageContainer>
               <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center', p: 4 }}>
                 <Typography
@@ -165,7 +187,7 @@ export default function Login() {
                 >
                   Shop anytime, anywhere. Experience online shopping made simple, reliable, and rewarding.
                 </Typography>
-                
+
                 {/* Decorative Elements */}
                 <Box
                   sx={{
@@ -191,8 +213,9 @@ export default function Login() {
         {/* Right Side - Login Form */}
         <Grid
           size={{
-            xs:12,
-          md:6}}
+            xs: 12,
+            md: 6
+          }}
           sx={{
             display: 'flex',
             alignItems: 'center',
@@ -368,6 +391,12 @@ export default function Login() {
           </Box>
         </Grid>
       </Grid>
+      <CustomSnackbar
+        openSnackbar={openSnackbar}
+        snackbarMessage={snackbarMessage}
+        setOpenSnackbar={setOpenSnackbar}
+        severity={severity}
+      />
     </Box>
   );
 }

@@ -22,33 +22,38 @@ import { Category } from '../category/Category'
 import { useGetAllBannerQuery } from '../../api/services/bannerApi';
 import ThemeToggleButton from '../../utils/ThemeToggleButton.jsx';
 import userAvatar from '../../static/images/user.png'
+import { CustomSnackbar } from '../../utils/CustomSnackbar.jsx';
 
 
 export default function Header() {
   // const pages = ['Products', 'Pricing', 'Blog'];
   const settings = {
-    Profile: 'Profile', 
-    Dashboard: 'Dashboard', 
-    Order: 'My Order'};
+    Profile: 'Profile',
+    Dashboard: 'Dashboard',
+    Order: 'My Order'
+  };
   const [anchorElUser, setAnchorElUser] = useState(null);
-   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   // const [category, setCategory] = useState(null);
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { data } = useGetAllCategoryQuery();
-  const { data: carouselData} = useGetAllCarouselQuery();
+  const { data: carouselData } = useGetAllCarouselQuery();
   const { data: prodData } = useGetAllProductsQuery();
-  const { data: bannerData} = useGetAllBannerQuery();
+  const { data: bannerData } = useGetAllBannerQuery();
 
   const [pageReloaded, setPageReloaded] = useState(false)
   const [logoutUser] = useLogoutUserMutation()
-  const  auth = useSelector((state) => state.auth)
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [severity, setSeverity] = useState('success')
+  const auth = useSelector((state) => state.auth)
   const stateStore = useSelector((state) => state.stateStore)
   const { user } = auth
   // console.log('auth', auth)
   // const { data: orderData, isSuccess: orderIsSuccess} = useMyOrdersQuery()
   const { data: orderData, isSuccess: orderIsSuccess } = useMyOrdersQuery(user?._id);
-  const { totalQuantity, selectedCategory, categories, bannerItems } = stateStore
+  const { totalQuantity, selectedCategory, categories, bannerItems } = stateStore;
   useEffect(() => {
     if (data !== undefined) {
       dispatch(setCategories(data))
@@ -70,7 +75,25 @@ export default function Header() {
     }
   }, [prodData])
 
- 
+
+const resetSnackMessage = () => {
+     setTimeout(() => {
+        setOpenSnackbar(false)
+      setSnackbarMessage('')
+      setSeverity('')
+      },[3000])
+  }
+
+  useEffect(() => {
+   resetSnackMessage();
+
+  }, [user?._id])
+
+  
+
+
+
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -93,6 +116,10 @@ export default function Header() {
     dispatch(setUser(null))
     dispatch(setToken(null))
     setMobileMenuOpen(false);
+    setOpenSnackbar(true)
+    setSnackbarMessage('You are logged out')
+    setSeverity('info')
+    resetSnackMessage()
     navigate('/')
   }
 
@@ -129,13 +156,13 @@ export default function Header() {
                 <MenuIcon />
               </IconButton>
             </Box>
-            <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1, padding: "5px", cursor: 'pointer'}}
+            <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1, padding: "5px", cursor: 'pointer' }}
               onClick={() => { reloadPage() }}>
 
               <img src={merikeLogo} style={{ width: '80px' }} />
 
             </Box>
-            <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1, padding: "5px", cursor: 'pointer'}}
+            <Box sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1, padding: "5px", cursor: 'pointer' }}
               onClick={() => { reloadPage() }}>
 
               <img src={merikeLogo2} style={{ width: '200px' }} />
@@ -162,14 +189,14 @@ export default function Header() {
               </Typography>
             </Box> */}
 
-            
+
 
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' }, padding: '0 20px' }}>
-                <Search pageReloaded={pageReloaded} />
-              </Box>
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, padding: '0 20px',cursor: 'pointer' }}
+              <Search pageReloaded={pageReloaded} />
+            </Box>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, padding: '0 20px', cursor: 'pointer' }}
               onClick={() => navigate('/cart')}>
               <ShoppingCart
                 cartstyle={{ size: 2, color: 'text.primary', circleBg: "#EBEBE8" }}
@@ -186,8 +213,8 @@ export default function Header() {
               ) : (
                 <Box style={{ display: 'flex', padding: '0 20px' }}>
                   <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer', color: 'text.primary' }}
-                  onClick={() => navigate('/login')}>
-                      <Typography textAlign="center" fontWeight={800} >Login</Typography>
+                    onClick={() => navigate('/login')}>
+                    <Typography textAlign="center" fontWeight={800} >Login</Typography>
                   </Box>
                   <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}
                     onClick={() => navigate('/register')}
@@ -197,6 +224,11 @@ export default function Header() {
                 </Box>
               )
             }
+            <CustomSnackbar
+              openSnackbar={openSnackbar}
+              snackbarMessage={snackbarMessage}
+              setOpenSnackbar={setOpenSnackbar}
+              severity={severity} />
 
 
             <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'block' }, padding: '0 20px' }}>
@@ -237,10 +269,10 @@ export default function Header() {
 
                     >
                       <Typography textAlign="center"
-                        // sx={{
-                        //   color: 'text.primary',
+                      // sx={{
+                      //   color: 'text.primary',
 
-                        // }}
+                      // }}
                       >{page}</Typography>
                     </Link>
                   </MenuItem>
@@ -251,7 +283,7 @@ export default function Header() {
 
             <Box sx={{
               padding: '0 20px',
-              display: {xs: 'none', md: 'flex'}
+              display: { xs: 'none', md: 'flex' }
             }}>
               <ThemeToggleButton />
             </Box>
@@ -265,74 +297,74 @@ export default function Header() {
 
       </AppBar>
 
-       {/* Mobile Drawer Menu */}
-        <Drawer
-          anchor="left"
-          open={mobileMenuOpen}
-          onClose={toggleMobileMenu}
-          sx={{ display: { xs: 'block', md: 'none' } }}
+      {/* Mobile Drawer Menu */}
+      <Drawer
+        anchor="left"
+        open={mobileMenuOpen}
+        onClose={toggleMobileMenu}
+        sx={{ display: { xs: 'block', md: 'none' } }}
+      >
+        <Box
+          sx={{ width: 280, pt: 2 }}
+          role="presentation"
         >
-          <Box
-            sx={{ width: 280, pt: 2 }}
-            role="presentation"
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2, pb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>Menu</Typography>
-              <IconButton onClick={toggleMobileMenu}>
-                <CloseIcon />
-              </IconButton>
-            </Box>
-            {/* <Divider /> */}
-            
-            <List>
-              {/* Search */}
-              <ListItem sx={{ px: 2, py: 2 }}>
-                <Search pageReloaded={pageReloaded} />
-              </ListItem>
-              
-              {/* <Divider /> */}
-              
-              {/* Shopping Cart */}
-              <ListItem  sx={{ px: 2, py: 2 }} onClick={() => { navigate('/cart'); setMobileMenuOpen(false); }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                  <ShoppingCart
-                    cartstyle={{ size: 2, color: "#000", circleBg: "#EBEBE8" }}
-                    totalQuantity={totalQuantity}
-                  />
-                  <Typography sx={{ ml: 2 }}>Cart</Typography>
-                </Box>
-              </ListItem>
-              
-              {/* <Divider /> */}
-              
-              {/* Auth buttons */}
-              {user?._id ? (
-                <ListItem  sx={{ px: 2, py: 2, cursor: 'pointer' }} onClick={logOut}>
-                  <Typography fontWeight={800}>Logout</Typography>
-                </ListItem>
-              ) : (
-                <>
-                  <ListItem  sx={{ px: 2, py: 2, cursor: 'pointer'}} onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}>
-                    <Typography fontWeight={800}>Login</Typography>
-                  </ListItem>
-                  <ListItem  sx={{ px: 2, py: 2, cursor: 'pointer' }} onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}>
-                    <Typography fontWeight={800}>Register</Typography>
-                  </ListItem>
-                </>
-              )}
-              
-              {/* <Divider /> */}
-              
-              {/* Settings */}
-              {Object.entries(settings).map(([key, page]) => (
-                <ListItem  key={key} sx={{ px: 2, py: 2 }} onClick={() => { navigate(`/${key.toLowerCase()}`); setMobileMenuOpen(false); }}>
-                  <Typography>{page}</Typography>
-                </ListItem>
-              ))}
-            </List>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2, pb: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>Menu</Typography>
+            <IconButton onClick={toggleMobileMenu}>
+              <CloseIcon />
+            </IconButton>
           </Box>
-        </Drawer>
-      <Banner bannerItems={bannerItems}/>
+          {/* <Divider /> */}
+
+          <List>
+            {/* Search */}
+            <ListItem sx={{ px: 2, py: 2 }}>
+              <Search pageReloaded={pageReloaded} />
+            </ListItem>
+
+            {/* <Divider /> */}
+
+            {/* Shopping Cart */}
+            <ListItem sx={{ px: 2, py: 2 }} onClick={() => { navigate('/cart'); setMobileMenuOpen(false); }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <ShoppingCart
+                  cartstyle={{ size: 2, color: "#000", circleBg: "#EBEBE8" }}
+                  totalQuantity={totalQuantity}
+                />
+                <Typography sx={{ ml: 2 }}>Cart</Typography>
+              </Box>
+            </ListItem>
+
+            {/* <Divider /> */}
+
+            {/* Auth buttons */}
+            {user?._id ? (
+              <ListItem sx={{ px: 2, py: 2, cursor: 'pointer' }} onClick={logOut}>
+                <Typography fontWeight={800}>Logout</Typography>
+              </ListItem>
+            ) : (
+              <>
+                <ListItem sx={{ px: 2, py: 2, cursor: 'pointer' }} onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}>
+                  <Typography fontWeight={800}>Login</Typography>
+                </ListItem>
+                <ListItem sx={{ px: 2, py: 2, cursor: 'pointer' }} onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}>
+                  <Typography fontWeight={800}>Register</Typography>
+                </ListItem>
+              </>
+            )}
+
+            {/* <Divider /> */}
+
+            {/* Settings */}
+            {Object.entries(settings).map(([key, page]) => (
+              <ListItem key={key} sx={{ px: 2, py: 2 }} onClick={() => { navigate(`/${key.toLowerCase()}`); setMobileMenuOpen(false); }}>
+                <Typography>{page}</Typography>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
+      <Banner bannerItems={bannerItems} />
     </>
   )
 }
