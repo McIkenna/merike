@@ -242,12 +242,12 @@ export const UserInventory = (props) => {
         <Box>
 
             {
-            (!data?.product.length || isFetching || deleteIsLoading) ? <Box>
-                <Box style={{ height: '80vh', overflow:'hidden' }}>
-                    <ModernLoader variant='list' count={12} />
-                </Box>
-            </Box>
-                :
+            // (!data?.product.length || isFetching || deleteIsLoading) ? <Box>
+            //     <Box style={{ height: '80vh', overflow:'hidden' }}>
+            //         <ModernLoader variant='list' count={12} />
+            //     </Box>
+            // </Box>
+            //     :
                 <Box>
                     <Box sx={{
                         padding: '20px',
