@@ -11,13 +11,13 @@ const Checkout = ({ cartItems, promoCode }) => {
   const handleCheckout = async () => {
     const orderResponse = await createPendingOrder({
       cartItems: cartItems,
-      userId: auth?.user,
+      userId: auth?.stateUser,
       promoCode: promoCode
     }).unwrap()
 
     const reqBody = {
       orderId: orderResponse.orderId,
-      userId: auth?.user,
+      userId: auth?.stateUser,
       successUrl: `${window.location.origin}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${window.location.origin}/cart`
     }

@@ -5,7 +5,7 @@ import {
     Box,
     Typography,
     Avatar,
-   
+
     Chip,
     Grid,
     Stack,
@@ -27,10 +27,12 @@ import {
     CalendarToday,
     LocationOn
 } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
-import { useMyOrdersQuery } from '../../api/services/orderApi';
+// import { useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Divider } from '../../utils/Divider';
+import { useMyOrdersQuery } from '../../api/services/orderApi';
+import { UseAuth } from '../../auth/AuthContext';
+import ModernLoader from '../../utils/ModernLoader';
 
 // Styled Components
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -77,9 +79,9 @@ const ItemCard = styled(Box)(({ theme }) => ({
 
 // Utility Functions
 const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', { 
-        style: 'currency', 
-        currency: 'USD' 
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
     }).format(value || 0);
 };
 
@@ -97,7 +99,7 @@ const formatShortDate = (iso) => {
 // Status Configuration
 const getStatusConfig = (status) => {
     const statusLower = status?.toLowerCase() || 'pending';
-    
+
     const configs = {
         pending: {
             label: 'Pending',
@@ -149,7 +151,7 @@ const OrderItem = ({ item }) => {
             >
                 {!item?.image && item?.name?.slice(0, 2).toUpperCase()}
             </Avatar>
-            
+
             <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
                     {item?.name}
@@ -221,10 +223,10 @@ const OrderCard = ({ order }) => {
 
                 {/* Order Summary - Collapsed by default */}
                 <Box sx={{ mb: 2 }}>
-                    <Box 
-                        sx={{ 
-                            display: 'flex', 
-                            justifyContent: 'space-between', 
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
                             alignItems: 'center',
                             cursor: 'pointer',
                             py: 1,
@@ -385,21 +387,29 @@ const OrderCard = ({ order }) => {
 
 // Main Component
 const Order = () => {
-    const stateStore  = useSelector(state => state.stateStore);
-    const { myOrders } = stateStore;
-    // const { data: orderData, isLoading } = useMyOrdersQuery(user?._id);
-    console.log('myOrders -->', myOrders)
+
+    const { user, isAuthenticated } = UseAuth()
+    const { data: myOrders, isLoading } = useMyOrdersQuery(user?._id)
+
+    
+    // const stateStore  = useSelector(state => state.stateStore);
+    // const { myOrders } = stateStore;
+    // const { data: orderData, isLoading } = useMyOrdersQuery(user?._id)
 
     const orders = useMemo(() => {
-        if (!myOrders || myOrders.length === 0) return [];
-        return myOrders;
+        if (!myOrders || myOrders?.orders?.length === 0 || !isAuthenticated()) return [];
+        return myOrders?.orders;
     }, [myOrders]);
 
     // Empty State
-    if (orders.length === 0) {
+    if (orders.length === 0 || !isAuthenticated()) {
         return (
             <Container maxWidth="lg" sx={{ py: 8 }}>
-                <Box
+               {isLoading ? (
+                <Box>
+                    <ModernLoader variant='list' count={4} />
+                </Box>
+            ) : <Box
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -438,35 +448,33 @@ const Order = () => {
                         Start Shopping
                     </Button>
                 </Box>
+    }
             </Container>
         );
     }
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
-            {/* Header */}
-            <Box sx={{ mb: 4 }}>
-                <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
-                    My Orders
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                    {orders.length} order{orders.length !== 1 ? 's' : ''} found
-                </Typography>
-            </Box>
+                <Box>
 
-            {/* Loading State */}
-            {/* {isLoading && (
-                <Box sx={{ textAlign: 'center', py: 8 }}>
-                    <Typography variant="body1" color="text.secondary">
-                        Loading your orders...
-                    </Typography>
+                    <Box sx={{ mb: 4 }}>
+                        <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+                            My Orders
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary">
+                            {orders.length} order{orders.length !== 1 ? 's' : ''} found
+                        </Typography>
+                    </Box>
+
+
+
+                    {/* Orders List */}
+                    {orders && orders?.map((order, index) => (
+                        <OrderCard key={order._id || index} order={order} />
+                    ))}
+
                 </Box>
-            )} */}
-
-            {/* Orders List */}
-            {orders && orders?.map((order, index) => (
-                <OrderCard key={order._id || index} order={order} />
-            ))}
+            
         </Container>
     );
 };

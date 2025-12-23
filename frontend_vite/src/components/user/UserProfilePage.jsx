@@ -1,20 +1,11 @@
-import React, { useEffect } from 'react';
 import { Container, Grid, Paper, Typography, Avatar, Box } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { UseAuth } from '../../auth/AuthContext';
 
 const UserProfilePage = () => {
-  const { user } = useSelector(state => state.auth);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user?._id) {
-      navigate('/login');
-    }
-  }, [user?._id, navigate]);
+  const {user} = UseAuth();
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f8fafc', py: 4 }}>
+    <Box sx={{ minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {/* Header Section */}
