@@ -19,9 +19,9 @@ router.route('/validate').post(isAuthenticatedUser, validatePromoCode);
 router.route('/apply').post(isAuthenticatedUser, applyPromoCode);
 
 // Admin routes
-router.route('/admin/create').post(isAuthenticatedUser, authorizedRoles('admin'), createPromoCode);
-router.route('/admin/update/:id').put(isAuthenticatedUser, authorizedRoles('admin'), updatePromoCode);
-router.route('/admin/delete/:id').delete(isAuthenticatedUser, authorizedRoles('admin'), deletePromoCode);
+router.route('/admin/createPromo').post(isAuthenticatedUser, authorizedRoles('admin'), createPromoCode);
+router.route('/admin/updatePromo/:id').put(isAuthenticatedUser, authorizedRoles('admin'), updatePromoCode);
+router.route('/admin/deletePromo/:id').delete(isAuthenticatedUser, authorizedRoles('admin'), deletePromoCode);
 router.route('/admin/allPromo').get(isAuthenticatedUser, authorizedRoles('admin'), getAllPromoCode)
 
 module.exports = router;

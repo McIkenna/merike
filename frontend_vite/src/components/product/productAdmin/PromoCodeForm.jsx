@@ -192,7 +192,7 @@ const PromoCodeForm = (props) => {
             if (res?.data?.success) {
                 setToastState({
                     open: true,
-                    message: 'Banner Deleted Successfully',
+                    message: 'Order Deleted Successfully',
                     severity: 'success'
                 })
             }
@@ -201,12 +201,12 @@ const PromoCodeForm = (props) => {
         ).catch(() => {
             setToastState({
                 open: true,
-                message: 'Banner Deletion Failed',
+                message: 'Order Deletion Failed',
                 severity: 'error'
             })
         }
         )
-        setActivePage('Banner')
+        setActivePage('AvailablePromoCode')
         setSelectedRow(null);
         setShowDeleteModal(false)
     }
@@ -249,11 +249,13 @@ const PromoCodeForm = (props) => {
             const updatedFormData = {
                 ...formData
             };
+
+            console.log('updatedFormData -->', updatedFormData)
             updatePromoCode(updatedFormData).then(res => {
                 if (res.data.success) {
                     setToastState({
                         open: true,
-                        message: "Banner Updated successfully",
+                        message: "AvailablePromoCode Updated successfully",
                         severity: "success"
                     })
                     refetch()

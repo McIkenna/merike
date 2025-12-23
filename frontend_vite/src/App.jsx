@@ -4,6 +4,9 @@ import Footer from './components/layout/Footer.jsx';
 import Home from './components/layout/Home.jsx';
 import { Container, Box } from '@mui/material';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { ProtectedRoute } from './auth/ProtectedRoute.jsx';
+import { PublicRoute } from './auth/PublicRoute.jsx';
+import { AuthProvider } from './auth/AuthContext.jsx';
 import ProductDetail from './components/product/ProductDetail.jsx';
 import Login from './components/user/Login.jsx';
 import Register from './components/user/Register.jsx';
@@ -19,46 +22,84 @@ import { FAQs } from './components/profile/FAQs.jsx';
 import { ContactUs } from './components/profile/ContactUs.jsx';
 import { PrivacyPolicy } from './components/profile/PrivatePolicy.jsx';
 import { FavoritePage } from './utils/FavoritePage.jsx';
+import NotFoundPage from './utils/NotFoundPage.jsx';
 import Order from './components/order/Order';
+// import ModernLoader from './utils/ModernLoader.jsx';
 
 function App() {
 
   return (
     <>
       <Router>
-        <Box
-          sx={{
-            backgroundColor: 'background.default',
-            color: 'text.primary',
-            minHeight: '100vh',
-          }}>
-          <Header />
-          <Box sx={{ padding: '2%', }}>
-            <Routes>
-              <Route path='/' Component={Home} exact />
-              <Route path='/recommended' Component={SelectHome} exact />
-              <Route path='/cart-inspired' Component={SelectHome} exact />
-              <Route path='/recently-bought' Component={SelectHome} exact />
-              <Route path='/login' Component={Login} exact />
-              <Route path='/register' Component={Register} exact />
-              <Route path='/product/:id' Component={ProductDetail} exact />
-              <Route path='/cart' Component={Cart} exact />
-              <Route path='/profile' Component={UserProfilePage} exact />
-              <Route path='/checkout' Component={Checkout} exact />
-              <Route path='/checkout-success' Component={CheckoutSuccess} exact />
-              <Route path='/dashboard' Component={AdminDashboard} exact />
-              <Route path='/aboutUs' Component={AboutUs} exact />
-              <Route path='/terms' Component={TermsOfService} exact />
-              <Route path='/faqs' Component={FAQs} exact />
-              <Route path='/contactus' Component={ContactUs} exact />
-              <Route path='/privacyPolicy' Component={PrivacyPolicy} exact />
-              <Route path='/favoritePage' Component={FavoritePage} exact />
-              <Route path='/order' Component={Order} exact />
-            </Routes>
-          </Box>
-          <Footer />
+        <AuthProvider>
+          <Box
+            sx={{
+              backgroundColor: 'background.default',
+              color: 'text.primary',
+              minHeight: '100vh',
+            }}>
 
-        </Box>
+            <Header />
+            <Box sx={{ padding: '2%', }}>
+
+              <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/recommended' element={<SelectHome />} />
+                <Route path='/cart-inspired' element={<SelectHome />} />
+                <Route path='/recently-bought' element={<SelectHome />} />
+                <Route path='/login' element={
+                  <PublicRoute>
+                    <Login />
+                  </PublicRoute>
+                } />
+                <Route path='/register' element={
+                  <PublicRoute>
+                    <Register />
+                  </PublicRoute>} />
+                <Route path='/product/:id' element={<ProductDetail />} />
+                <Route path='/cart' element={<Cart />} />
+                <Route path='/profile' element={
+                  <ProtectedRoute>
+                    <UserProfilePage />
+                  </ProtectedRoute>
+                } />
+                <Route path='/checkout' element={
+                  <ProtectedRoute>
+                    <Checkout />
+
+                  </ProtectedRoute>} />
+                <Route path='/checkout-success' element={
+                  <ProtectedRoute>
+                    <CheckoutSuccess />
+                  </ProtectedRoute>} />
+                <Route path='/dashboard' element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path='/aboutUs' element={<AboutUs />} />
+                <Route path='/terms' element={<TermsOfService />} />
+                <Route path='/faqs' element={<FAQs />} />
+                <Route path='/contactus' element={<ContactUs />} />
+                <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
+                <Route path='/favoritePage' element={
+                  <FavoritePage />
+                } />
+                <Route path='/order' element={
+                  <ProtectedRoute>
+                    <Order />
+                  </ProtectedRoute>} />
+
+                   <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+             
+                        
+
+            </Box>
+            <Footer />
+
+          </Box>
+        </AuthProvider>
       </Router>
     </>
   )

@@ -310,7 +310,6 @@ export const UserInventory = ({
         <Box sx={{ px: 2 }}>
           <ProductForm
             categories={categories}
-            user={user}
             selectedRow={selectedRow}
             setSelectedRow={setSelectedRow}
             activePage={view === 'create' ? 'ProductForm' : 'UpdateProductForm'}
