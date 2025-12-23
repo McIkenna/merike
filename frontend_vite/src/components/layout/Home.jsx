@@ -272,7 +272,7 @@ export default function Home() {
             {/* <LastViewed allProducts={localproducts} viewedProducts={viewedProducts} /> */}
 
           </Grid>
-         { !viewedProducts.length ? <ModernLoader variant={'list'}/> :<ViewCarousel allProducts={filteredProduct} viewedProducts={viewedProducts} />}
+         { viewedProducts.length > 0 && <ViewCarousel allProducts={filteredProduct} viewedProducts={viewedProducts} />}
         </Box>
       </Box>
     </Box>
