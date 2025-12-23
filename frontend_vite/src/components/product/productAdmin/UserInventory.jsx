@@ -7,17 +7,15 @@ import ProductForm from './ProductForm';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { colors } from '../../../utils/Themes';
-import ModernLoader from '../../../utils/ModernLoader';
 
 export const UserInventory = (props) => {
-    const { categories, user, data, isFetching, refetch, toastState, setToastState } = props
+    const { categories, user, data, refetch, toastState, setToastState } = props
     const gridRef = useRef(null)
-    // Row Data: The data to be displayed.
 
 
     const [selectedRow, setSelectedRow] = useState(null)
     // const userPage = ['Listing', 'ProductForm', 'UpdateProductForm']
-    const [deleteProduct, { isLoading: deleteIsLoading }] = useDeleteProductMutation()
+    const [deleteProduct] = useDeleteProductMutation()
     const [activePage, setActivePage] = useState('Listing')
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -46,7 +44,6 @@ export const UserInventory = (props) => {
                     severity: 'success'
                 })
             }
-            // console.log('res -->', res)
             if (res?.error) {
                 setToastState({
                     open: true,
@@ -55,8 +52,7 @@ export const UserInventory = (props) => {
                 })
             }
         }
-        ).catch((err) => {
-            console.log('err -->', err)
+        ).catch(() => {
             setToastState({
                 open: true,
                 message: 'Product Deletion Failed',
@@ -64,9 +60,9 @@ export const UserInventory = (props) => {
             })
         }
         )
+        refetch()
         setActivePage('Listing')
         setSelectedRow(null)
-        refetch()
         setShowDeleteModal(false)
     }
 
@@ -74,6 +70,7 @@ export const UserInventory = (props) => {
     const CustomButtonComponent = (props) => {
         const field = props.colDef.field
         const value = props.value
+
 
         if (field === 'images') {
             const mainImage = value[0].url
@@ -125,6 +122,20 @@ export const UserInventory = (props) => {
 
         }
 
+        if (typeof value === 'object') {
+
+            return (
+                <Box sx={{
+                    height: '100%',
+                    alignContent: 'center'
+                }}>
+                    <Typography variant='body1'>
+                        {JSON.stringify(value)}
+                    </Typography>
+                </Box>
+            )
+        }
+
         else {
             return (
                 <Box sx={{
@@ -142,11 +153,12 @@ export const UserInventory = (props) => {
         // return <button onClick={() => window.alert("clicked")}>Push Me!</button>;
     };
 
+    const rowData = useMemo(() => { return data?.products ? data?.products?.filter(field => field !== 'reviews') : [] }, [data])
     const columnData = useMemo(() => {
-        if (!data || !data?.product || data.product?.length === 0) {
+        if (!data || !data?.products || data?.products?.length === 0) {
             return []
         }
-        const headers = Object.keys(data?.product[0]).map((header) => (
+        const headers = Object.keys(data?.products[0])?.filter(field => field !== 'reviews').map((header) => (
             {
 
                 headerName: header,
@@ -163,7 +175,7 @@ export const UserInventory = (props) => {
 
     }, [data])
 
-    const rowData = useMemo(() => { return data?.product ? data?.product : [] }, [data])
+
 
     const defaultColDef = {
         flex: 1,
@@ -242,12 +254,12 @@ export const UserInventory = (props) => {
         <Box>
 
             {
-            // (!data?.product.length || isFetching || deleteIsLoading) ? <Box>
-            //     <Box style={{ height: '80vh', overflow:'hidden' }}>
-            //         <ModernLoader variant='list' count={12} />
-            //     </Box>
-            // </Box>
-            //     :
+                // (!data?.product.length || isFetching || deleteIsLoading) ? <Box>
+                //     <Box style={{ height: '80vh', overflow:'hidden' }}>
+                //         <ModernLoader variant='list' count={12} />
+                //     </Box>
+                // </Box>
+                //     :
                 <Box>
                     <Box sx={{
                         padding: '20px',
@@ -257,7 +269,7 @@ export const UserInventory = (props) => {
                         <Stack spacing={2} direction="row">
                             <Button
                                 name='ProductForm'
-                                disabled={activePage === 'ProductForm'}
+                                disabled={selectedRow || activePage === 'ProductForm'}
                                 variant="outlined"
                                 onClick={(e) => changePageAndClear(e)}
                                 sx={{
@@ -370,11 +382,11 @@ export const UserInventory = (props) => {
                                     top: '50%',
                                     left: '50%',
                                     transform: 'translate(-50%, -50%)',
-                                    // width: 400,
                                     bgcolor: 'background.paper',
                                     boxShadow: 24,
                                     p: 4,
-                                    borderRadius: '10px'
+                                    borderRadius: 2,
+                                    minWidth: 400
                                 }}>
                                 <Typography variant='h5' sx={{ mt: 2 }}>Are you sure you want to delete this product?</Typography>
                                 <Box
@@ -384,8 +396,14 @@ export const UserInventory = (props) => {
                                         marginTop: '20px'
                                     }}>
 
-                                    <Button variant='outlined' color='error' onClick={() => setShowDeleteModal(false)}>No</Button>
-                                    <Button variant='outlined' color='primary' onClick={() => handleDelete(selectedRow)}>Yes</Button>
+                                    <Stack direction="row" spacing={2} justifyContent="flex-end">
+                                        <Button variant="outlined" onClick={() => {setShowDeleteModal(false), setSelectedRow(null)}}>
+                                            Cancel
+                                        </Button>
+                                        <Button variant="contained" color="error" onClick={() => handleDelete(selectedRow)}>
+                                            Delete
+                                        </Button>
+                                    </Stack>
                                 </Box>
 
                             </Box>

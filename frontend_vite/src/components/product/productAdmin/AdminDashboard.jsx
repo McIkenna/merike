@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Grid, Box, Button } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { UserInventory } from './UserInventory'
-import { useGetProductBySellerQuery } from '../../../api/services/productApi'
+import { useGetAllProductsQuery} from '../../../api/services/productApi'
 import CarouselManagement from './CarouselManagement'
 import BannerManagement from './BannerManagement'
 import Snackbar from '@mui/material/Snackbar';
@@ -15,7 +15,7 @@ export const AdminDashboard = () => {
     const stateStore = useSelector(state => state.stateStore);
     const { user } = auth
     const { categories,bannerItems, carouselItems } = stateStore
-    const { data, isFetching, refetch } = useGetProductBySellerQuery(user?._id)
+    const { data, isFetching, refetch } = useGetAllProductsQuery()
    const userPage = {
     UserInventory: 'Inventory',
     CarouselManagement: 'Carousel Management',
