@@ -30,7 +30,7 @@ const useStyles = styled((theme) => ({
 }));
 
 const ProductForm = (props) => {
-    const { categories, user, activePage, setActivePage, selectedRow, emptyState, refetch, setToastState, setSelectedRow, gridRef } = props;
+    const { categories,  activePage, setActivePage, selectedRow, emptyState, refetch, setToastState, setSelectedRow, gridRef } = props;
     // console.log('categories -->', categories)
     const [createProduct] = useCreateProductMutation()
     const [updateProduct] = useUpdateProductMutation()
@@ -262,7 +262,7 @@ const ProductForm = (props) => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid size={{sx:6, md:6, xl:6}}>
+                        {/* <Grid size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="seller"
                                 variant="outlined"
@@ -272,7 +272,7 @@ const ProductForm = (props) => {
                                 value={user?._id}
                                 aria-readonly
                             />
-                        </Grid>
+                        </Grid> */}
                         <Grid size={{sx:6, md:6, xl:6}}>
                             <TextField
                                 name="stock"
