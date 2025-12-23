@@ -56,8 +56,6 @@ const Banner = (props) => {
             slidesToScroll={1}
             autoplaySpeed={10000}
             cssEase={"linear"}
-            nextArrow={<div style={{display: 'none'}} />}
-            prevArrow={<div style={{display: 'none'}} />}
             >
             {bannerItems?.map((currentItem) => (<Paper
               elevation={0}

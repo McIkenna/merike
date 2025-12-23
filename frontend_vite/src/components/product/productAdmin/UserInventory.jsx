@@ -1,417 +1,335 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
-import { Box, Typography, Button, Stack, TextField, Modal } from '@mui/material'
-import { AgGridReact } from "ag-grid-react";
-import { useDeleteProductMutation } from '../../../api/services/productApi';
-import ProductForm from './ProductForm';
-// import Loader from '../../../utils/Loader';
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { colors } from '../../../utils/Themes';
+import { Box, Typography, Button, Stack, TextField, Modal, IconButton } from '@mui/material'
+import { AgGridReact } from 'ag-grid-react'
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined'
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
+import AddIcon from '@mui/icons-material/Add'
+import { useDeleteProductMutation } from '../../../api/services/productApi'
+import ProductForm from './ProductForm'
+import { colors } from '../../../utils/Themes'
 
-export const UserInventory = (props) => {
-    const { categories, user, data, refetch, toastState, setToastState } = props
-    const gridRef = useRef(null)
+// Separate component for action buttons in grid
+const ActionButtons = ({ data, onEdit, onDelete }) => (
+  <Stack direction="row" spacing={1} alignItems="center" height="100%">
+    <IconButton
+      size="small"
+      onClick={() => onEdit(data)}
+      sx={{
+        color: colors.primaryBlue.main,
+        bgcolor: colors.neutral.lightGray,
+        '&:hover': { bgcolor: colors.primaryBlue.light }
+      }}
+    >
+      <EditNoteOutlinedIcon fontSize="small" />
+    </IconButton>
+    <IconButton
+      size="small"
+      onClick={() => onDelete(data)}
+      sx={{
+        color: colors.primaryRed.main,
+        bgcolor: colors.neutral.lightGray,
+        '&:hover': { bgcolor: colors.primaryRed.light }
+      }}
+    >
+      <DeleteOutlineOutlinedIcon fontSize="small" />
+    </IconButton>
+  </Stack>
+)
 
+// Separate component for product image
+const ProductImage = ({ url }) => (
+  <Box display="flex" alignItems="center" height="100%">
+    <img
+      src={url}
+      alt="Product"
+      style={{
+        width: 50,
+        height: 50,
+        objectFit: 'cover',
+        borderRadius: 8
+      }}
+    />
+  </Box>
+)
 
-    const [selectedRow, setSelectedRow] = useState(null)
-    // const userPage = ['Listing', 'ProductForm', 'UpdateProductForm']
-    const [deleteProduct] = useDeleteProductMutation()
-    const [activePage, setActivePage] = useState('Listing')
+// Generic cell renderer
+const CellRenderer = ({ field, value, data, onEdit, onDelete }) => {
+  if (field === 'images' && value?.[0]?.url) {
+    return <ProductImage url={value[0].url} />
+  }
+  
+  if (field === '_id') {
+    return <ActionButtons data={data} onEdit={onEdit} onDelete={onDelete} />
+  }
 
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const changePage = (e) => {
-        const { name } = e.target
-        setActivePage(name)
-    }
+  const displayValue = typeof value === 'object' ? JSON.stringify(value) : value
 
-    const handleEdit = (data) => {
-        setSelectedRow(data); // Set the selected row
-        setActivePage('UpdateProductForm')
-    }
-    const deleteIntent = (data) => {
-        setSelectedRow(data);
-        setShowDeleteModal(true)
-    }
+  return (
+    <Box display="flex" alignItems="center" height="100%">
+      <Typography variant="body2" noWrap>
+        {displayValue}
+      </Typography>
+    </Box>
+  )
+}
 
+// Delete confirmation modal
+const DeleteModal = ({ open, onClose, onConfirm, productName }) => (
+  <Modal open={open} onClose={onClose}>
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 4,
+        borderRadius: 2,
+        minWidth: 400
+      }}
+    >
+      <Typography variant="h6" gutterBottom>
+        Delete Product
+      </Typography>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        Are you sure you want to delete "{productName}"? This action cannot be undone.
+      </Typography>
+      <Stack direction="row" spacing={2} justifyContent="flex-end">
+        <Button variant="outlined" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button variant="contained" color="error" onClick={onConfirm}>
+          Delete
+        </Button>
+      </Stack>
+    </Box>
+  </Modal>
+)
 
-    const handleDelete = () => {
+// Main component
+export const UserInventory = ({
+  categories,
+  user,
+  data,
+  refetch,
+  toastState,
+  setToastState
+}) => {
+  const gridRef = useRef(null)
+  const [selectedRow, setSelectedRow] = useState(null)
+  const [view, setView] = useState('list') // 'list', 'create', 'edit'
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [deleteProduct] = useDeleteProductMutation()
 
-        deleteProduct(selectedRow?._id).then((res) => {
-            if (res.statusCode === 200) {
-                setToastState({
-                    open: true,
-                    message: 'Product Deleted Successfully',
-                    severity: 'success'
-                })
-            }
-            if (res?.error) {
-                setToastState({
-                    open: true,
-                    message: 'Product Deletion Failed',
-                    severity: 'error'
-                })
-            }
-        }
-        ).catch(() => {
-            setToastState({
-                open: true,
-                message: 'Product Deletion Failed',
-                severity: 'error'
-            })
-        }
-        )
+  // Handle product deletion
+  const handleDelete = async () => {
+    try {
+      const response = await deleteProduct(selectedRow?._id)
+      
+      const success = response.statusCode === 200
+      setToastState({
+        open: true,
+        message: success ? 'Product deleted successfully' : 'Product deletion failed',
+        severity: success ? 'success' : 'error'
+      })
+
+      if (success) {
         refetch()
-        setActivePage('Listing')
+        setView('list')
         setSelectedRow(null)
+      }
+    } catch {
+      setToastState({
+        open: true,
+        message: 'Product deletion failed',
+        severity: 'error'
+      })
+    } finally {
+      setShowDeleteModal(false)
+    }
+  }
+
+  // Handle view changes
+  const handleViewChange = (newView) => {
+    setView(newView)
+    setSelectedRow(null)
+    gridRef.current?.api?.deselectAll()
+  }
+
+  // Grid configuration
+  const rowData = useMemo(
+    () => data?.products?.filter(product => product) || [],
+    [data]
+  )
+
+  const columnDefs = useMemo(() => {
+    if (!data?.products?.length) return []
+
+    return Object.keys(data.products[0])
+      .filter(field => field !== 'reviews')
+      .map(field => ({
+        headerName: field.charAt(0).toUpperCase() + field.slice(1),
+        field,
+        cellRenderer: (params) => (
+          <CellRenderer
+            {...params}
+            onEdit={(data) => {
+              setSelectedRow(data)
+              setView('edit')
+            }}
+            onDelete={(data) => {
+              setSelectedRow(data)
+              setShowDeleteModal(true)
+            }}
+          />
+        )
+      }))
+  }, [data])
+
+  const defaultColDef = useMemo(
+    () => ({
+      flex: 1,
+      minWidth: 150,
+      sortable: true,
+      resizable: true
+    }),
+    []
+  )
+
+  const rowSelection = useMemo(() => ({ mode: 'singleRow' }), [])
+
+  const onSelectionChanged = useCallback(() => {
+    const selectedNodes = gridRef.current?.api?.getSelectedRows()
+    setSelectedRow(selectedNodes?.length > 0 ? selectedNodes[0] : null)
+  }, [])
+
+  const onFilterTextBoxChanged = useCallback(() => {
+    const filterValue = document.getElementById('filter-text-box')?.value || ''
+    gridRef.current?.api?.setGridOption('quickFilterText', filterValue)
+  }, [])
+
+  // Auto-dismiss toast
+  useEffect(() => {
+    if (!toastState.open) return
+
+    const timer = setTimeout(() => {
+      setToastState({ open: false, message: '', severity: '' })
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [toastState.open, setToastState])
+
+  const emptyProduct = {
+    name: '',
+    price: 0,
+    description: '',
+    ratings: 5,
+    images: [{ public_id: '', url: '' }],
+    category: '',
+    seller: user?._id,
+    stock: 0,
+    createdAt: ''
+  }
+
+  const onCloseModal = () => {
         setShowDeleteModal(false)
-    }
-
-    // console.log('seller data -->', data)
-    const CustomButtonComponent = (props) => {
-        const field = props.colDef.field
-        const value = props.value
-
-
-        if (field === 'images') {
-            const mainImage = value[0].url
-            return (
-                <Box>
-                    <img
-                        src={mainImage}
-                        alt={'...product'}
-                        style={{
-                            width: '50px',
-                            borderRadius: '8px'
-                        }}
-                    />
-                </Box>
-            )
-
-        }
-        if (field === '_id') {
-            return (
-                <Box style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '10px'
-                }}>
-                    <EditNoteOutlinedIcon
-                        style={{
-                            color: colors.primaryBlue.main,
-                            border: 'none',
-                            backgroundColor: colors.neutral.lightGray,
-                            cursor: 'pointer',
-                            padding: '5px',
-                            borderRadius: '20px',
-                        }}
-                        onClick={() => handleEdit(props.data)}
-                    />
-                    <DeleteOutlineOutlinedIcon
-                        style={{
-                            color: colors.primaryRed.main,
-                            border: 'none',
-                            backgroundColor: colors.neutral.lightGray,
-                            padding: '5px',
-                            borderRadius: '20px',
-                            cursor: 'pointer'
-                        }}
-                        onClick={() => deleteIntent(props.data)} />
-                </Box>
-            )
-
-        }
-
-        if (typeof value === 'object') {
-
-            return (
-                <Box sx={{
-                    height: '100%',
-                    alignContent: 'center'
-                }}>
-                    <Typography variant='body1'>
-                        {JSON.stringify(value)}
-                    </Typography>
-                </Box>
-            )
-        }
-
-        else {
-            return (
-                <Box sx={{
-                    height: '100%',
-                    alignContent: 'center'
-                }}>
-                    <Typography variant='body1'>
-                        {value}
-                    </Typography>
-                </Box>
-
-            )
-
-        }
-        // return <button onClick={() => window.alert("clicked")}>Push Me!</button>;
-    };
-
-    const rowData = useMemo(() => { return data?.products ? data?.products?.filter(field => field !== 'reviews') : [] }, [data])
-    const columnData = useMemo(() => {
-        if (!data || !data?.products || data?.products?.length === 0) {
-            return []
-        }
-        const headers = Object.keys(data?.products[0])?.filter(field => field !== 'reviews').map((header) => (
-            {
-
-                headerName: header,
-                field: header
-
-
-
-
-
-            }
-        )
-        )
-        return headers
-
-    }, [data])
-
-
-
-    const defaultColDef = {
-        flex: 1,
-        minWidth: 150,
-        cellRenderer: CustomButtonComponent,
-        valueFormatter: (params) =>
-            typeof params.value === 'object'
-                ? JSON.stringify(params.value)
-                : params.value
-    };
-
-    const rowSelection = useMemo(() => {
-        return {
-            mode: 'singleRow',
-        };
-    }, []);
-
-    // const getSelectValue = (id) => {
-    //     return document.querySelector(id)?.value ?? "singleRow";
-    // };
-
-    // const checkRowSelected = useMemo(() => {
-    //     if(!gridRef.current.api){
-    //         return null
-    //     }
-
-    //     return selectedNodes
-    // }, [gridRef?.current.api]);
-
-    const onSelectedRow = useCallback(() => {
-        const selectedNodes = gridRef.current.api.getSelectedRows();
-        setSelectedRow(selectedNodes.length > 0 ? selectedNodes[0] : null);
-
-    }, []);
-
-    const onFilterTextBoxChanged = useCallback(() => {
-        gridRef.current.api.setGridOption(
-            "quickFilterText",
-            document.getElementById("filter-text-box").value,
-        );
-    }, []);
-
-    const changePageAndClear = (e) => {
-        changePage(e)
         setSelectedRow(null)
-        if (gridRef.current && gridRef.current.api) {
-            gridRef.current.api.deselectAll(); // Corrected to deselectAll
-        }
+        gridRef.current?.api?.deselectAll()
+        setView('list')
     }
 
-    useEffect(() => {
-        const removeAlert = () => {
-            setToastState({
-                open: false,
-                message: '',
-                severity: ''
-            })
-        }
-        const timer = setTimeout(removeAlert, 3000);
-        return () => clearTimeout(timer)
-    }, [toastState.open])
+  return (
+    <Box>
+      {/* Action Bar */}
+      <Box sx={{ p: 2.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Stack direction="row" spacing={1.5}>
+          <Button
+            variant={view === 'create' ? 'contained' : 'outlined'}
+            startIcon={<AddIcon />}
+            disabled={selectedRow || view === 'create'}
+            onClick={() => handleViewChange('create')}
+            sx={{ textTransform: 'none', color: 'primary.dark', borderColor: 'primary.dark'}}
+          >
+            Add Product
+          </Button>
+          <Button
+            variant={view === 'edit' ? 'contained' : 'outlined'}
+            disabled={!selectedRow || view === 'edit'}
+            onClick={() => setView('edit')}
+            sx={{ textTransform: 'none', color: 'success.main', borderColor: 'success.main'}}
+          >
+            Edit Product
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            disabled={!selectedRow}
+            onClick={() => setShowDeleteModal(true)}
+            sx={{ textTransform: 'none' }}
+          >
+            Delete Product
+          </Button>
+        </Stack>
 
-    const emptyState = {
-        name: '',
-        price: 0.0,
-        description: '',
-        ratings: 5.0,
-        images: [{ public_id: '', url: '' }],
-        category: '',
-        seller: user?._id,
-        stock: 0,
-        createdAt: ''
-    }
+        {view === 'list' ? (
+          <TextField
+            id="filter-text-box"
+            size="small"
+            placeholder="Search products..."
+            variant="outlined"
+            onChange={onFilterTextBoxChanged}
+            sx={{ width: 250 }}
+          />
+        ) : (
+          <Button
+            variant="text"
+            onClick={() => handleViewChange('list')}
+            sx={{ textTransform: 'none' }}
+          >
+            ← Back to List
+          </Button>
+        )}
+      </Box>
 
-    return (
-        <Box>
-
-            {
-                // (!data?.product.length || isFetching || deleteIsLoading) ? <Box>
-                //     <Box style={{ height: '80vh', overflow:'hidden' }}>
-                //         <ModernLoader variant='list' count={12} />
-                //     </Box>
-                // </Box>
-                //     :
-                <Box>
-                    <Box sx={{
-                        padding: '20px',
-                        display: 'flex',
-                        justifyContent: 'space-between'
-                    }}>
-                        <Stack spacing={2} direction="row">
-                            <Button
-                                name='ProductForm'
-                                disabled={selectedRow || activePage === 'ProductForm'}
-                                variant="outlined"
-                                onClick={(e) => changePageAndClear(e)}
-                                sx={{
-                                    borderColor: colors.primaryBlue.main,
-                                    color: colors.primaryBlue.main,
-                                    '&:hover': {
-                                        backgroundColor: colors.primaryBlue.light,
-                                        color: colors.neutral.black
-                                    }
-
-                                }}>Add Listing</Button>
-                            <Button
-                                name='UpdateProductForm'
-                                disabled={!selectedRow || activePage === 'UpdateProductForm'}
-                                variant="outlined"
-                                onClick={changePage}
-                                sx={{
-                                    borderColor: colors.primaryGreen.dark,
-                                    color: colors.primaryGreen.dark,
-                                    '&:hover': {
-                                        backgroundColor: colors.primaryGreen.main,
-                                        color: colors.neutral.black
-                                    }
-                                }}
-                            >Edit Listing</Button>
-                            {/* <Button disabled={!selectedRow} variant="outlined">Update Listing</Button> */}
-                            <Button
-                                disabled={!selectedRow} variant="outlined"
-                                sx={{
-                                    borderColor: colors.primaryRed.main,
-                                    color: colors.primaryRed.main,
-                                    '&:hover': {
-                                        backgroundColor: colors.primaryRed.light,
-                                        color: colors.neutral.black
-                                    }
-                                }}
-                                onClick={() => setShowDeleteModal(true)}>Delete Listing</Button>
-                        </Stack>
-                        {activePage === 'Listing' ? <Box>
-                            <TextField
-                                id="filter-text-box"
-                                label="Search Filter"
-                                variant="outlined"
-                                type="text"
-                                placeholder="Quick Filter..."
-                                onChange={onFilterTextBoxChanged} />
-                        </Box>
-                            :
-                            <Button
-                                name='Listing' variant="outlined"
-                                sx={{
-                                    borderColor: colors.primaryGreen.dark,
-                                    color: colors.primaryGreen.dark,
-                                    '&:hover': {
-                                        backgroundColor: colors.primaryGreen.light,
-                                        color: colors.neutral.black
-                                    }
-                                }}
-                                onClick={(e) => changePageAndClear(e)}>Back to listing</Button>
-                        }
-
-                    </Box>
-                    {activePage === 'Listing' && <Box>
-                        <div style={{ height: '80vh' }}>
-                            <AgGridReact
-                                ref={gridRef}
-                                rowData={rowData}
-                                columnDefs={columnData}
-                                defaultColDef={defaultColDef}
-                                rowHeight={50}
-                                rowSelection={rowSelection}
-                                onSelectionChanged={onSelectedRow}
-                            />
-                        </div>
-
-                    </Box>}
-                    <Box>
-                        {(activePage === 'ProductForm' || activePage === 'UpdateProductForm') && <Box>
-                            <ProductForm
-                                categories={categories}
-                                user={user}
-                                selectedRow={selectedRow}
-                                setSelectedRow={setSelectedRow}
-                                activePage={activePage}
-                                setActivePage={setActivePage}
-                                emptyState={emptyState}
-                                refetch={refetch}
-                                setToastState={setToastState}
-                                gridRef={gridRef}
-                            />
-                        </Box>}
-                    </Box>
-
-                    {/* <Box>
-                {activePage === 'UpdateProductForm' && <Box>
-                    <UpdateProductForm categories={categories} user={user} />
-                </Box>}
-            </Box> */}
-                    {showDeleteModal && <Box
-                    >
-                        <Modal
-                            open={showDeleteModal}
-                            onClose={() => setShowDeleteModal(false)}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    bgcolor: 'background.paper',
-                                    boxShadow: 24,
-                                    p: 4,
-                                    borderRadius: 2,
-                                    minWidth: 400
-                                }}>
-                                <Typography variant='h5' sx={{ mt: 2 }}>Are you sure you want to delete this product?</Typography>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        marginTop: '20px'
-                                    }}>
-
-                                    <Stack direction="row" spacing={2} justifyContent="flex-end">
-                                        <Button variant="outlined" onClick={() => {setShowDeleteModal(false), setSelectedRow(null)}}>
-                                            Cancel
-                                        </Button>
-                                        <Button variant="contained" color="error" onClick={() => handleDelete(selectedRow)}>
-                                            Delete
-                                        </Button>
-                                    </Stack>
-                                </Box>
-
-                            </Box>
-                        </Modal>
-                    </Box>}
-                </Box>
-            }
-
+      {/* Content Area */}
+      {view === 'list' ? (
+        <Box sx={{ height: '80vh', px: 2 }}>
+          <AgGridReact
+            ref={gridRef}
+            rowData={rowData}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            rowHeight={60}
+            rowSelection={rowSelection}
+            onSelectionChanged={onSelectionChanged}
+            suppressRowClickSelection
+          />
         </Box>
-    )
+      ) : (
+        <Box sx={{ px: 2 }}>
+          <ProductForm
+            categories={categories}
+            user={user}
+            selectedRow={selectedRow}
+            setSelectedRow={setSelectedRow}
+            activePage={view === 'create' ? 'ProductForm' : 'UpdateProductForm'}
+            setActivePage={setView}
+            emptyState={emptyProduct}
+            refetch={refetch}
+            setToastState={setToastState}
+            gridRef={gridRef}
+          />
+        </Box>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteModal
+        open={showDeleteModal}
+        onClose={onCloseModal}
+        onConfirm={handleDelete}
+        productName={selectedRow?.name || 'this product'}
+      />
+    </Box>
+  )
 }
