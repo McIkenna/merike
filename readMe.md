@@ -1,12 +1,9 @@
 # Merike E-Commerce
 
 ### Architecture Diagram
+
+### FrontEnd
 ``` mermaid
-graph TB
-    subgraph "Client Layer"
-        Browser[Web Browser]
-    end
-    
     subgraph "Frontend - React + Vite"
         direction TB
         HTML[index.html]
@@ -49,7 +46,11 @@ graph TB
             Cards[UI Cards]
         end
     end
-    
+```
+
+### Backend
+``` mermaid
+graph TB
     subgraph "Backend - Node.js/Express"
         direction TB
         Server[server.js]
