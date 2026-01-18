@@ -67,7 +67,6 @@ const PromoCodeInput = (props) => {
         cartTotal: totalPrice
       }).unwrap();
 
-      console.log('response ->Promo', response)
 
       if (response.success) {
         dispatch(setPromoCode({promoCode: response.promoCode.code, discount: response.discount}));
@@ -101,18 +100,24 @@ const PromoCodeInput = (props) => {
   }
 
 
-console.log('discount -->', discount)
-console.log('promoCode -->', promoCode)
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box 
+    sx={{
+      display:'flex',
+      width: '100%'
+    }}
+    
+    size={{ md: 3}}>
       {promoCode ? (
-        <Box>
+        <Box sx={{
+      width: '100%'
+    }}>
           <Chip
             icon={<CheckCircle />}
             label={`${promoCode} applied - $${discount.toFixed(2)} off`}
             onDelete={handleRemove}
             
-            sx={{ mb: 2, fontWeight: 600, color: "success.main" }}
+            sx={{ mb: 2, fontWeight: 600, color: "success.main", width: '100%'}}
           />
           <Collapse in={!!success}>
             <Alert severity="success" sx={{ mb: 2 }}>

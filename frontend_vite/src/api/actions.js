@@ -21,5 +21,5 @@ setBannerItems,
 setFavorites,
 setPromoCode,
 removePromoCode } = reducers.actions
-export const { setUser, setToken, logout } = authReducer.actions
+export const { setStateUser, setToken, logoutStateUser } = authReducer.actions
 

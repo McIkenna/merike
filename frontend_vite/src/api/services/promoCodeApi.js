@@ -33,7 +33,7 @@ export const promoCodeApi = createApi({
         createPromoCode: build.mutation({
             query: (body) => (
                 {
-                    url: '/admin/create',
+                    url: '/admin/createPromo',
                     method: 'POST',
                     body: body
                 }
@@ -42,7 +42,7 @@ export const promoCodeApi = createApi({
         updatePromoCode: build.mutation({
             query: (body) => (
                 {
-                    url: `/admin/update/${body?._id}`,
+                    url: `/admin/updatePromo/${body?._id}`,
                     method: 'PUT',
                     body: body
                 }
@@ -51,7 +51,7 @@ export const promoCodeApi = createApi({
         deletePromoCode: build.mutation({
             query: (body) => (
                 {
-                    url: `/admin/delete/${body?._id}`,
+                    url: `/admin/deletePromo/${body?._id}`,
                     method: 'DELETE',
                     body: body
                 }

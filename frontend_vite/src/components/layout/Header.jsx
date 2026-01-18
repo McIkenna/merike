@@ -11,18 +11,17 @@ import { useGetAllCarouselQuery } from '../../api/services/carouselApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Search from '../../utils/Search';
-import { useLogoutUserMutation } from '../../api/services/userApi';
+// import { useLogoutUserMutation } from '../../api/services/userApi';
 import { useNavigate } from 'react-router-dom';
 import { setCategories, setProducts, setSelectedCategory, setPriceFilter, setCarouselItems, setBannerItems } from '../../api/actions';
 import { useGetAllProductsQuery } from '../../api/services/productApi';
 import Banner from './Banner';
-import { setUser, setToken, setMyOrders } from '../../api/actions';
-import { useMyOrdersQuery } from '../../api/services/orderApi';
 import { Category } from '../category/Category'
 import { useGetAllBannerQuery } from '../../api/services/bannerApi';
 import ThemeToggleButton from '../../utils/ThemeToggleButton.jsx';
 import userAvatar from '../../static/images/user.png'
 import { CustomSnackbar } from '../../utils/CustomSnackbar.jsx';
+import { UseAuth } from '../../auth/AuthContext.jsx';
 
 
 export default function Header() {
@@ -43,23 +42,18 @@ export default function Header() {
   const { data: bannerData } = useGetAllBannerQuery();
 
   const [pageReloaded, setPageReloaded] = useState(false)
-  const [logoutUser] = useLogoutUserMutation()
+  
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [severity, setSeverity] = useState('success')
-  const auth = useSelector((state) => state.auth)
+  const { isAuthenticated, logout } = UseAuth()
+  // const auth = useSelector((state) => state.auth)
   const stateStore = useSelector((state) => state.stateStore)
-  const { user } = auth
-  // console.log('auth', auth)
-  // const { data: orderData, isSuccess: orderIsSuccess} = useMyOrdersQuery()
-  const { data: orderData, isSuccess: orderIsSuccess } = useMyOrdersQuery(user?._id);
   const { totalQuantity, selectedCategory, categories, bannerItems } = stateStore;
+
   useEffect(() => {
     if (data !== undefined) {
       dispatch(setCategories(data))
-    }
-    if (user?._id && orderIsSuccess) {
-      dispatch(setMyOrders(orderData?.orders))
     }
     if (carouselData !== undefined) {
       dispatch(setCarouselItems(carouselData?.carousels))
@@ -67,7 +61,7 @@ export default function Header() {
     if (bannerData !== undefined) {
       dispatch(setBannerItems(bannerData?.adverts))
     }
-  }, [data, carouselData, bannerData, orderData])
+  }, [data, carouselData, bannerData])
 
   useEffect(() => {
     if (prodData !== undefined) {
@@ -76,22 +70,13 @@ export default function Header() {
   }, [prodData])
 
 
-const resetSnackMessage = () => {
-     setTimeout(() => {
-        setOpenSnackbar(false)
+  const resetSnackMessage = () => {
+    setTimeout(() => {
+      setOpenSnackbar(false)
       setSnackbarMessage('')
       setSeverity('')
-      },[3000])
+    }, [3000])
   }
-
-  useEffect(() => {
-   resetSnackMessage();
-
-  }, [user?._id])
-
-  
-
-
 
 
   const handleOpenUserMenu = (event) => {
@@ -108,19 +93,16 @@ const resetSnackMessage = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  const logOut = () => {
+  const handleLogout = () => {
     // useLogoutUserQuery()
-    logoutUser()
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    dispatch(setUser(null))
-    dispatch(setToken(null))
-    setMobileMenuOpen(false);
+
+    logout()
     setOpenSnackbar(true)
     setSnackbarMessage('You are logged out')
     setSeverity('info')
     resetSnackMessage()
-    navigate('/')
+    reloadPage()
+
   }
 
   const reloadPage = () => {
@@ -205,21 +187,49 @@ const resetSnackMessage = () => {
               />
             </Box>
             {
-              user?._id ? (
-                <Box sx={{ padding: '0 20px', textDecoration: 'none', cursor: 'pointer', flex: 0 }}
-                  onClick={() => logOut()}>
-                  <Typography textAlign="center" fontWeight={800}>Logout</Typography>
+              isAuthenticated() ? (
+                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, padding: '0 20px', textDecoration: 'none', cursor: 'pointer', flex: 0 }}
+                  >
+                    <Box sx={{display: { xs: 'none', md: 'flex' }}} onClick={handleLogout}>
+                      <Typography textAlign="center" fontWeight={800}
+                  sx={{
+                        color: 'text.primary',
+                        textDecoration: 'none',
+                        '&:hover': {
+                        color: 'text.secondary'
+                      }
+                    }
+                    }>Logout</Typography>
+
+                    </Box>
+                  
                 </Box>
               ) : (
-                <Box style={{ display: 'flex', padding: '0 20px' }}>
-                  <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer', color: 'text.primary' }}
+                <Box sx={{flexGrow: 1, display: { xs: 'none', md: 'flex' }, padding: '0 20px' }}>
+                  <Box sx={{ display: { xs: 'none', md: 'flex' }, padding: '0 20px', cursor: 'pointer' }}
                     onClick={() => navigate('/login')}>
-                    <Typography textAlign="center" fontWeight={800} >Login</Typography>
+                    <Typography textAlign="center" fontWeight={800} 
+                    sx={{
+                        color: 'text.primary',
+                        textDecoration: 'none',
+                        '&:hover': {
+                        color: 'text.secondary'
+                      }
+                    }
+                    }>Login</Typography>
                   </Box>
-                  <Box style={{ textDecoration: 'none', paddingRight: '20px', cursor: 'pointer' }}
+                  <Box style={{ display: { xs: 'none', md: 'flex' }, padding: '0 20px', cursor: 'pointer' }}
                     onClick={() => navigate('/register')}
                   >
-                    <Typography textAlign="center" fontWeight={800}>Register</Typography>
+                    <Typography textAlign="center" fontWeight={800}
+                    sx={{
+                        color: 'text.primary',
+                        textDecoration: 'none',
+                        '&:hover': {
+                        color: 'text.secondary'
+                      }
+                    }
+                    }>Register</Typography>
                   </Box>
                 </Box>
               )
@@ -257,7 +267,11 @@ const resetSnackMessage = () => {
 
               >
                 {Object.entries(settings).map(([key, page]) => (
-                  <MenuItem key={key} onClick={() => { handleCloseUserMenu() }}
+                  <Link to={`/${key.toLowerCase()}`}
+
+                    ><MenuItem 
+                    key={key} 
+                    onClick={() => { handleCloseUserMenu() }}
                     sx={{
 
                       '&:hover': {
@@ -265,17 +279,20 @@ const resetSnackMessage = () => {
                       }
                     }}
                   >
-                    <Link to={`/${key.toLowerCase()}`}
-
-                    >
+                    
                       <Typography textAlign="center"
-                      // sx={{
-                      //   color: 'text.primary',
+                      sx={{
+                        color: 'text.primary',
+                        textDecoration: 'none',
+                        '&:hover': {
+                        color: 'text.white'
+                      }
 
-                      // }}
+                      }}
                       >{page}</Typography>
-                    </Link>
+                    
                   </MenuItem>
+                  </Link>
                 ))}
               </Menu>
             </Box>
@@ -338,17 +355,47 @@ const resetSnackMessage = () => {
             {/* <Divider /> */}
 
             {/* Auth buttons */}
-            {user?._id ? (
-              <ListItem sx={{ px: 2, py: 2, cursor: 'pointer' }} onClick={logOut}>
-                <Typography fontWeight={800}>Logout</Typography>
+            {isAuthenticated() ? (
+              <ListItem sx={{ px: 2, py: 2, cursor: 'pointer', '&:hover': {
+                        bgcolor: 'background.dark'
+                      } }} onClick={handleLogout}>
+                <Typography fontWeight={800}
+                sx={{
+                        color: 'text.primary',
+                        textDecoration: 'none',
+                        '&:hover': {
+                        color: 'text.secondary'
+                      }
+                    }
+                    }>Logout</Typography>
               </ListItem>
             ) : (
               <>
-                <ListItem sx={{ px: 2, py: 2, cursor: 'pointer' }} onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}>
-                  <Typography fontWeight={800}>Login</Typography>
+                <ListItem sx={{ px: 2, py: 2, cursor: 'pointer', '&:hover': {
+                        bgcolor: 'background.dark'
+                      } }} onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}>
+                  <Typography fontWeight={800}
+                  sx={{
+                        color: 'text.primary',
+                        textDecoration: 'none',
+                        '&:hover': {
+                        color: 'text.white'
+                      }
+                    }
+                    }>Login</Typography>
                 </ListItem>
-                <ListItem sx={{ px: 2, py: 2, cursor: 'pointer' }} onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}>
-                  <Typography fontWeight={800}>Register</Typography>
+                <ListItem sx={{ px: 2, py: 2, cursor: 'pointer', '&:hover': {
+                        bgcolor: 'background.dark'
+                      } }} onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}>
+                  <Typography fontWeight={800}
+                  sx={{
+                        color: 'text.primary',
+                        textDecoration: 'none',
+                        '&:hover': {
+                        color: 'text.white'
+                      }
+                    }
+                    }>Register</Typography>
                 </ListItem>
               </>
             )}
@@ -357,8 +404,23 @@ const resetSnackMessage = () => {
 
             {/* Settings */}
             {Object.entries(settings).map(([key, page]) => (
-              <ListItem key={key} sx={{ px: 2, py: 2 }} onClick={() => { navigate(`/${key.toLowerCase()}`); setMobileMenuOpen(false); }}>
-                <Typography>{page}</Typography>
+              <ListItem 
+              key={key} 
+              sx={{ px: 2, py: 2, cursor: 'pointer', 
+
+                      '&:hover': {
+                        bgcolor: 'background.dark'
+                      }
+                     }} onClick={() => { navigate(`/${key.toLowerCase()}`); setMobileMenuOpen(false); }}>
+                <Typography
+                sx={{
+                        color: 'text.primary',
+                        textDecoration: 'none',
+                        '&:hover': {
+                        color: 'text.white'
+                      }
+                    }
+                    }>{page}</Typography>
               </ListItem>
             ))}
           </List>

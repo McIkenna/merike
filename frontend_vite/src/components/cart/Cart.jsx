@@ -35,8 +35,7 @@ import { CartStateUpdate } from './cartUtils/CartStateUpdate';
 import { CustomSnackbar } from '../../utils/CustomSnackbar';
 import PromoCodeInput from '../promoCode/PromoCodeInput';
 import { Divider } from '../../utils/Divider';
-import ModernLoader from '../../utils/ModernLoader';
-import { AddViewedProduct } from './cartUtils/AddViewedProduct';
+import { UseAuth } from '../../auth/AuthContext';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -87,12 +86,13 @@ const FeatureChip = styled(Chip)(({ theme }) => ({
 }));
 
 export const Cart = () => {
+  const { isAuthenticated} = UseAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const  auth  = useSelector(state => state.auth);
+  // const  auth  = useSelector(state => state.auth);
   const stateStore = useSelector(state => state.stateStore);
-  const { cartItems, totalQuantity, totalPrice, discount, promoCode, products, viewedProducts } = stateStore;
-  const { user } = auth;
+  const { cartItems, totalQuantity, totalPrice, discount, promoCode, products } = stateStore;
+  
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('')
   const [severity, setSeverity] = useState('success')
@@ -522,13 +522,13 @@ export const Cart = () => {
             </Box>
 
             {/* Checkout Button */}
-            {!user?._id ? (
+            {!isAuthenticated() ? (
               <Alert severity="info" sx={{ mb: 2 }}>
                 Please log in to proceed with checkout
               </Alert>
             ) : null}
 
-            {!user?._id ? (
+            {!isAuthenticated() ? (
               <Button
                 variant="contained"
                 fullWidth

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Box,
@@ -13,10 +13,7 @@ import {
   LinearProgress
 } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
-import { useNavigate } from "react-router";
 import { useCreateUserMutation } from "../../api/services/userApi";
-import { useSelector, useDispatch } from "react-redux";
-import { setUser, setToken } from "../../api/actions";
 import {
   Person,
   Email,
@@ -28,6 +25,7 @@ import {
   ShoppingBag
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
+import { UseAuth } from "../../auth/AuthContext";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -117,7 +115,7 @@ const PasswordStrengthBar = ({ password }) => {
 };
 
 export default function Register() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const mediaAboveMd = useMediaQuery('(min-width:900px)');
   const emptyState = {
     firstName: "",
@@ -130,17 +128,8 @@ export default function Register() {
   const [userData, setUserData] = useState(emptyState);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { auth } = useSelector(state => state);
-  const { user } = auth;
-  const navigate = useNavigate();
   const [createUser, { isLoading }] = useCreateUserMutation();
-
-  useEffect(() => {
-    if (user?._id) {
-      navigate('/');
-    }
-  }, [user?._id, navigate]);
-
+  const {login} = UseAuth();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData((prevState) => ({
@@ -240,11 +229,8 @@ export default function Register() {
       createUser(reqBody)
         .unwrap()
         .then((res) => {
-          localStorage.setItem('token', res.token);
-          localStorage.setItem('user', JSON.stringify(res.user));
-          dispatch(setToken(res.token));
-          dispatch(setUser(res.user));
           setSuccessMessage('Account created successfully! Redirecting...');
+          login(res.token, res.user)
         })
         .catch((err) => {
           setErrorMessages(err.data?.message || 'Registration failed. Please try again.');

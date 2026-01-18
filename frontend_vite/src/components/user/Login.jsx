@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   TextField,
@@ -17,11 +17,12 @@ import { useMediaQuery } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLoginUserMutation } from '../../api/services/userApi';
 import { useNavigate } from "react-router";
-import { setToken, setUser } from '../../api/actions';
+import { setToken, setStateUser } from '../../api/actions';
 import { Visibility, VisibilityOff, Email, Lock, Login as LoginIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import shoppingImg from '../../static/images/shopping.jpg'
 import { CustomSnackbar } from '../../utils/CustomSnackbar';
+import { UseAuth } from '../../auth/AuthContext.jsx';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -95,8 +96,10 @@ export default function Login() {
   const dispatch = useDispatch();
   const [loginUser, { isLoading }] = useLoginUserMutation();
   const navigate = useNavigate();
-  const auth = useSelector(state => state.auth);
-  const { user, token } = auth;
+  const {login} = UseAuth()
+  // const auth = useSelector(state => state.auth);
+  // const { user, token } = auth;
+
   const resetSnackMessage = () => {
     setTimeout(() => {
       setOpenSnackbar(false)
@@ -112,17 +115,23 @@ export default function Login() {
   }
 
 
-  useEffect(() => {
-    const loginMessage = () => {
+  // useEffect(() => {
+  //   const loginMessage = () => {
+  //     setOpenSnackbar(true)
+  //     setSnackbarMessage('You are logged in')
+  //     setSeverity('info')
+  //   }
+  //   if (user?._id && token) {
+  //     loginMessage();
+  //     resetSnackMessage();
+  //   }
+  // }, [user?._id, token, navigate]);
+
+  const loginMessage = () => {
       setOpenSnackbar(true)
       setSnackbarMessage('You are logged in')
       setSeverity('info')
     }
-    if (user?._id && token) {
-      loginMessage();
-      resetSnackMessage();
-    }
-  }, [user?._id, token, navigate]);
 
   const handleStateChange = (e) => {
     const { name, value } = e.target;
@@ -135,14 +144,17 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('')
     const reqBody = state;
     loginUser(reqBody)
       .unwrap()
       .then((response) => {
-        localStorage.setItem('token', response?.token);
-        localStorage.setItem('user', JSON.stringify(response?.user));
+        login(response?.token, response?.user);
+        loginMessage();
         dispatch(setToken(response?.token));
-        dispatch(setUser(response?.user));
+        dispatch(setStateUser(response?.user));
+      }).then(()=>{
+        resetSnackMessage();
       })
       .catch((error) => {
         setError(error?.data?.message || 'Login failed. Please try again.');
