@@ -4,6 +4,7 @@
 
 ### FrontEnd
 ``` mermaid
+graph TB
     subgraph "Frontend - React + Vite"
         direction TB
         HTML[index.html]
