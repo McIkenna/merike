@@ -1,7 +1,7 @@
 # Merike E-Commerce
 
 ### Architecture Diagram
-```mermaid
+``` mermaid
 graph TB
     subgraph "Client Layer"
         Browser[Web Browser]
@@ -115,32 +115,6 @@ graph TB
     subgraph "Database"
         DB[(Database)]
     end
-    
-    Browser --> HTML
-    HTML --> App
-    App --> Components
-    Components --> Store
-    Store --> API Services
-    API Services --> Server
-    
-    Server --> AppJS
-    AppJS --> Middleware
-    Middleware --> Routes
-    Routes --> Controllers
-    Controllers --> Models
-    Controllers --> Utilities
-    Models --> DB
-    Config --> DB
-    
-    StripeCtrl --> Stripe
-    Email --> EmailService
-    StripeCoupon --> Stripe
-    
-    style Browser fill:#e1f5ff
-    style Frontend fill:#f0f0f0
-    style Backend fill:#fff4e6
-    style Database fill:#e8f5e9
-    style "External Services" fill:#fce4ec
 ```
 
 ### Application UML Class Diagram
@@ -368,5 +342,30 @@ classDiagram
     AuthController --> ErrorMiddleware : uses
     ProductController --> ErrorMiddleware : uses
     OrderController --> ErrorMiddleware : uses
-
     ```
+### Designs
+Browser --> HTML
+HTML --> App
+App --> Components
+Components --> Store
+Store --> API Services
+API Services --> Server
+
+Server --> AppJS
+AppJS --> Middleware
+Middleware --> Routes
+Routes --> Controllers
+Controllers --> Models
+Controllers --> Utilities
+Models --> DB
+Config --> DB
+
+StripeCtrl --> Stripe
+Email --> EmailService
+StripeCoupon --> Stripe
+
+style Browser fill:#e1f5ff
+style Frontend fill:#f0f0f0
+style Backend fill:#fff4e6
+style Database fill:#e8f5e9
+style "External Services" fill:#fce4ec
